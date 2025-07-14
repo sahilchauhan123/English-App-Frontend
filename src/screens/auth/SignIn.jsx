@@ -1,0 +1,114 @@
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
+import {colors, fonts} from '../../../assets/constants';
+
+const SignIn = () => {
+  const navigation = useNavigation();
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: colors.white,
+      }}>
+      <View
+        style={{
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          flex: 1,
+          paddingBottom: hp(5),
+        }}>
+        <Image
+          source={require('../../../assets/images/logo.png')}
+          style={{height: wp(28), width: wp(28)}}
+        />
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{fontFamily: 'Poppins-Bold', fontSize: wp(9)}}>
+            Strango
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Poppins-Medium',
+              fontSize: wp(4.2),
+              marginTop: wp(-1.8),
+            }}>
+            Speak English With Real People
+          </Text>
+        </View>
+      </View>
+
+      <View
+        style={{
+          justifyContent: 'flex-end',
+          //   alignItems: 'center',
+          flex: 1,
+          paddingBottom: hp(1),
+        }}>
+        <TouchableOpacity style={styles.signinButton}>
+          <Image
+            source={require('../../../assets/images/google.png')}
+            style={styles.icon}
+          />
+          <Text style={styles.buttonText}>Sign in with Google</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity  onPress={()=>navigation.navigate("LoginOrSignup")} style={[styles.signinButton,{marginBottom:hp(5)}]}>
+          <Image
+            source={require('../../../assets/images/email.png')}
+            style={styles.icon}
+          />
+          <Text style={styles.buttonText}>Sign in with Email</Text>
+        </TouchableOpacity>
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+          <Text style={styles.terms}>By logging in, you agree to our</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.terms,{textDecorationLine:'underline',fontFamily:fonts.meduim}]}>Privacy policy</Text>
+            <Text style={styles.terms}> and </Text>
+            <Text style={[styles.terms,{textDecorationLine:'underline',fontFamily:fonts.meduim}]}>Terms of Use.</Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default SignIn;
+
+const styles = StyleSheet.create({
+  signinButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center', // Center content horizontally
+    width: wp(90),
+    paddingVertical: hp(1.3),
+    paddingHorizontal: wp(5),
+    borderColor: colors.grey,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: hp(2.8),
+    position: 'relative',
+  },
+  icon: {
+    position: 'absolute',
+    left: wp(5),
+    height: wp(6.5),
+    width: wp(6.5),
+    resizeMode: 'contain',
+  },
+  buttonText: {
+    fontSize: wp(4),
+    fontFamily: fonts.semiBold,
+  },
+  terms:{
+    fontFamily:fonts.light,
+    fontSize:wp(3.2),
+    color:colors.grey
+  }
+});
