@@ -1,223 +1,3 @@
-// import {
-//   KeyboardAvoidingView,
-//   StyleSheet,
-//   Text,
-//   TextInput,
-//   TouchableOpacity,
-//   View,
-// } from 'react-native';
-// import React, {useEffect, useRef, useState} from 'react';
-// import {
-//   widthPercentageToDP as wp,
-//   heightPercentageToDP as hp,
-// } from 'react-native-responsive-screen';
-// import {SafeAreaView} from 'react-native-safe-area-context';
-// import {colors, fonts} from '../../../assets/constants';
-// import LinearGradient from 'react-native-linear-gradient';
-
-// const LoginOrSignup = () => {
-//   const [inputPressed, setInputPressed] = useState(false);
-//   const inputRef = useRef(null);
-
-//   useEffect(() => {
-//     if (inputPressed) {
-//       setTimeout(() => {
-//         inputRef.current?.focus();
-//       }, 100); // 100ms gives time to render
-//     }
-//   }, [inputPressed]);
-
-//   return (
-//     <SafeAreaView
-//       style={{
-//         backgroundColor: colors.white,
-//         flex: 1,
-//         paddingVertical: hp(1),
-//         paddingHorizontal: wp(5),
-//       }}>
-//       <KeyboardAvoidingView style={{flex: 1}}>
-//         <View style={{alignItems: 'center', flex: 1}}>
-//           <Text style={{fontFamily: fonts.semiBold, fontSize: wp(5.5)}}>
-//             Login or Signup
-//           </Text>
-//           <View
-//             style={{
-//               width: '100%',
-//               flex: 1,
-//               justifyContent: 'space-between',
-//               alignItems: 'center',
-//             }}>
-//             {!inputPressed ? (
-//               <TouchableOpacity
-//                 style={{width: '100%'}}
-//                 onPress={() => setInputPressed(true)}>
-//                 <View
-//                   style={{
-//                     borderColor: colors.grey,
-//                     alignItems: 'flex-start',
-//                     borderWidth: 1,
-//                     width: '100%',
-//                     height: hp(9),
-//                     marginTop: hp(4),
-//                     borderColor: colors.bordercolor,
-//                     justifyContent: 'center',
-//                     borderRadius: hp(1.9),
-//                   }}>
-//                   <Text
-//                     style={{
-//                       marginLeft: wp(4),
-//                       fontFamily: fonts.meduim,
-//                       color: colors.bordercolor,
-//                     }}>
-//                     Email
-//                   </Text>
-//                 </View>
-//               </TouchableOpacity>
-//             ) : (
-//               <>
-//                 <LinearGradient
-//                   colors={[
-//                     colors.gradient.first,
-//                     colors.gradient.second,
-//                     colors.gradient.last,
-//                   ]}
-//                   start={{x: 0, y: 0}}
-//                   end={{x: 0.7, y: 0}}
-//                   style={styles.gradientBorder}>
-//                   <View style={styles.activeInputInner}>
-//                     <Text style={styles.label}>Email</Text>
-//                     <TextInput
-//                       ref={inputRef}
-//                       style={styles.textInput}
-//                       cursorColor={colors.black}
-//                       autoComplete="email"
-//                       keyboardType="email-address"
-//                       placeholder=""
-//                       placeholderTextColor={'black'}
-//                     />
-//                   </View>
-//                 </LinearGradient>
-//               </>
-//             )}
-//             {inputPressed ? (
-//               <LinearGradient
-//                 colors={[
-//                   colors.gradient.first,
-//                   colors.gradient.second,
-//                   colors.gradient.last,
-//                 ]}
-//                 start={{x: 0, y: 0}}
-//                 end={{x: 0.9, y: 0}}
-//                 style={{
-//                   width: '100%',
-//                   paddingVertical: hp(1.6),
-//                   justifyContent: 'center',
-//                   alignItems: 'center',
-//                   borderRadius: hp(1.2),
-//                 }}>
-//                 <TouchableOpacity>
-//                   <Text style={{fontFamily: fonts.bold, color: colors.white}}>
-//                     CONTINUE
-//                   </Text>
-//                 </TouchableOpacity>
-//               </LinearGradient>
-//             ) : (
-//               <TouchableOpacity
-//                 style={{
-//                   borderColor: colors.bordercolor,
-//                   borderWidth: 1,
-//                   width: '100%',
-//                   paddingVertical: hp(1.6),
-//                   justifyContent: 'center',
-//                   alignItems: 'center',
-//                   borderRadius: hp(1.2),
-//                 }}>
-//                 <Text style={{fontFamily: fonts.bold}}>CONTINUE</Text>
-//               </TouchableOpacity>
-//             )}
-//           </View>
-//         </View>
-//       </KeyboardAvoidingView>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default LoginOrSignup;
-
-// const styles = StyleSheet.create({
-//   safeArea: {
-//     backgroundColor: colors.white,
-//     flex: 1,
-//     paddingVertical: hp(1),
-//     paddingHorizontal: wp(5),
-//   },
-//   container: {
-//     alignItems: 'center',
-//     flex: 1,
-//   },
-//   heading: {
-//     fontFamily: fonts.semiBold,
-//     fontSize: wp(5.5),
-//   },
-//   formWrapper: {
-//     width: '100%',
-//     flex: 1,
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//   },
-//   inactiveInputWrapper: {
-//     borderColor: colors.bordercolor,
-//     borderWidth: 1,
-//     width: '100%',
-//     height: hp(9),
-//     marginTop: hp(4),
-//     justifyContent: 'center',
-//     borderRadius: hp(1.9),
-//     alignItems: 'flex-start',
-//     paddingLeft: wp(4),
-//   },
-//   gradientBorder: {
-//     width: '100%',
-//     height: hp(9),
-//     marginTop: hp(4),
-//     borderRadius: hp(2.05),
-//     // padding: 1, // space for gradient border
-//   },
-//   activeInputInner: {
-//     flex: 1,
-//     backgroundColor: 'white',
-//     borderRadius: hp(1.9),
-//     paddingHorizontal: wp(4),
-//     justifyContent: 'center',
-//     margin: 1,
-//   },
-//   label: {
-//     fontFamily: fonts.medium,
-//     color: colors.bordercolor,
-//     paddingTop: hp(1.5),
-//     marginBottom: hp(-0.8),
-//     // backgroundColor:'blue'
-//   },
-//   textInput: {
-//     fontFamily: fonts.semiBold,
-//     fontSize: wp(4),
-//     color: 'black',
-//     paddingTop: hp(0.5),
-//     paddingLeft: wp(-1),
-//   },
-//   continueButton: {
-//     borderColor: colors.bordercolor,
-//     borderWidth: 1,
-//     width: '100%',
-//     paddingVertical: hp(1.6),
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     borderRadius: hp(1.2),
-//   },
-//   continueText: {
-//     fontFamily: fonts.bold,
-//   },
-// });
 
 import {
   KeyboardAvoidingView,
@@ -235,11 +15,11 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, fonts} from '../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
-
+import {useNavigation} from '@react-navigation/native';
 const LoginOrSignup = () => {
   const [emailPressed, setEmailPressed] = useState(false);
   const [passwordPressed, setPasswordPressed] = useState(false);
-
+  const navigation = useNavigation()
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
@@ -347,12 +127,12 @@ const LoginOrSignup = () => {
                 start={{x: 0, y: 0}}
                 end={{x: 0.9, y: 0}}
                 style={styles.gradientButton}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate("Otp")} >
                   <Text style={styles.gradientButtonText}>CONTINUE</Text>
                 </TouchableOpacity>
               </LinearGradient>
             ) : (
-              <TouchableOpacity style={styles.continueButton} >
+              <TouchableOpacity style={styles.continueButton} onPress={()=>navigation.navigate("Otp")} >
                 <Text style={styles.continueText}>CONTINUE</Text>
               </TouchableOpacity>
             )}
