@@ -35,78 +35,87 @@ const Otp = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView style={styles.container}>
-        <Text style={styles.title}>Login</Text>
+        <View style={{ alignItems: 'center', flex: 1.4}}>
+          <Text style={styles.title}>Login</Text>
 
-        <Text style={styles.confirmText}>
-          <Text style={{fontFamily: fonts.regular,fontSize:wp(4.6)}}>
-            Confirmation code was sent to the email{' '}
+          <Text style={styles.confirmText}>
+            <Text style={{fontFamily: fonts.regular, fontSize: wp(4.6)}}>
+              Confirmation code was sent to the email{' '}
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.semiBold,
+                color: colors.black,
+                fontSize: wp(4.6),
+              }}>
+              akshitagulerialdh@gmail.com
+            </Text>
           </Text>
-          <Text style={{fontFamily: fonts.semiBold, color: colors.black,fontSize:wp(4.6)}}>
-            akshitagulerialdh@gmail.com
-          </Text>
-        </Text>
 
-        <TouchableOpacity>
-          <Text style={styles.changeEmail}>Change email</Text>
-        </TouchableOpacity>
+          <TouchableOpacity>
+            <Text style={styles.changeEmail}>Change email</Text>
+          </TouchableOpacity>
 
-        <View style={styles.otpContainer}>
-          {otp.map((value, index) => (
+          <View style={styles.otpContainer}>
+            {otp.map((value, index) => (
+              <LinearGradient
+                key={index}
+                colors={[
+                  colors.gradient.first,
+                  colors.gradient.second,
+                  colors.gradient.last,
+                ]}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.gradientBox}>
+                <TextInput
+                  textAlign="center"
+                  caretHidden={true}
+                  ref={ref => (inputs.current[index] = ref)}
+                  style={styles.otpInput}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  value={otp[index]}
+                  onChangeText={text => handleChange(text, index)}
+                  onKeyPress={({nativeEvent}) => {
+                    if (nativeEvent.key === 'Backspace') {
+                      if (otp[index] === '') {
+                        if (index > 0) {
+                          inputs.current[index - 1]?.focus();
+
+                          const updatedOTP = [...otp];
+                          updatedOTP[index - 1] = '';
+                          setOtp(updatedOTP);
+                        }
+                      } else {
+                        const updatedOTP = [...otp];
+                        updatedOTP[index] = '';
+                        setOtp(updatedOTP);
+                      }
+                    }
+                  }}
+                />
+              </LinearGradient>
+            ))}
+          </View>
+
+          <Text style={styles.enterCodeText}>Enter the code</Text>
+        </View>
+        <View style={{justifyContent: 'flex-end', alignItems: 'center', flex: 1,width:'100%'}}>
+          <TouchableOpacity style={{width: '100%'}}>
             <LinearGradient
-              key={index}
               colors={[
                 colors.gradient.first,
                 colors.gradient.second,
                 colors.gradient.last,
               ]}
               start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={styles.gradientBox}>
-              <TextInput
-                caretHidden={true}
-                ref={ref => (inputs.current[index] = ref)}
-                style={styles.otpInput}
-                keyboardType="number-pad"
-                maxLength={1}
-                value={otp[index]}
-                onChangeText={text => handleChange(text, index)}
-                onKeyPress={({nativeEvent}) => {
-                  if (nativeEvent.key === 'Backspace') {
-                    if (otp[index] === '') {
-                      if (index > 0) {
-                        inputs.current[index - 1]?.focus();
-
-                        const updatedOTP = [...otp];
-                        updatedOTP[index - 1] = '';
-                        setOtp(updatedOTP);
-                      }
-                    } else {
-                      const updatedOTP = [...otp];
-                      updatedOTP[index] = '';
-                      setOtp(updatedOTP);
-                    }
-                  }
-                }}
-              />
+              end={{x: 0.8, y: 0}}
+              style={styles.continueBtn}>
+              <Text style={styles.continueText}>CONTINUE</Text>
             </LinearGradient>
-          ))}
-        </View>
-
-        <Text style={styles.enterCodeText}>Enter the code</Text>
-
-        <LinearGradient
-          colors={[
-            colors.gradient.first,
-            colors.gradient.second,
-            colors.gradient.last,
-          ]}
-          start={{x: 0, y: 0}}
-          end={{x: 0.8, y: 0}}
-          style={styles.continueBtn}>
-          <TouchableOpacity>
-            <Text style={styles.continueText}>CONTINUE</Text>
           </TouchableOpacity>
-        </LinearGradient>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -135,8 +144,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: wp(3.6),
     marginBottom: hp(1),
-    marginTop:hp(10.4),
-    flexWrap:'wrap'
+    marginTop: hp(12),
+    flexWrap: 'wrap',
   },
   changeEmail: {
     color: colors.orange,
@@ -147,7 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: hp(2),
-    marginTop:hp(5)
+    marginTop: hp(5),
   },
   gradientBox: {
     height: hp(9),
@@ -158,8 +167,8 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(2),
   },
   otpInput: {
-    height: "96%",
-    width: "96%",
+    height: '96%',
+    width: '96%',
     backgroundColor: 'white',
     textAlign: 'center',
     borderRadius: wp(3),
@@ -168,7 +177,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   enterCodeText: {
-    fontFamily: fonts.light,
+    fontFamily: fonts.regular,
     fontSize: wp(3.5),
     marginTop: hp(1),
     marginBottom: hp(5),

@@ -1,4 +1,3 @@
-
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -19,7 +18,9 @@ import {useNavigation} from '@react-navigation/native';
 const LoginOrSignup = () => {
   const [emailPressed, setEmailPressed] = useState(false);
   const [passwordPressed, setPasswordPressed] = useState(false);
-  const navigation = useNavigation()
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
+  const navigation = useNavigation();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
@@ -43,7 +44,7 @@ const LoginOrSignup = () => {
           <Text style={styles.heading}>Login or Signup</Text>
 
           <View style={styles.formWrapper}>
-            <View style={{width:"100%",marginTop:hp(2)}}>
+            <View style={{width: '100%', marginTop: hp(2)}}>
               {/* Email Input */}
               {!emailPressed ? (
                 <TouchableOpacity
@@ -68,6 +69,7 @@ const LoginOrSignup = () => {
                   <View style={styles.activeInputInner}>
                     <Text style={styles.label}>Email</Text>
                     <TextInput
+                      onChangeText={setEmail}
                       ref={emailRef}
                       style={styles.textInput}
                       cursorColor={colors.black}
@@ -104,6 +106,7 @@ const LoginOrSignup = () => {
                   <View style={styles.activeInputInner}>
                     <Text style={styles.label}>Password</Text>
                     <TextInput
+                    onChangeText={setPassword}
                       ref={passwordRef}
                       style={styles.textInput}
                       cursorColor={colors.black}
@@ -117,22 +120,26 @@ const LoginOrSignup = () => {
             </View>
 
             {/* Continue Button */}
-            {emailPressed && passwordPressed ? (
-              <LinearGradient
-                colors={[
-                  colors.gradient.first,
-                  colors.gradient.second,
-                  colors.gradient.last,
-                ]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.9, y: 0}}
-                style={styles.gradientButton}>
-                <TouchableOpacity onPress={()=>navigation.navigate("Otp")} >
+            {email.length > 0 && password.length > 0  ? (
+              <TouchableOpacity
+                style={{width: '100%'}}
+                onPress={() => navigation.navigate('Otp')}>
+                <LinearGradient
+                  colors={[
+                    colors.gradient.first,
+                    colors.gradient.second,
+                    colors.gradient.last,
+                  ]}
+                  start={{x: 0, y: 0}}
+                  end={{x: 0.9, y: 0}}
+                  style={styles.gradientButton}>
                   <Text style={styles.gradientButtonText}>CONTINUE</Text>
-                </TouchableOpacity>
-              </LinearGradient>
+                </LinearGradient>
+              </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.continueButton} onPress={()=>navigation.navigate("Otp")} >
+              <TouchableOpacity
+                style={styles.continueButton}
+                onPress={() => navigation.navigate('Otp')}>
                 <Text style={styles.continueText}>CONTINUE</Text>
               </TouchableOpacity>
             )}
