@@ -6,10 +6,11 @@ import SplashScreen from '../screens/onboarding/SplashScreen';
 import OnboardingSlider from '../screens/onboarding/OnboardingSlider';
 import SignIn from '../screens/auth/SignIn';
 import LoginOrSignup from '../screens/auth/LoginOrSignup';
-import Otp from '../screens/auth/Otp';
+import Otp from '../screens/auth/accountCreate/Otp';
+import LanguageSelector from '../screens/auth/accountCreate/LanguageSelector';
 
 const Navigation = () => {
-  const [initialRoute, setInitialRoute] = useState('SplashScreen'); // default SplashScreen
+  const [initialRoute, setInitialRoute] = useState('LanguageSelector'); // default SplashScreen
   const Stack = createNativeStackNavigator();
 
   return (
@@ -22,6 +23,7 @@ const Navigation = () => {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="LoginOrSignup" component={LoginOrSignup} />
         <Stack.Screen name="Otp" component={Otp} />
+        <Stack.Screen name="LanguageSelector" component={LanguageSelector} />
       </Stack.Navigator>
     </NavigationContainer>
   );
