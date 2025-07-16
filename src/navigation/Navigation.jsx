@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -8,6 +8,7 @@ import SignIn from '../screens/auth/SignIn';
 import LoginOrSignup from '../screens/auth/LoginOrSignup';
 import Otp from '../screens/auth/accountCreate/Otp';
 import LanguageSelector from '../screens/auth/accountCreate/LanguageSelector';
+import {KeyboardProvider} from 'react-native-keyboard-controller';
 
 const Navigation = () => {
   const [initialRoute, setInitialRoute] = useState('LanguageSelector'); // default SplashScreen

@@ -48,7 +48,24 @@ export const GradientLine = () => {
 };
 
 const LanguageSelector = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [languages, setLanguages] = useState(nativeLanguages);
+
+  const SearchByName = searchQuery => {
+    const res = nativeLanguages.filter(lang =>
+      lang.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+    setLanguages(res);
+  };
+
+  const setLang = lang => {
+    if (selectedLanguage == lang) {
+      setSelectedLanguage('');
+    } else {
+      setSelectedLanguage(lang);
+    }
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -56,7 +73,7 @@ const LanguageSelector = () => {
         backgroundColor: colors.white,
         paddingHorizontal: wp(7),
       }}>
-      <KeyboardAvoidingView>
+      <KeyboardAvoidingView style={{justifyContent: 'space-around'}}>
         <View
           style={{
             alignItems: 'center',
@@ -77,7 +94,7 @@ const LanguageSelector = () => {
             marginTop: wp(5),
             width: '100%',
           }}>
-          <Text style={{fontFamily: fonts.semiBold, fontSize: wp(5.5)}}>
+          <Text style={{fontFamily: fonts.semiBold, fontSize: hp(2.6)}}>
             What is your native language?
           </Text>
           <View
@@ -85,13 +102,12 @@ const LanguageSelector = () => {
               borderColor: colors.bordercolor,
               borderWidth: wp(0.3),
               width: '100%',
-              marginTop: hp(5),
+              marginTop: hp(4),
               borderRadius: wp(3),
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'flex-start',
               paddingHorizontal: wp(3.8),
-              paddingVertical: hp(0),
             }}>
             <Image
               style={{height: wp(6), width: wp(6)}}
@@ -102,21 +118,23 @@ const LanguageSelector = () => {
               style={{
                 width: wp(70),
                 fontFamily: fonts.regular,
-                fontSize: wp(4),
+                fontSize: hp(1.7),
                 marginTop: hp(0.3),
                 paddingLeft: wp(2),
               }}
               placeholder="Search..."
+              onChangeText={SearchByName}
             />
           </View>
         </View>
 
-        <View style={{paddingTop: hp(2)}}>
+        <View style={{paddingTop: hp(2), height: hp(68)}}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{marginBottom: wp(100)}}>
-            {nativeLanguages.map(language => (
+            style={{marginBottom: wp(0)}}>
+            {languages.map((language, index) => (
               <TouchableOpacity
+                key={index}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -124,21 +142,56 @@ const LanguageSelector = () => {
                   paddingVertical: hp(2),
                   paddingHorizontal: wp(2),
                 }}
-                onPress={()=>setSelectedLanguage(language)}
-                >
-                <Text style={{fontFamily: fonts.meduim}}>{language}</Text>
+                onPress={() => setLang(language)}>
+                <Text style={{fontFamily: fonts.meduim, fontSize: hp(1.8)}}>
+                  {language}
+                </Text>
                 {language == selectedLanguage ? (
                   <Image
                     source={require('../../../../assets/images/tick-circle.png')}
                     style={{height: wp(6), width: wp(6)}}
-                    resizeMode='cover'
+                    resizeMode="cover"
                   />
                 ) : (
-                  <View style={{height: wp(5), width: wp(5),borderRadius:wp(100),borderWidth:wp(0.5),borderColor:colors.bordercolor}} />
+                  <View
+                    style={{
+                      height: wp(5),
+                      width: wp(5),
+                      borderRadius: wp(100),
+                      borderWidth: wp(0.5),
+                      borderColor: colors.bordercolor,
+                    }}
+                  />
                 )}
               </TouchableOpacity>
             ))}
           </ScrollView>
+        </View>
+
+        <View>
+          {selectedLanguage != null > 0 ? (
+            <TouchableOpacity
+              style={{width: '100%'}}
+              onPress={() => navigation.navigate('Otp')}>
+              <LinearGradient
+                colors={[
+                  colors.gradient.first,
+                  colors.gradient.second,
+                  colors.gradient.last,
+                ]}
+                start={{x: 0, y: 0}}
+                end={{x: 0.9, y: 0}}
+                style={styles.gradientButton}>
+                <Text style={styles.gradientButtonText}>CONTINUE</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.continueButton}
+              onPress={() => navigation.navigate('Otp')}>
+              <Text style={styles.continueText}>CONTINUE</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -147,4 +200,30 @@ const LanguageSelector = () => {
 
 export default LanguageSelector;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  gradientButton: {
+    width: '100%',
+    paddingVertical: hp(1.6),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: hp(1.2),
+    marginTop: hp(2),
+  },
+  gradientButtonText: {
+    fontFamily: fonts.bold,
+    color: colors.white,
+  },
+  continueButton: {
+    borderColor: colors.bordercolor,
+    borderWidth: 1,
+    width: '100%',
+    paddingVertical: hp(1.6),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: hp(1.2),
+    marginTop: hp(2),
+  },
+  continueText: {
+    fontFamily: fonts.bold,
+  },
+});

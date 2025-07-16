@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, fonts} from '../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+
 const LoginOrSignup = () => {
   const [emailPressed, setEmailPressed] = useState(false);
   const [passwordPressed, setPasswordPressed] = useState(false);
