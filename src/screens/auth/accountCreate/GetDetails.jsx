@@ -329,86 +329,97 @@ const LanguageSelector = ({jumpTo}) => {
     <SafeAreaView
       style={{
         flex: 1,
-        // backgroundColor: colors.black,
+        // backgroundColor: 'blue',
         paddingHorizontal: wp(5),
+        justifyContent: 'flex-start',
       }}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            // marginTop: wp(5),
-            width: '100%',
-          }}>
-          <Text style={{fontFamily: fonts.semiBold, fontSize: hp(2.6)}}>
-            What is your native language?
-          </Text>
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          height: '100%',
+          justifyContent: 'space-between',
+          paddingBottom: hp(1),
+        }}>
+        {/* <View style={{height: '90%'}}> */}
           <View
             style={{
-              borderColor: colors.bordercolor,
-              borderWidth: wp(0.3),
-              width: '100%',
-              marginTop: hp(4),
-              borderRadius: wp(3),
-              flexDirection: 'row',
+              justifyContent: 'center',
               alignItems: 'center',
-              paddingHorizontal: wp(3.8),
+              // marginTop: wp(5),
+              width: '100%',
             }}>
-            <Image
-              style={{height: wp(6), width: wp(6)}}
-              source={require('../../../../assets/images/search.png')}
-            />
-            <TextInput
+            <Text style={{fontFamily: fonts.semiBold, fontSize: hp(2.6)}}>
+              What is your native language?
+            </Text>
+            <View
               style={{
-                width: wp(70),
-                fontFamily: fonts.regular,
-                fontSize: hp(1.7),
-                paddingLeft: wp(2),
-              }}
-              placeholder="Search..."
-              onChangeText={SearchByName}
-            />
-          </View>
-        </View>
-
-        <View style={{paddingTop: hp(2), flex: 1}}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {languages.map((language, index) => (
-              <TouchableOpacity
-                key={index}
+                borderColor: colors.bordercolor,
+                borderWidth: wp(0.3),
+                width: '100%',
+                marginTop: hp(4),
+                borderRadius: wp(3),
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: wp(3.8),
+              }}>
+              <Image
+                style={{height: wp(6), width: wp(6)}}
+                source={require('../../../../assets/images/search.png')}
+              />
+              <TextInput
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingVertical: hp(2),
-                  paddingHorizontal: wp(2),
+                  width: wp(70),
+                  fontFamily: fonts.regular,
+                  fontSize: hp(1.7),
+                  paddingLeft: wp(2),
+                  color: colors.grey,
                 }}
-                onPress={() => setLang(language)}>
-                <Text style={{fontFamily: fonts.meduim, fontSize: hp(1.8)}}>
-                  {language}
-                </Text>
-                {language === selectedLanguage ? (
-                  <Image
-                    source={require('../../../../assets/images/tick-circle.png')}
-                    style={{height: wp(6), width: wp(6)}}
-                  />
-                ) : (
-                  <View
-                    style={{
-                      height: wp(5),
-                      width: wp(5),
-                      borderRadius: wp(100),
-                      borderWidth: wp(0.5),
-                      borderColor: colors.bordercolor,
-                    }}
-                  />
-                )}
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+                placeholderTextColor={colors.grey}
+                placeholder="Search..."
+                onChangeText={SearchByName}
+              />
+            </View>
+          </View>
 
-        <View>
+          <View style={{paddingTop: hp(2), flex: 1}}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {languages.map((language, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingVertical: hp(2),
+                    paddingHorizontal: wp(2),
+                  }}
+                  onPress={() => setLang(language)}>
+                  <Text style={{fontFamily: fonts.meduim, fontSize: hp(1.8)}}>
+                    {language}
+                  </Text>
+                  {language === selectedLanguage ? (
+                    <Image
+                      source={require('../../../../assets/images/tick-circle.png')}
+                      style={{height: wp(6), width: wp(6)}}
+                    />
+                  ) : (
+                    <View
+                      style={{
+                        height: wp(5),
+                        width: wp(5),
+                        borderRadius: wp(100),
+                        borderWidth: wp(0.5),
+                        borderColor: colors.bordercolor,
+                      }}
+                    />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        {/* </View> */}
+
+        <View style={{ paddingBottom: hp(0)}}>
           {selectedLanguage ? (
             <TouchableOpacity
               onPress={() => jumpTo('second')}
@@ -445,7 +456,7 @@ const SecondScreen = () => (
   </SafeAreaView>
 );
 
-const GenderScreen = () => {
+const GenderScreen = ({jumpTo}) => {
   const [selectedGender, setSelectedGender] = useState('');
   const [age, setAge] = useState('');
   const [agePressed, setAgePressed] = useState(false);
@@ -592,7 +603,7 @@ const GenderScreen = () => {
           {age && selectedGender ? (
             <TouchableOpacity
               style={{width: '100%'}}
-              onPress={() => navigation.navigate('Otp')}>
+              onPress={() => jumpTo('third')}>
               <LinearGradient
                 colors={[
                   colors.gradient.first,
@@ -608,7 +619,7 @@ const GenderScreen = () => {
           ) : (
             <TouchableOpacity
               style={styles.continueButton}
-              onPress={() => navigation.navigate('Otp')}>
+              onPress={() => jumpTo('third')}>
               <Text style={styles.continueText}>CONTINUE</Text>
             </TouchableOpacity>
           )}
@@ -631,7 +642,7 @@ const GetDetails = () => {
       case 'first':
         return <LanguageSelector jumpTo={jumpTo} />;
       case 'second':
-        return <GenderScreen />;
+        return <GenderScreen jumpTo={jumpTo}/>;
       case 'third':
         return <SecondScreen />;
       default:
