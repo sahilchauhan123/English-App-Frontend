@@ -27,7 +27,7 @@ const GradientLine = () => (
   <LinearGradient
     colors={[colors.gradient.first, colors.gradient.last]}
     start={{x: 0, y: 0}}
-    end={{x: 0.1, y: 0}}
+    end={{x: 0.8, y: 0}}
     style={styles.gradientLine}
   />
 );
@@ -39,8 +39,6 @@ const GetDetails = () => {
     {key: 'second', title: 'GenderScreen'},
     {key: 'third', title: 'OTP'},
     {key: 'fourth', title: 'Challenge'},
-
-
   ]);
 
   const renderScene = ({route, jumpTo}) => {
@@ -50,9 +48,9 @@ const GetDetails = () => {
       case 'second':
         return <GenderScreen jumpTo={jumpTo} />;
       case 'third':
-        return <EnglishLevel/>;
-        case "fourth":
-          return <MainChallange/>
+        return <EnglishLevel />;
+      case 'fourth':
+        return <MainChallange />;
       default:
         return null;
     }
@@ -61,12 +59,11 @@ const GetDetails = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.progressContainer}>
-        <Line />
-        <GradientLine />
-        <GradientLine />
-        <GradientLine />
+        {routes.map((step, i) => (
+          <View key={i}>{index >= i ? <Line /> : <GradientLine />}</View>
+        ))}
       </View>
-      <View style={{flex:1,marginTop:hp(2)}}>
+      <View style={{flex: 1, marginTop: hp(2)}}>
         <TabView
           navigationState={{index, routes}}
           renderScene={renderScene}

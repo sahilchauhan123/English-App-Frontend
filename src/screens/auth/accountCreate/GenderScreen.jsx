@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.semiBold,
-    fontSize: hp(3),
+    fontSize: hp(2.6),
   },
   genderContainer: {
     width: '90%',
