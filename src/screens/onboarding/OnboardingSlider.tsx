@@ -5,6 +5,7 @@ import {
   Image,
   Animated,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Onboarding from 'react-native-onboarding-swiper';
@@ -61,7 +62,8 @@ const OnboardingSlider = () => {
   };
 
   return (
-    <View
+   
+    <SafeAreaView
       style={{flex: 1, paddingVertical: hp(5), backgroundColor: colors.white}}>
       <View style={{alignItems: 'flex-end', marginHorizontal: wp(5)}}>
         <TouchableOpacity onPress={ResetAndNavigate}>
@@ -69,7 +71,7 @@ const OnboardingSlider = () => {
             style={{
               color: colors.grey,
               fontFamily: fonts.meduim,
-              fontSize: wp(4),
+              fontSize: hp(2),
             }}>
             {pageIndex == 0 ? 'Skip>>' : '..'}
             {/* Skip{'>>'} */}
@@ -98,7 +100,7 @@ const OnboardingSlider = () => {
               <Text
                 style={{
                   fontFamily: fonts.regular,
-                  fontSize: wp(3.5),
+                  fontSize: hp(1.8),
                   color: colors.white,
                 }}>
                 Continue →
@@ -124,7 +126,7 @@ const OnboardingSlider = () => {
                 <Text
                   style={{
                     fontFamily: fonts.semiBold,
-                    fontSize: wp(7),
+                    fontSize: hp(3.5),
                     textAlign: 'center',
                     marginTop: hp(4),
                   }}>
@@ -134,12 +136,12 @@ const OnboardingSlider = () => {
                   <Text
                     style={{
                       fontFamily: fonts.semiBold,
-                      fontSize: wp(7),
+                      fontSize: hp(3.5),
                       textAlign: 'center',
                     }}>
                     Better{' '}
                   </Text>
-                  <GradientText text="Conversations" size={wp(7)} />
+                  <GradientText text="Conversations" size={hp(3.5)} />
                 </View>
 
                 <Text
@@ -147,7 +149,7 @@ const OnboardingSlider = () => {
                     textAlign: 'center',
                     fontFamily: fonts.light,
                     color: colors.black,
-                    fontSize: wp(3.5),
+                    fontSize: hp(1.8),
                   }}>
                   Get paired with conversation partners based on your English
                   level and interests.
@@ -162,7 +164,7 @@ const OnboardingSlider = () => {
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginHorizontal: wp(6),
+                  marginHorizontal: wp(5),
                   //   marginTop: hp(10),
                 }}>
                 <View
@@ -180,7 +182,7 @@ const OnboardingSlider = () => {
                 <Text
                   style={{
                     fontFamily: fonts.semiBold,
-                    fontSize: wp(7),
+                    fontSize: hp(3.5),
                     textAlign: 'center',
                     marginTop: hp(4),
                   }}>
@@ -190,12 +192,12 @@ const OnboardingSlider = () => {
                   <Text
                     style={{
                       fontFamily: fonts.semiBold,
-                      fontSize: wp(7),
+                      fontSize: hp(3.5),
                       textAlign: 'center',
                     }}>
                     by{' '}
                   </Text>
-                  <GradientText text="Speaking it" size={wp(7)} />
+                  <GradientText text="Speaking it" size={hp(3.5)} />
                 </View>
 
                 <Text
@@ -203,7 +205,7 @@ const OnboardingSlider = () => {
                     textAlign: 'center',
                     fontFamily: fonts.light,
                     color: colors.black,
-                    fontSize: wp(3.5),
+                    fontSize: hp(1.8),
                   }}>
                   Learn English naturally through real conversations — no boring
                   grammar drills, just real progress.
@@ -229,12 +231,12 @@ const OnboardingSlider = () => {
                   <Text
                     style={{
                       fontFamily: fonts.semiBold,
-                      fontSize: wp(7),
+                      fontSize: hp(3.5),
                       textAlign: 'center',
                     }}>
                     See Your{' '}
                   </Text>
-                  <GradientText text="Progress" size={wp(7)} />
+                  <GradientText text="Progress" size={hp(3.5)}/>
                 </View>
 
                 <Text
@@ -242,7 +244,7 @@ const OnboardingSlider = () => {
                     textAlign: 'center',
                     fontFamily: fonts.light,
                     color: colors.black,
-                    fontSize: wp(3.5),
+                    fontSize: hp(1.8),
                   }}>
                   Build fluency step by step with personal insights and feedback
                 </Text>
@@ -251,7 +253,7 @@ const OnboardingSlider = () => {
           },
         ]}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

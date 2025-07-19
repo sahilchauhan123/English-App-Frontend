@@ -10,7 +10,7 @@ import Otp from '../screens/auth/accountCreate/Otp';
 import GetDetails from '../screens/auth/accountCreate/GetDetails';
 
 const Navigation = () => {
-  const [initialRoute, setInitialRoute] = useState('GetDetails'); // default SplashScreen
+  const [initialRoute, setInitialRoute] = useState('SplashScreen'); // default SplashScreen
   const Stack = createNativeStackNavigator();
 
   return (

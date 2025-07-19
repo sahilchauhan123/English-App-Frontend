@@ -10,45 +10,53 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import {heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {colors, fonts, nativeLanguages} from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 
-const EnglishLevel = ({jumpTo}) => {
+const LanguageSelector = ({jumpTo}) => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
-    const EnglishLVL = [
-    'Just starting out',
-    'Basic understanding',
-    'Can hold simple conversation',
-  ];
-  const [level, setLevel] = useState();
+  const [languages, setLanguages] = useState(nativeLanguages);
 
-
-  const setEnglishLevel = lang => {
-    setLevel(prev => (prev === lang ? '' : lang));
+  const SearchByName = searchQuery => {
+    const res = nativeLanguages.filter(lang =>
+      lang.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+    setLanguages(res);
   };
 
-
+  const setLang = lang => {
+    setSelectedLanguage(prev => (prev === lang ? '' : lang));
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardAvoidView}>
         <View style={styles.header}>
-          <Text style={styles.title}>What is your English level?</Text>
+          <Text style={styles.title}>What is your native language?</Text>
+          <View style={styles.searchContainer}>
+            <Image
+              style={styles.searchIcon}
+              source={require('../../../../assets/images/search.png')}
+            />
+            <TextInput
+              style={styles.searchInput}
+              placeholderTextColor={colors.grey}
+              placeholder="Search..."
+              onChangeText={SearchByName}
+            />
+          </View>
         </View>
 
         <View style={styles.listContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {EnglishLVL.map((item, index) => (
+            {languages.map((language, index) => (
               <TouchableOpacity
                 key={index}
                 style={styles.listItem}
-                onPress={() => setEnglishLevel(item)}>
-                <Text style={styles.languageText}>{item}</Text>
-                {item === level ? (
+                onPress={() => setLang(language)}>
+                <Text style={styles.languageText}>{language}</Text>
+                {language === selectedLanguage ? (
                   <Image
                     source={require('../../../../assets/images/tick-circle.png')}
                     style={styles.tickIcon}
@@ -62,7 +70,7 @@ const EnglishLevel = ({jumpTo}) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          {level ? (
+          {selectedLanguage ? (
             <TouchableOpacity
               onPress={() => jumpTo('second')}
               style={{width: '100%'}}>
@@ -75,12 +83,12 @@ const EnglishLevel = ({jumpTo}) => {
                 start={{x: 0, y: 0}}
                 end={{x: 0.9, y: 0}}
                 style={styles.gradientButton}>
-                <Text style={styles.gradientButtonText}>CONTINUE</Text>
+                <Text style={styles.gradientButtonText}>Next</Text>
               </LinearGradient>
             </TouchableOpacity>
           ) : (
             <View style={styles.continueButton}>
-              <Text style={styles.continueText}>CONTINUE</Text>
+              <Text style={styles.continueText}>Next</Text>
             </View>
           )}
         </View>
@@ -107,8 +115,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontFamily: fonts.semiBold,
-    fontSize: hp(2.6),
+    fontFamily: fonts.semiBold, 
+    fontSize: hp(2.6)
   },
   searchContainer: {
     borderColor: colors.bordercolor,
@@ -122,7 +130,7 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     height: wp(6),
-    width: wp(6),
+    width: wp(6)
   },
   searchInput: {
     width: wp(70),
@@ -132,8 +140,8 @@ const styles = StyleSheet.create({
     color: colors.grey,
   },
   listContainer: {
-    paddingTop: hp(5),
-    flex: 1,
+    paddingTop: hp(2),
+    flex: 1
   },
   listItem: {
     flexDirection: 'row',
@@ -144,11 +152,11 @@ const styles = StyleSheet.create({
   },
   languageText: {
     fontFamily: fonts.meduim,
-    fontSize: hp(2),
+    fontSize: hp(1.8)
   },
   tickIcon: {
     height: wp(6),
-    width: wp(6),
+    width: wp(6)
   },
   emptyCircle: {
     height: wp(5),
@@ -158,7 +166,7 @@ const styles = StyleSheet.create({
     borderColor: colors.bordercolor,
   },
   buttonContainer: {
-    paddingBottom: hp(0),
+    paddingBottom: hp(0)
   },
   gradientButton: {
     width: '100%',
@@ -187,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EnglishLevel;
+export default LanguageSelector;

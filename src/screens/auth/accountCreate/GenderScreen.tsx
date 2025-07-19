@@ -136,14 +136,14 @@ const GenderScreen = ({jumpTo}) => {
                 start={{x: 0, y: 0}}
                 end={{x: 0.9, y: 0}}
                 style={styles.gradientButton}>
-                <Text style={styles.gradientButtonText}>CONTINUE</Text>
+                <Text style={styles.gradientButtonText}>Next</Text>
               </LinearGradient>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={styles.continueButton}
               onPress={() => jumpTo('third')}>
-              <Text style={styles.continueText}>CONTINUE</Text>
+              <Text style={styles.continueText}>Next</Text>
             </TouchableOpacity>
           )}
         </View>

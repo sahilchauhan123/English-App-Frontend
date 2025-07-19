@@ -19,8 +19,8 @@ import {useNavigation} from '@react-navigation/native';
 const LoginOrSignup = () => {
   const [emailPressed, setEmailPressed] = useState(false);
   const [passwordPressed, setPasswordPressed] = useState(false);
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigation = useNavigation();
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -107,7 +107,7 @@ const LoginOrSignup = () => {
                   <View style={styles.activeInputInner}>
                     <Text style={styles.label}>Password</Text>
                     <TextInput
-                    onChangeText={setPassword}
+                      onChangeText={setPassword}
                       ref={passwordRef}
                       style={styles.textInput}
                       cursorColor={colors.black}
@@ -121,7 +121,7 @@ const LoginOrSignup = () => {
             </View>
 
             {/* Continue Button */}
-            {email.length > 0 && password.length > 0  ? (
+            {email.length > 0 && password.length > 0 ? (
               <TouchableOpacity
                 style={{width: '100%'}}
                 onPress={() => navigation.navigate('Otp')}>
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontFamily: fonts.semiBold,
-    fontSize: wp(5.5),
+    fontSize: hp(2.6),
   },
   formWrapper: {
     width: '100%',
@@ -204,10 +204,11 @@ const styles = StyleSheet.create({
     color: colors.bordercolor,
     paddingTop: hp(1.5),
     marginBottom: hp(-0.8),
+    fontSize: hp(1.9),
   },
   textInput: {
     fontFamily: fonts.semiBold,
-    fontSize: wp(4),
+    fontSize: hp(2),
     color: 'black',
     paddingTop: hp(0.5),
     paddingLeft: wp(-1),
@@ -236,5 +237,6 @@ const styles = StyleSheet.create({
   },
   continueText: {
     fontFamily: fonts.bold,
+    fontSize: hp(1.9),
   },
 });

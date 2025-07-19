@@ -30,17 +30,12 @@ const SignIn = () => {
           style={{height: wp(28), width: wp(28)}}
         />
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontFamily: 'Poppins-Bold', fontSize: wp(9)}}>
-            Strango
-          </Text>
-          <Text
-            style={{
-              fontFamily: 'Poppins-Medium',
-              fontSize: wp(4.2),
-              marginTop: wp(-1.8),
-            }}>
-            Speak English With Real People
-          </Text>
+        <Text style={{fontFamily: 'Poppins-Bold', fontSize: hp(4.4)}}>
+          Strango
+        </Text>
+        <Text style={{fontFamily: 'Poppins-Medium', fontSize: hp(2.1),marginTop:wp(-1.8)}}>
+          Speak English With Real People
+        </Text>
         </View>
       </View>
 
@@ -103,12 +98,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   buttonText: {
-    fontSize: wp(4),
+    fontSize: hp(2),
     fontFamily: fonts.semiBold,
   },
   terms:{
     fontFamily:fonts.light,
-    fontSize:wp(3.2),
+    fontSize:hp(1.6),
     color:colors.grey
   }
 });

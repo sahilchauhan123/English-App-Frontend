@@ -19,7 +19,7 @@ export async function getTokenFromKeychain() {
   }
 }
 
-export async function setTokenInKeychain(token) {
+export async function setTokenInKeychain(token:string) {
   const username = 'user';
   try {
     await Keychain.setGenericPassword(username, token, {

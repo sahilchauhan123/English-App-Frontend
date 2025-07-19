@@ -60,6 +60,7 @@ const MainChallange = ({jumpTo}) => {
           <ScrollView showsVerticalScrollIndicator={false}>
             {challenges.map((item, index) => (
               <Pressable
+                key={index}
                 onPress={() => setEnglishChallenge(item.task)}
                 style={{width: '100%'}}>
                 <LinearGradient
@@ -94,7 +95,7 @@ const MainChallange = ({jumpTo}) => {
                         source={item.emoji}
                       />
                       <Text
-                        style={{paddingLeft: wp(5), fontFamily: fonts.regular}}>
+                        style={{paddingLeft: wp(5), fontFamily: fonts.meduim}}>
                         {item.task}
                       </Text>
                     </View>

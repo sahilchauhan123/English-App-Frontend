@@ -1,36 +1,29 @@
-import React, {useState} from 'react';
-import {View, SafeAreaView, Dimensions, StyleSheet, Text} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {View, SafeAreaView, StyleSheet, Text} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {colors, fonts} from '../../../../assets/constants';
-import {TabView, SceneMap} from 'react-native-tab-view';
+import {TabView} from 'react-native-tab-view';
 import LanguageSelector from './LanguageSelector';
 import GenderScreen from './GenderScreen';
 import LinearGradient from 'react-native-linear-gradient';
 import EnglishLevel from './EnglishLevel';
 import MainChallange from './MainChallange';
 
-const SecondScreen = () => (
-  <SafeAreaView
-    style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-    <Text style={{fontFamily: fonts.semiBold, fontSize: hp(3)}}>
-      This is the OTP screen
-    </Text>
-  </SafeAreaView>
-);
-
 const Line = () => <View style={styles.line} />;
 
-const GradientLine = () => (
-  <LinearGradient
-    colors={[colors.gradient.first, colors.gradient.last]}
-    start={{x: 0, y: 0}}
-    end={{x: 0.8, y: 0}}
-    style={styles.gradientLine}
-  />
-);
+const GradientLine = () => {
+  return (
+    <LinearGradient
+      colors={[colors.gradient.first, colors.gradient.last]}
+      start={{x: 0, y: 0}}
+      end={{x: 0.8, y: 0}}
+      style={styles.gradientLine}
+    />
+  );
+};
 
 const GetDetails = () => {
   const [index, setIndex] = useState(0);
@@ -48,9 +41,9 @@ const GetDetails = () => {
       case 'second':
         return <GenderScreen jumpTo={jumpTo} />;
       case 'third':
-        return <EnglishLevel />;
+        return <EnglishLevel jumpTo={jumpTo} />;
       case 'fourth':
-        return <MainChallange />;
+        return <MainChallange jumpTo={jumpTo} />;
       default:
         return null;
     }
@@ -70,6 +63,7 @@ const GetDetails = () => {
           onIndexChange={setIndex}
           swipeEnabled={true}
           renderTabBar={() => null}
+          lazy
         />
       </View>
     </SafeAreaView>
