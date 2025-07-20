@@ -1,14 +1,36 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors, fonts} from '../../../assets/constants';
+import { colors, fonts } from '../../../assets/constants';
+import { GoogleSignUp } from '../../utils/google';
 
 const SignIn = () => {
   const navigation = useNavigation();
+
+  const GoogleLogin = async () => {
+    const token = await GoogleSignUp();
+    // console.log("token : ",token)
+    const response = await fetch("http://10.90.137.24:8080/api/auth/google/login", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id_token: token,
+      }),
+    });
+    const data = await response.json()
+
+    if (!data.isRegistered) {
+      //create account by going to this screen
+      navigation.navigate("GetDetails")
+    }
+
+  }
 
   return (
     <View
@@ -27,15 +49,15 @@ const SignIn = () => {
         }}>
         <Image
           source={require('../../../assets/images/logo.png')}
-          style={{height: wp(28), width: wp(28)}}
+          style={{ height: wp(28), width: wp(28) }}
         />
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={{fontFamily: 'Poppins-Bold', fontSize: hp(4.4)}}>
-          Strango
-        </Text>
-        <Text style={{fontFamily: 'Poppins-Medium', fontSize: hp(2.1),marginTop:wp(-1.8)}}>
-          Speak English With Real People
-        </Text>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontFamily: 'Poppins-Bold', fontSize: hp(4.4) }}>
+            Strango
+          </Text>
+          <Text style={{ fontFamily: 'Poppins-Medium', fontSize: hp(2.1), marginTop: wp(-1.8) }}>
+            Speak English With Real People
+          </Text>
         </View>
       </View>
 
@@ -46,27 +68,27 @@ const SignIn = () => {
           flex: 1,
           paddingBottom: hp(1),
         }}>
-        <TouchableOpacity style={styles.signinButton}>
+        <TouchableOpacity style={styles.signinButton} onPress={GoogleLogin}>
           <Image
             source={require('../../../assets/images/google.png')}
             style={styles.icon}
           />
-          <Text style={styles.buttonText}>Sign in with Google</Text>
+          <Text style={styles.buttonText}>Continue with Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity  onPress={()=>navigation.navigate("LoginOrSignup")} style={[styles.signinButton,{marginBottom:hp(5)}]}>
+        <TouchableOpacity onPress={() => navigation.navigate("LoginOrSignup")} style={[styles.signinButton, { marginBottom: hp(5) }]}>
           <Image
             source={require('../../../assets/images/email.png')}
             style={styles.icon}
           />
-          <Text style={styles.buttonText}>Sign in with Email</Text>
+          <Text style={styles.buttonText}>Continue with Email</Text>
         </TouchableOpacity>
-        <View style={{justifyContent:'center',alignItems:'center'}}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Text style={styles.terms}>By logging in, you agree to our</Text>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.terms,{textDecorationLine:'underline',fontFamily:fonts.meduim}]}>Privacy policy</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={[styles.terms, { textDecorationLine: 'underline', fontFamily: fonts.meduim }]}>Privacy policy</Text>
             <Text style={styles.terms}> and </Text>
-            <Text style={[styles.terms,{textDecorationLine:'underline',fontFamily:fonts.meduim}]}>Terms of Use.</Text>
+            <Text style={[styles.terms, { textDecorationLine: 'underline', fontFamily: fonts.meduim }]}>Terms of Use.</Text>
           </View>
         </View>
       </View>
@@ -101,9 +123,9 @@ const styles = StyleSheet.create({
     fontSize: hp(2),
     fontFamily: fonts.semiBold,
   },
-  terms:{
-    fontFamily:fonts.light,
-    fontSize:hp(1.6),
-    color:colors.grey
+  terms: {
+    fontFamily: fonts.light,
+    fontSize: hp(1.6),
+    color: colors.grey
   }
 });

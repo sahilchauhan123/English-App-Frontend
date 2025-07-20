@@ -15,6 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {colors, fonts} from '../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+import { GoogleSignUp } from '../../utils/google';
 
 const LoginOrSignup = () => {
   const [emailPressed, setEmailPressed] = useState(false);
@@ -37,6 +38,11 @@ const LoginOrSignup = () => {
       }, 100);
     }
   }, [emailPressed, passwordPressed]);
+
+  const GoogleLogin = async ()=>{
+    const token = await GoogleSignUp();
+    console.log(token)
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
