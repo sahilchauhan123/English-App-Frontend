@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -9,49 +9,96 @@ import {
   SafeAreaView,
   Pressable,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors, fonts} from '../../../../assets/constants';
+import { colors, fonts } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-simple-toast';
 
-const GenderScreen = ({jumpTo}) => {
+const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo }) => {
   const [selectedGender, setSelectedGender] = useState('');
   const [age, setAge] = useState('');
   const [agePressed, setAgePressed] = useState(false);
+  const [username, setUsername] = useState('');
   const ageInputRef = useRef(null);
-
+  const [usernameAvailable, setUsernameAvailable] = useState(null); // null = not checked
+  let usernameTimeout = null;
+  const usernameTimeoutRef = useRef(null);
+  const [message, setMessage] = useState("");
   useEffect(() => {
-    if (agePressed && ageInputRef.current) {
-      setTimeout(() => ageInputRef.current?.focus(), 100);
+    if (agePressed) {
+      // console.log("running")
+      setTimeout(() => {
+        ageInputRef.current?.focus()
+      }, 100);
     }
   }, [agePressed]);
+
+
+  const updateAge = (text) => {
+    setAge(text)
+    setOnboardingData({ ...onboardingData, age: Number(text) })
+  }
+  const navigateToNext = () => {
+    if (Number(age) > 11 && selectedGender && username.trim() !== '') {
+      jumpTo("third");
+    } else {
+      Toast.show("Age should be greater than 11", 1000)
+    }
+  }
+
+  const updateUsername = async (text: string) => {
+    setUsername(text);
+    setOnboardingData({ ...onboardingData, username: text });
+    if (usernameTimeoutRef.current) {
+      clearTimeout(usernameTimeoutRef.current);
+    }
+    if (text.length <= 0) return;
+
+    usernameTimeoutRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`http://10.144.105.24:8080/api/auth/checkusername?username=${text}`);
+        const data = await res.json();
+        console.log(data)
+        // Assume API response is like { available: true/false }
+        console.log("Username Registered:", data.data.is_registered);
+        // Optionally store in state:
+        setUsernameAvailable(!data.data.is_registered);
+        setMessage(data.data.message)
+      } catch (err) {
+        console.error('Error checking username:', err);
+      }
+    }, 300);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardView}>
+
         <View style={styles.content}>
           <Text style={styles.title}>Select your gender</Text>
 
           <View style={styles.genderContainer}>
             <LinearGradient
               colors={
-                selectedGender == 'male'
+                selectedGender == 'male' && onboardingData.gender == 'male'
                   ? [
-                      colors.gradient.first,
-                      colors.gradient.second,
-                      colors.gradient.last,
-                    ]
+                    colors.gradient.first,
+                    colors.gradient.second,
+                    colors.gradient.last,
+                  ]
                   : [colors.bordercolor, colors.bordercolor]
               }
-              start={{x: 0, y: 0}}
-              end={{x: 0.7, y: 0}}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0.7, y: 0 }}
               style={styles.gradientBorder}>
               <Pressable
                 style={styles.genderButton}
-                onPress={() => setSelectedGender('male')}>
+                onPress={() => { setSelectedGender('male'), setOnboardingData({ ...onboardingData, gender: "male" }) }}>
                 <Image
                   style={styles.genderIcon}
                   source={require('../../../../assets/images/male.png')}
@@ -61,20 +108,20 @@ const GenderScreen = ({jumpTo}) => {
             </LinearGradient>
             <LinearGradient
               colors={
-                selectedGender == 'female'
+                selectedGender == 'female' && onboardingData.gender == 'female'
                   ? [
-                      colors.gradient.first,
-                      colors.gradient.second,
-                      colors.gradient.last,
-                    ]
+                    colors.gradient.first,
+                    colors.gradient.second,
+                    colors.gradient.last,
+                  ]
                   : [colors.bordercolor, colors.bordercolor]
               }
               style={styles.gradientBorder}
-              start={{x: 0, y: 0}}
-              end={{x: 0.7, y: 0}}>
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0.7, y: 0 }}>
               <Pressable
                 style={styles.genderButton}
-                onPress={() => setSelectedGender('female')}>
+                onPress={() => { setSelectedGender('female'), setOnboardingData({ ...onboardingData, gender: "female" }) }}>
                 <Image
                   style={styles.genderIcon}
                   source={require('../../../../assets/images/female.png')}
@@ -100,41 +147,66 @@ const GenderScreen = ({jumpTo}) => {
                   colors.gradient.second,
                   colors.gradient.last,
                 ]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.7, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.7, y: 0 }}
                 style={styles.activeInputBorder}>
                 <View style={styles.activeInput}>
-                  <Text style={[styles.label, {paddingTop: hp(1.5)}]}>
+                  <Text style={[styles.label, { paddingTop: hp(1.5) }]}>
                     Enter your age
                   </Text>
                   <TextInput
                     ref={ageInputRef}
-                    onChangeText={setAge}
+                    onChangeText={updateAge}
                     style={styles.input}
                     cursorColor={colors.black}
                     keyboardType="numeric"
-                    placeholder=""
                     placeholderTextColor={'black'}
+                    value={age}
                   />
                 </View>
               </LinearGradient>
             )}
+          </View>
+
+          {/* for Username */}
+          <View style={styles.ageContainer}>
+            <LinearGradient
+              colors={[
+                colors.gradient.first,
+                colors.gradient.second,
+                colors.gradient.last,
+              ]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0.7, y: 0 }}
+              style={styles.activeInputBorder}>
+              <View style={styles.activeInput}>
+                <Text style={[styles.label, { paddingTop: hp(1.5) }]}>Enter Username</Text>
+                <TextInput
+                  onChangeText={updateUsername}
+                  style={styles.input}
+                  cursorColor={colors.black}
+                  placeholderTextColor={'black'}
+                  value={username}
+                />
+              </View>
+            </LinearGradient>
+            <Text style={[styles.label,{color:colors.gradient.last,paddingTop:hp(1)}]}>{message}</Text>
           </View>
         </View>
 
         <View style={styles.buttonContainer}>
           {age > 0 && selectedGender ? (
             <TouchableOpacity
-              style={{width: '100%'}}
-              onPress={() => jumpTo('third')}>
+              style={{ width: '100%' }}
+              onPress={navigateToNext}>
               <LinearGradient
                 colors={[
                   colors.gradient.first,
                   colors.gradient.second,
                   colors.gradient.last,
                 ]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.9, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.9, y: 0 }}
                 style={styles.gradientButton}>
                 <Text style={styles.gradientButtonText}>Next</Text>
               </LinearGradient>
@@ -142,13 +214,15 @@ const GenderScreen = ({jumpTo}) => {
           ) : (
             <TouchableOpacity
               style={styles.continueButton}
-              onPress={() => jumpTo('third')}>
+              onPress={() => Toast.show("Please fill all details", 1000)}>
               <Text style={styles.continueText}>Next</Text>
             </TouchableOpacity>
           )}
         </View>
+
       </KeyboardAvoidingView>
-    </SafeAreaView>
+
+    </SafeAreaView >
   );
 };
 

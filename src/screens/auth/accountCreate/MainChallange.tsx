@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -15,10 +15,11 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors, fonts} from '../../../../assets/constants';
+import { colors, fonts } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-simple-toast';
 
-const MainChallange = ({jumpTo}) => {
+const MainChallange = ({ onboardingData, setOnboardingData, jumpTo }) => {
   const [challenge, setChallenge] = useState('');
   const challenges = [
     {
@@ -44,8 +45,56 @@ const MainChallange = ({jumpTo}) => {
   ];
 
   const setEnglishChallenge = lang => {
+    if (lang != challenge) {
+      setOnboardingData({ ...onboardingData, mainChallenge: lang })
+    }
     setChallenge(prev => (prev === lang ? '' : lang));
   };
+
+  const createAccount = async () => {
+
+    if (!onboardingData.gender) {
+      console.log('Please select your gender')
+      return 'Please select your gender';
+    }
+
+    if (!onboardingData.nativeLanguage) {
+      console.log('Please select your language')
+
+      return 'Please select your native language';
+    }
+
+    if (!onboardingData.currentEnglishLevel) {
+      console.log('Please select your English level')
+
+      return 'Please select your English level';
+    }
+
+    if (!onboardingData.age) {
+      console.log('Please select your age')
+
+      return 'Please enter your age';
+    }
+
+    if (!onboardingData.mainChallenge) {
+      console.log('Please select your main challenge')
+
+      return 'Please select your main challenge';
+    }
+
+    console.log("everything is fine ")
+    console.log("local data going to server : ",onboardingData)
+    // console.log("token : ",token)
+    const response = await fetch("http://10.144.105.24:8080/api/auth/google/signup", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(onboardingData),
+    });
+    const data = await response.json()
+    console.log(data)
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,19 +111,19 @@ const MainChallange = ({jumpTo}) => {
               <Pressable
                 key={index}
                 onPress={() => setEnglishChallenge(item.task)}
-                style={{width: '100%'}}>
+                style={{ width: '100%' }}>
                 <LinearGradient
                   colors={
                     item.task == challenge
                       ? [
-                          colors.gradient.first,
-                          colors.gradient.second,
-                          colors.gradient.last,
-                        ]
+                        colors.gradient.first,
+                        colors.gradient.second,
+                        colors.gradient.last,
+                      ]
                       : [colors.bordercolor, colors.bordercolor]
                   }
-                  start={{x: 0, y: 0}}
-                  end={{x: 0.9, y: 0}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0.9, y: 0 }}
                   style={styles.gradientButton1}>
                   <View
                     style={{
@@ -91,11 +140,11 @@ const MainChallange = ({jumpTo}) => {
                         alignItems: 'center',
                       }}>
                       <Image
-                        style={{height: wp(7), width: wp(7)}}
+                        style={{ height: wp(7), width: wp(7) }}
                         source={item.emoji}
                       />
                       <Text
-                        style={{paddingLeft: wp(5), fontFamily: fonts.meduim}}>
+                        style={{ paddingLeft: wp(5), fontFamily: fonts.meduim }}>
                         {item.task}
                       </Text>
                     </View>
@@ -109,24 +158,26 @@ const MainChallange = ({jumpTo}) => {
         <View style={styles.buttonContainer}>
           {challenge ? (
             <TouchableOpacity
-              onPress={() => jumpTo('second')}
-              style={{width: '100%'}}>
+              onPress={createAccount}
+              style={{ width: '100%' }}>
               <LinearGradient
                 colors={[
                   colors.gradient.first,
                   colors.gradient.second,
                   colors.gradient.last,
                 ]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.9, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.9, y: 0 }}
                 style={styles.gradientButton}>
                 <Text style={styles.gradientButtonText}>CONTINUE</Text>
               </LinearGradient>
             </TouchableOpacity>
           ) : (
-            <View style={styles.continueButton}>
+            <TouchableOpacity
+              onPress={() => Toast.show("Please fill all details", 1000)}
+              style={styles.continueButton}>
               <Text style={styles.continueText}>CONTINUE</Text>
-            </View>
+            </TouchableOpacity>
           )}
         </View>
       </KeyboardAvoidingView>

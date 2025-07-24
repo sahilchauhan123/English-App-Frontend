@@ -1,11 +1,7 @@
 
-// import React, { useEffect } from 'react';
-// import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-// Define the Login functional component
-// export const App = () => {
-// Function to handle Google Sign-Up process
 export const GoogleSignUp = async () => {
     try {
         GoogleSignin.configure({

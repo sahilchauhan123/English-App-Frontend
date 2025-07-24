@@ -7,6 +7,7 @@ import {
 } from 'react-native-responsive-screen';
 import { colors, fonts } from '../../../assets/constants';
 import { GoogleSignUp } from '../../utils/google';
+import Toast from 'react-native-simple-toast';
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -14,7 +15,7 @@ const SignIn = () => {
   const GoogleLogin = async () => {
     const token = await GoogleSignUp();
     // console.log("token : ",token)
-    const response = await fetch("http://10.90.137.24:8080/api/auth/google/login", {
+    const response = await fetch("http://10.144.105.24:8080/api/auth/google/login", {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -27,9 +28,9 @@ const SignIn = () => {
 
     if (!data.isRegistered) {
       //create account by going to this screen
-      navigation.navigate("GetDetails")
+      Toast.show("Lets Create Your Account",1500)
+      navigation.navigate("GetDetails",{token})
     }
-
   }
 
   return (

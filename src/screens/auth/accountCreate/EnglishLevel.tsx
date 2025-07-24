@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,13 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors, fonts, nativeLanguages} from '../../../../assets/constants';
+import { colors, fonts, nativeLanguages } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-simple-toast';
 
-const EnglishLevel = ({jumpTo}) => {
+const EnglishLevel = ({ onboardingData, setOnboardingData, jumpTo }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
-    const EnglishLVL = [
+  const EnglishLVL = [
     'Just starting out',
     'Basic understanding',
     'Can hold simple conversation',
@@ -28,6 +29,9 @@ const EnglishLevel = ({jumpTo}) => {
 
 
   const setEnglishLevel = lang => {
+    if (lang != level) {
+      setOnboardingData({ ...onboardingData, currentEnglishLevel: lang })
+    }
     setLevel(prev => (prev === lang ? '' : lang));
   };
 
@@ -62,26 +66,28 @@ const EnglishLevel = ({jumpTo}) => {
         </View>
 
         <View style={styles.buttonContainer}>
-          {level ? (
+          {level && onboardingData.currentEnglishLevel ? (
             <TouchableOpacity
               onPress={() => jumpTo('fourth')}
-              style={{width: '100%'}}>
+              style={{ width: '100%' }}>
               <LinearGradient
                 colors={[
                   colors.gradient.first,
                   colors.gradient.second,
                   colors.gradient.last,
                 ]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.9, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.9, y: 0 }}
                 style={styles.gradientButton}>
                 <Text style={styles.gradientButtonText}>Next</Text>
               </LinearGradient>
             </TouchableOpacity>
           ) : (
-            <View style={styles.continueButton}>
+            <TouchableOpacity
+              onPress={() => Toast.show("Please Select English Level", 1000)}
+              style={styles.continueButton}>
               <Text style={styles.continueText}>Next</Text>
-            </View>
+            </TouchableOpacity>
           )}
         </View>
       </KeyboardAvoidingView>

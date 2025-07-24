@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,12 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import {heightPercentageToDP as hp, widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {colors, fonts, nativeLanguages} from '../../../../assets/constants';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { colors, fonts, nativeLanguages } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-simple-toast';
 
-const LanguageSelector = ({jumpTo}) => {
+const LanguageSelector = ({ onboardingData, setOnboardingData, jumpTo }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [languages, setLanguages] = useState(nativeLanguages);
 
@@ -26,9 +27,10 @@ const LanguageSelector = ({jumpTo}) => {
   };
 
   const setLang = lang => {
-    setSelectedLanguage(prev => (prev === lang ? '' : lang));
+    const newLanguage = selectedLanguage === lang ? '' : lang;
+    setSelectedLanguage(newLanguage);
+    setOnboardingData(prev => ({ ...prev, nativeLanguage: newLanguage }));
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardAvoidView}>
@@ -73,23 +75,25 @@ const LanguageSelector = ({jumpTo}) => {
           {selectedLanguage ? (
             <TouchableOpacity
               onPress={() => jumpTo('second')}
-              style={{width: '100%'}}>
+              style={{ width: '100%' }}>
               <LinearGradient
                 colors={[
                   colors.gradient.first,
                   colors.gradient.second,
                   colors.gradient.last,
                 ]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.9, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.9, y: 0 }}
                 style={styles.gradientButton}>
                 <Text style={styles.gradientButtonText}>Next</Text>
               </LinearGradient>
             </TouchableOpacity>
           ) : (
-            <View style={styles.continueButton}>
+            <TouchableOpacity
+              onPress={() => Toast.show("Language Not Selected", 1000)}
+              style={styles.continueButton}>
               <Text style={styles.continueText}>Next</Text>
-            </View>
+            </TouchableOpacity>
           )}
         </View>
       </KeyboardAvoidingView>
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontFamily: fonts.semiBold, 
+    fontFamily: fonts.semiBold,
     fontSize: hp(2.6)
   },
   searchContainer: {
