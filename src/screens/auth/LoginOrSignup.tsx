@@ -6,16 +6,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, fonts} from '../../../assets/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, fonts } from '../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { GoogleSignUp } from '../../utils/google';
+import Toast from 'react-native-simple-toast';
 
 const LoginOrSignup = () => {
   const [emailPressed, setEmailPressed] = useState(false);
@@ -39,26 +40,49 @@ const LoginOrSignup = () => {
     }
   }, [emailPressed, passwordPressed]);
 
-  const GoogleLogin = async ()=>{
-    const token = await GoogleSignUp();
-    console.log(token)
+
+  const EmailLogin = async () => {
+
+    if (!email) {
+      Toast.show("please enter a valid email", 500)
+      return
+    }
+    const response = await fetch("http://10.144.105.24:8080/api/auth/email/generateloginotp", {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+
+    });
+    const data = await response.json()
+    // console.log(data);
+    if (!data.data.optSent){
+      Toast.show(data.data.message,2000)
+      navigation.navigate("GetDetails",{
+        type:"email"
+      })
+    }
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView style={{flex: 1}}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={styles.container}>
           <Text style={styles.heading}>Login or Signup</Text>
 
           <View style={styles.formWrapper}>
-            <View style={{width: '100%', marginTop: hp(2)}}>
+            <View style={{ width: '100%', marginTop: hp(2) }}>
+
               {/* Email Input */}
               {!emailPressed ? (
                 <TouchableOpacity
-                  style={{width: '100%'}}
+                  style={{ width: '100%' }}
                   onPress={() => setEmailPressed(true)}>
                   <View style={styles.inactiveInputWrapper}>
-                    <Text style={[styles.label, {paddingTop: hp(0)}]}>
+                    <Text style={[styles.label, { paddingTop: hp(0) }]}>
                       Email
                     </Text>
                   </View>
@@ -70,8 +94,8 @@ const LoginOrSignup = () => {
                     colors.gradient.second,
                     colors.gradient.last,
                   ]}
-                  start={{x: 0, y: 0}}
-                  end={{x: 0.7, y: 0}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0.7, y: 0 }}
                   style={styles.gradientBorder}>
                   <View style={styles.activeInputInner}>
                     <Text style={styles.label}>Email</Text>
@@ -90,7 +114,7 @@ const LoginOrSignup = () => {
               )}
 
               {/* Password Input */}
-              {!passwordPressed ? (
+              {/* {!passwordPressed ? (
                 <TouchableOpacity
                   style={{width: '100%'}}
                   onPress={() => setPasswordPressed(true)}>
@@ -123,30 +147,30 @@ const LoginOrSignup = () => {
                     />
                   </View>
                 </LinearGradient>
-              )}
+              )} */}
+
+
             </View>
 
             {/* Continue Button */}
-            {email.length > 0 && password.length > 0 ? (
+            {email.length > 0 ? (
               <TouchableOpacity
-                style={{width: '100%'}}
-                onPress={() => navigation.navigate('Otp')}>
+                style={{ width: '100%' }}
+                onPress={EmailLogin}>
                 <LinearGradient
                   colors={[
                     colors.gradient.first,
                     colors.gradient.second,
                     colors.gradient.last,
                   ]}
-                  start={{x: 0, y: 0}}
-                  end={{x: 0.9, y: 0}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0.9, y: 0 }}
                   style={styles.gradientButton}>
                   <Text style={styles.gradientButtonText}>CONTINUE</Text>
                 </LinearGradient>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity
-                style={styles.continueButton}
-                onPress={() => navigation.navigate('Otp')}>
+              <TouchableOpacity style={styles.continueButton}>
                 <Text style={styles.continueText}>CONTINUE</Text>
               </TouchableOpacity>
             )}

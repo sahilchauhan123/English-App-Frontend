@@ -25,17 +25,73 @@ const GradientLine = () => {
   );
 };
 
-const GetDetails = ({route}) => {
-  const {token} = route.params;
-  const [onboardingData, setOnboardingData] = useState({
-    gender: '',
-    nativeLanguage:'',
-    currentEnglishLevel:'',
-    age:'',
-    mainChallenge:'',
-    username:'',
-    id_token:token,
-  });
+const GetDetails = ({ route }) => {
+  const { token, type } = route.params;
+
+  // if (type == "email") {
+  //   const [onboardingData, setOnboardingData] = useState({
+  //     gender: '',
+  //     nativeLanguage: '',
+  //     currentEnglishLevel: '',
+  //     age: '',
+  //     mainChallenge: '',
+  //     username: '',
+  //     id_token: token,
+  //   });
+  // } else {
+  //   const [onboardingData, setOnboardingData] = useState({
+  //     gender: '',
+  //     nativeLanguage: '',
+  //     currentEnglishLevel: '',
+  //     age: '',
+  //     mainChallenge: '',
+  //     username: '',
+  //     full_name: '',
+  //     profile_pic: '',
+  //     email: '',
+  //     auth_type: 'email',
+  //   });
+  // }
+
+
+  const initialState = type === "email"
+    ? {
+        gender: '',
+        nativeLanguage: '',
+        currentEnglishLevel: '',
+        age: '',
+        mainChallenge: '',
+        username: '',
+        id_token: token,
+      }
+    : {
+        gender: '',
+        nativeLanguage: '',
+        currentEnglishLevel: '',
+        age: '',
+        mainChallenge: '',
+        username: '',
+        full_name: '',
+        profile_pic: '',
+        email: '',
+        auth_type: 'email',
+      };
+
+  const [onboardingData, setOnboardingData] = useState(initialState);
+
+  
+  // FullName string `json:"full_name" binding:"required"`
+  // Username string `json:"username" binding:"required"`
+  // Email    string `json:"email" binding:"required,email"`
+  // Age      int    `json:"age" binding:"required"`
+  // Gender   string `json:"gender" binding:"required"`
+  // ProfilePic          string `json:"profile_pic" binding:"required,url"`
+  // AuthType            string `json:"auth_type" binding:"required"` // "google" or "email"
+  // MainChallenge       string `json:"mainChallenge" binding:"required"`
+  // NativeLanguage      string `json:"nativeLanguage" binding:"required"`
+  // CurrentEnglishLevel string `json:"currentEnglishLevel" binding:"required"`
+
+
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -47,7 +103,7 @@ const GetDetails = ({route}) => {
 
   const renderScene = ({ route, jumpTo }) => {
 
-    const props = {jumpTo,onboardingData,setOnboardingData};
+    const props = { jumpTo, onboardingData, setOnboardingData };
     switch (route.key) {
       case 'first':
         return <LanguageSelector {...props} />;

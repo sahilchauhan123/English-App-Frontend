@@ -19,6 +19,7 @@ api.interceptors.request.use(
     },
     error => Promise.reject(error)
 );
+
 api.interceptors.response.use(
     response => response,
     async error => {
@@ -58,7 +59,6 @@ api.interceptors.response.use(
                 console.warn('Session expired. Please log in again.');
             }
         }
-
         return Promise.reject(error);
     }
 )
