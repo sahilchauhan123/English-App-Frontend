@@ -19,7 +19,7 @@ import { colors, fonts } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-simple-toast';
 
-const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo }) => {
+const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   const [selectedGender, setSelectedGender] = useState('');
   const [age, setAge] = useState('');
   const [agePressed, setAgePressed] = useState(false);
@@ -52,8 +52,14 @@ const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo }) => {
   }
 
   const updateUsername = async (text: string) => {
+    const randomBoyImage = "https://png.pngtree.com/png-vector/20250613/ourmid/pngtree-avatar-boy-2-png-image_16533728.png"
     setUsername(text);
-    setOnboardingData({ ...onboardingData, username: text });
+
+    if (type === "email") {
+      setOnboardingData({ ...onboardingData, username: text, full_name: text, profile_pic: randomBoyImage, auth_type: "email" });
+    } else {
+      setOnboardingData({ ...onboardingData, username: text });
+    }
     if (usernameTimeoutRef.current) {
       clearTimeout(usernameTimeoutRef.current);
     }
@@ -190,7 +196,7 @@ const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo }) => {
                 />
               </View>
             </LinearGradient>
-            <Text style={[styles.label,{color:colors.gradient.last,paddingTop:hp(1)}]}>{message}</Text>
+            <Text style={[styles.label, { color: colors.gradient.last, paddingTop: hp(1) }]}>{message}</Text>
           </View>
         </View>
 

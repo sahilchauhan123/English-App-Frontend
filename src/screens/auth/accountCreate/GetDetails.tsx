@@ -10,7 +10,7 @@ import LanguageSelector from './LanguageSelector';
 import GenderScreen from './GenderScreen';
 import LinearGradient from 'react-native-linear-gradient';
 import EnglishLevel from './EnglishLevel';
-import MainChallange from './MainChallange';
+import MainChallenge from './MainChallange';
 
 const Line = () => <View style={styles.line} />;
 
@@ -26,60 +26,34 @@ const GradientLine = () => {
 };
 
 const GetDetails = ({ route }) => {
-  const { token, type } = route.params;
-
-  // if (type == "email") {
-  //   const [onboardingData, setOnboardingData] = useState({
-  //     gender: '',
-  //     nativeLanguage: '',
-  //     currentEnglishLevel: '',
-  //     age: '',
-  //     mainChallenge: '',
-  //     username: '',
-  //     id_token: token,
-  //   });
-  // } else {
-  //   const [onboardingData, setOnboardingData] = useState({
-  //     gender: '',
-  //     nativeLanguage: '',
-  //     currentEnglishLevel: '',
-  //     age: '',
-  //     mainChallenge: '',
-  //     username: '',
-  //     full_name: '',
-  //     profile_pic: '',
-  //     email: '',
-  //     auth_type: 'email',
-  //   });
-  // }
-
-
+  const { token, type ,email } = route.params;
+  console.log("email: ",email)
   const initialState = type === "email"
     ? {
-        gender: '',
-        nativeLanguage: '',
-        currentEnglishLevel: '',
-        age: '',
-        mainChallenge: '',
-        username: '',
-        id_token: token,
-      }
+      gender: '',
+      nativeLanguage: '',
+      currentEnglishLevel: '',
+      age: '',
+      mainChallenge: '',
+      username: '',
+      full_name: '',
+      profile_pic: '',
+      email: email,
+      auth_type: 'email',
+    }
     : {
-        gender: '',
-        nativeLanguage: '',
-        currentEnglishLevel: '',
-        age: '',
-        mainChallenge: '',
-        username: '',
-        full_name: '',
-        profile_pic: '',
-        email: '',
-        auth_type: 'email',
-      };
+      gender: '',
+      nativeLanguage: '',
+      currentEnglishLevel: '',
+      age: '',
+      mainChallenge: '',
+      username: '',
+      id_token: token,
+    };
 
   const [onboardingData, setOnboardingData] = useState(initialState);
 
-  
+
   // FullName string `json:"full_name" binding:"required"`
   // Username string `json:"username" binding:"required"`
   // Email    string `json:"email" binding:"required,email"`
@@ -108,11 +82,11 @@ const GetDetails = ({ route }) => {
       case 'first':
         return <LanguageSelector {...props} />;
       case 'second':
-        return <GenderScreen {...props} />;
+        return <GenderScreen {...props} type={type} />;
       case 'third':
         return <EnglishLevel {...props} />;
       case 'fourth':
-        return <MainChallange {...props} />;
+        return <MainChallenge {...props} type={type}/>;
       default:
         return null;
     }

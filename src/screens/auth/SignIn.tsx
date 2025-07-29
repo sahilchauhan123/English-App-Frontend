@@ -33,19 +33,6 @@ const SignIn = () => {
     }
   }
 
-  const EmailLogin = async () => {
-    const response = await fetch("http://10.144.105.24:8080/api/auth/email/generateloginotp", {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email:EmailLogin ,
-      }),
-    });
-    const data = await response.json()
-
-  }
 
   return (
     <View

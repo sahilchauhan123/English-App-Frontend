@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,14 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, fonts} from '../../../../assets/constants';
-import {useNavigation} from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, fonts } from '../../../../assets/constants';
+import { useNavigation } from '@react-navigation/native';
+import { create } from 'zustand';
 
-const Otp = () => {
+const Otp = ({ route }) => {
+  const { onboardingData } = route.params;
+  console.log('Onboarding Data:', onboardingData);
   const [otp, setOtp] = useState(['', '', '', '']);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigation = useNavigation();
@@ -32,7 +35,7 @@ const Otp = () => {
     }
   };
 
-  const handleKeyPress = ({nativeEvent}, index) => {
+  const handleKeyPress = ({ nativeEvent }, index) => {
     if (nativeEvent.key === 'Backspace') {
       if (otp[index] === '' && index > 0) {
         const updatedOTP = [...otp];
@@ -49,14 +52,32 @@ const Otp = () => {
 
   const isFilled = otp.every(val => val !== '');
 
+  const createAccount = async () => {
+    console.log("running")
+    if (!onboardingData) {
+      console.log('Please fill all the fields');
+      return;
+    }
+    const otpString = otp.join('').trim();  
+    const response = await fetch(
+      'http://10.144.105.24:8080/api/auth/email/signup', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ...onboardingData,otp:otpString}),
+    })
+    const data = await response.json();
+    console.log(data);
+  }
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView style={styles.container}>
-        <View style={{alignItems: 'center', flex: 1.4}}>
+        <View style={{ alignItems: 'center', flex: 1.4 }}>
           <Text style={styles.title}>Login</Text>
 
           <Text style={styles.confirmText}>
-            <Text style={{fontFamily: fonts.regular, fontSize: hp(2.3)}}>
+            <Text style={{ fontFamily: fonts.regular, fontSize: hp(2.3) }}>
               Confirmation code was sent to the email{' '}
             </Text>
             <Text
@@ -86,14 +107,14 @@ const Otp = () => {
                     colors={
                       showGradient
                         ? [
-                            colors.gradient.first,
-                            colors.gradient.second,
-                            colors.gradient.last,
-                          ]
+                          colors.gradient.first,
+                          colors.gradient.second,
+                          colors.gradient.last,
+                        ]
                         : ['#d3d3d3', '#d3d3d3'] // grey for inactive
                     }
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     style={styles.gradientBox}>
                     <View style={styles.inputInner}>
                       <TextInput
@@ -116,7 +137,7 @@ const Otp = () => {
                             setActiveIndex(index + 1);
                           }
                         }}
-                        onKeyPress={({nativeEvent}) => {
+                        onKeyPress={({ nativeEvent }) => {
                           if (nativeEvent.key === 'Backspace') {
                             if (digit === '' && index > 0) {
                               const updatedOTP = [...otp];
@@ -151,8 +172,8 @@ const Otp = () => {
             width: '100%',
           }}>
           <TouchableOpacity
-            style={{width: '100%'}}
-            onPress={() => navigation.navigate('GetDetails')}>
+            style={{ width: '100%' }}
+            onPress={createAccount} >
             {isFilled ? (
               <LinearGradient
                 colors={[
@@ -160,16 +181,16 @@ const Otp = () => {
                   colors.gradient.second,
                   colors.gradient.last,
                 ]}
-                start={{x: 0, y: 0}}
-                end={{x: 0.8, y: 0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.8, y: 0 }}
                 style={styles.continueBtn}>
-                <Text style={[styles.continueText, {color: colors.white}]}>
+                <Text style={[styles.continueText, { color: colors.white }]}>
                   CONTINUE
                 </Text>
               </LinearGradient>
             ) : (
               <TouchableOpacity
-                onPress={() => navigation.navigate('GetDetails')}
+                onPress={createAccount}
                 style={styles.continueButton}>
                 <Text style={styles.continueText}>CONTINUE</Text>
               </TouchableOpacity>
