@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { GoogleSignUp } from '../../utils/google';
 import Toast from 'react-native-simple-toast';
+import { baseURL } from '../../utils/constants';
 
 const LoginOrSignup = () => {
   const [emailPressed, setEmailPressed] = useState(false);
@@ -44,10 +45,10 @@ const LoginOrSignup = () => {
   const EmailLogin = async () => {
 
     if (!email) {
-      Toast.show("please enter a valid email", 500)
+      Toast.show("please enter a valid email", 2000)
       return
     }
-    const response = await fetch("http://10.144.105.24:8080/api/auth/email/generateloginotp", {
+    const response = await fetch(`${baseURL}/api/auth/email/generateloginotp`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -61,7 +62,7 @@ const LoginOrSignup = () => {
     console.log(data);
     if (data["error"]){
       console.log("in error")
-      Toast.show(data["error"], 1500)
+      Toast.show(data["error"], 3000)
       return
     }
     if (!data.data.optSent){
@@ -70,6 +71,13 @@ const LoginOrSignup = () => {
         type:"email",email:email
       })
     }
+    if (data.data.optSent) {
+      Toast.show("OTP sent to your email", 2000)
+      navigation.navigate("Otp", {
+        type: "login",
+        email: email,
+      });
+    } 
   }
 
   return (

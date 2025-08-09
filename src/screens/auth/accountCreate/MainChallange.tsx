@@ -19,6 +19,8 @@ import { colors, fonts } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-simple-toast';
 import { useNavigation } from '@react-navigation/native';
+import { baseURL } from '../../../utils/constants';
+
 const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   const navigation = useNavigation();
   const [challenge, setChallenge] = useState('');
@@ -89,7 +91,7 @@ const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
     if (type === "email") {
       // console.log("email data : ",onboardingData)
       // setOnboardingData
-      const response = await fetch("http://10.144.105.24:8080/api/auth/email/generatesignupotp", {
+      const response = await fetch(`${baseURL}/api/auth/email/generatesignupotp`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
@@ -102,7 +104,7 @@ const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
         onboardingData
       })
     } else {
-      const response = await fetch("http://10.144.105.24:8080/api/auth/google/signup", {
+      const response = await fetch(`${baseURL}/api/auth/google/signup`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"

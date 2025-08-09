@@ -16,9 +16,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, fonts } from '../../../../assets/constants';
 import { useNavigation } from '@react-navigation/native';
 import { create } from 'zustand';
+import { baseURL } from '../../../utils/constants';
 
 const Otp = ({ route }) => {
-  const { onboardingData } = route.params;
+  const { onboardingData, type, email } = route.params;
   console.log('Onboarding Data:', onboardingData);
   const [otp, setOtp] = useState(['', '', '', '']);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -53,22 +54,37 @@ const Otp = ({ route }) => {
   const isFilled = otp.every(val => val !== '');
 
   const createAccount = async () => {
-    console.log("running")
-    if (!onboardingData) {
-      console.log('Please fill all the fields');
+    const otpString = otp.join('').trim();
+
+    if (type === 'login') {
+      const response = await fetch(
+        `${baseURL}/api/auth/email/login`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, otp: otpString }),
+      })
+      const data = await response.json();
+      console.log(data);
       return;
+    } else {
+      if (!onboardingData) {
+        console.log('Please fill all the fields');
+        return;
+      }
+      const response = await fetch(
+        `${baseURL}/api/auth/email/signup`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ...onboardingData, otp: otpString }),
+      })
+      const data = await response.json();
+      console.log(data);
     }
-    const otpString = otp.join('').trim();  
-    const response = await fetch(
-      'http://10.144.105.24:8080/api/auth/email/signup', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ ...onboardingData,otp:otpString}),
-    })
-    const data = await response.json();
-    console.log(data);
+
   }
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -86,12 +102,12 @@ const Otp = ({ route }) => {
                 color: colors.black,
                 fontSize: hp(2.4),
               }}>
-              akshitagulerialdh@gmail.com
+              {email}
             </Text>
           </Text>
 
           <TouchableOpacity>
-            <Text style={styles.changeEmail}>Chane email</Text>
+            <Text style={styles.changeEmail}>Change email</Text>
           </TouchableOpacity>
 
           <View style={styles.otpContainer}>

@@ -20,10 +20,12 @@ import {
   StackActions,
   useNavigation,
 } from '@react-navigation/native';
+import useBasicStore from '../../store/userBasicStore';
 
 const CustomDot = ({selected}) => {
   const widthAnim = useRef(new Animated.Value(wp(2))).current;
-
+  const {setUserOnboarded} = useBasicStore();
+  setUserOnboarded(true); 
   useEffect(() => {
     Animated.timing(widthAnim, {
       toValue: selected ? wp(8) : wp(2.5),
@@ -31,6 +33,8 @@ const CustomDot = ({selected}) => {
       useNativeDriver: false, // can't animate width with native driver
     }).start();
   }, [selected]);
+
+  // Set userOnboarded to true when the onboarding starts
 
   return (
     <Animated.View

@@ -14,6 +14,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import { colors, fonts, nativeLanguages } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-simple-toast';
+import { baseURL } from '../../../utils/constants';
 
 const LanguageSelector = ({ onboardingData, setOnboardingData, jumpTo }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('');

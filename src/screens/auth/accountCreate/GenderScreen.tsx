@@ -18,6 +18,7 @@ import {
 import { colors, fonts } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-simple-toast';
+import { baseURL } from '../../../utils/constants';
 
 const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   const [selectedGender, setSelectedGender] = useState('');
@@ -67,7 +68,7 @@ const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
 
     usernameTimeoutRef.current = setTimeout(async () => {
       try {
-        const res = await fetch(`http://10.144.105.24:8080/api/auth/checkusername?username=${text}`);
+        const res = await fetch(`${baseurl}/api/auth/checkusername?username=${text}`);
         const data = await res.json();
         console.log(data)
         // Assume API response is like { available: true/false }

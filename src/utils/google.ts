@@ -8,7 +8,7 @@ export const GoogleSignUp = async () => {
             webClientId: '654497521442-4kdbkr8v9gker2ndkbadseu8ufmp33j2.apps.googleusercontent.com',
             offlineAccess: false,
         });
-        // Check if Google Play Services are available on the device
+        GoogleSignin.revokeAccess() // REMOVE THIS LINE LATER 
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
         return userInfo.data?.idToken

@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import {
   heightPercentageToDP as hp,
@@ -8,28 +8,44 @@ import {
 import { colors, fonts } from '../../../assets/constants';
 import { GoogleSignUp } from '../../utils/google';
 import Toast from 'react-native-simple-toast';
+import { baseURL } from '../../utils/constants';
 
 const SignIn = () => {
   const navigation = useNavigation();
 
   const GoogleLogin = async () => {
-    const token = await GoogleSignUp();
-    // console.log("token : ",token)
-    const response = await fetch("http://10.144.105.24:8080/api/auth/google/login", {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id_token: token,
-      }),
-    });
-    const data = await response.json()
 
-    if (!data.isRegistered) {
-      //create account by going to this screen
-      Toast.show("Lets Create Your Account", 1500)
-      navigation.navigate("GetDetails", { token })
+    try {
+      const token = await GoogleSignUp();
+      // console.log("token : ",token)
+      const response = await fetch(`${baseURL}/api/auth/google/login`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id_token: token,
+        }),
+      });        Toast.show(data["error"], 3000)
+
+
+      const data = await response.json()
+      console.log("data : ", data);
+      if (data["error"]) {
+        Toast.show(data["error"], 3000)
+        return
+      }
+
+      if (!data.data.isRegistered) {
+        //create account by going to this screen
+        Toast.show("Lets Create Your Account", 1500)
+        navigation.navigate("GetDetails", { token })
+      } else {
+        Toast.show("Logged In", 1500)
+      }
+
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -78,7 +94,7 @@ const SignIn = () => {
           <Text style={styles.buttonText}>Continue with Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=>navigation.navigate("LoginOrSignup")} style={[styles.signinButton, { marginBottom: hp(5) }]}>
+        <TouchableOpacity onPress={() => navigation.navigate("LoginOrSignup")} style={[styles.signinButton, { marginBottom: hp(5) }]}>
           <Image
             source={require('../../../assets/images/email.png')}
             style={styles.icon}

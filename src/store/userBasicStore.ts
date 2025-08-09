@@ -2,23 +2,19 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
+
 import { persist, createJSONStorage } from "zustand/middleware";
 
-const useAuthStore = create(
+const useBasicStore = create(
   persist(
     (set) => ({
-      user: null,
-      isAuthenticated: false,
-      isInitialized: false, // Tracks hydration completion
-
-      setUser: (user) => set({ user, isAuthenticated: true }),
-      
-      logout: () => set({ user: null, isAuthenticated: false }),
-
+      userOnboarded:false,
+      isInitialized: false,
+      setUserOnboarded: (value:boolean) => set({ userOnboarded: value }),
       setInitialized: () => set({ isInitialized: true }),
     }),
     {
-      name: "user-data",
+      name: "User-Data",
       storage: createJSONStorage(() => AsyncStorage),
       onRehydrateStorage: () => (state) => {
         if (state) {
@@ -29,4 +25,6 @@ const useAuthStore = create(
   )
 );
 
-export default useAuthStore;
+export default useBasicStore;
+
+
