@@ -8,12 +8,14 @@ import { useNavigation } from '@react-navigation/native';
 import { retrieveUserSession } from '../../utils/tokens';
 import useAuthStore from '../../store/useAuthStore';
 import useBasicStore from '../../store/userBasicStore';
+import { initSocket } from '../../services/socket';
 
 const SplashScreen = () => {
 
   const navigation = useNavigation();
   const { setUser } = useAuthStore();
   const { userOnboarded } = useBasicStore();
+
 
   useEffect(() => {
     handleNavigation();
@@ -28,7 +30,8 @@ const SplashScreen = () => {
         setUser(data);
         console.log('data', data);
         console.log('User is authenticated');
-        navigation.navigate('Home');
+        initSocket();
+        navigation.navigate('Home');  
       } else {
         if (userOnboarded) {
           console.log('User is not authenticated but completed onboarding');
@@ -42,8 +45,9 @@ const SplashScreen = () => {
       console.error('Error retrieving user session:', error);
       navigation.navigate('OnboardingSlider');
     }
-
   }
+
+
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>

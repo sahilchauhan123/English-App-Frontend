@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ToastAndroid,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -17,6 +18,8 @@ import { colors, fonts } from '../../../../assets/constants';
 import { useNavigation } from '@react-navigation/native';
 import { create } from 'zustand';
 import { baseURL } from '../../../utils/constants';
+import { storeUserSession } from '../../../utils/tokens';
+import useAuthStore from '../../../store/useAuthStore';
 
 const Otp = ({ route }) => {
   const { onboardingData, type, email } = route.params;
@@ -25,6 +28,7 @@ const Otp = ({ route }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const navigation = useNavigation();
   const inputs = useRef([]);
+  const { setUser } = useAuthStore();
 
   const handleChange = (text, index) => {
     const updatedOTP = [...otp];
@@ -67,6 +71,16 @@ const Otp = ({ route }) => {
       })
       const data = await response.json();
       console.log(data);
+      if (data.error) {
+        console.log(data.error);
+        return;
+      }
+      if (data.data.isRegistered) {
+        ToastAndroid.show("Account Created", 2000);
+        storeUserSession(data.data);
+        setUser(data.data);
+        navigation.navigate("Home");
+      }
       return;
     } else {
       if (!onboardingData) {
@@ -83,8 +97,17 @@ const Otp = ({ route }) => {
       })
       const data = await response.json();
       console.log(data);
+      if (data.error) {
+        console.log(data.error);
+        return;
+      }
+      if (data.data.isRegistered) {
+        ToastAndroid.show("Account Created", 2000);
+        storeUserSession(data.data);
+        setUser(data.data);
+        navigation.navigate("Home");
+      }
     }
-
   }
   return (
     <SafeAreaView style={styles.safeArea}>

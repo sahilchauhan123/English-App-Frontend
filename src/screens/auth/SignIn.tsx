@@ -9,9 +9,12 @@ import { colors, fonts } from '../../../assets/constants';
 import { GoogleSignUp } from '../../utils/google';
 import Toast from 'react-native-simple-toast';
 import { baseURL } from '../../utils/constants';
+import { storeUserSession } from '../../utils/tokens';
+import useAuthStore from '../../store/useAuthStore';
 
 const SignIn = () => {
   const navigation = useNavigation();
+  const {setUser} = useAuthStore()
 
   const GoogleLogin = async () => {
 
@@ -26,11 +29,11 @@ const SignIn = () => {
         body: JSON.stringify({
           id_token: token,
         }),
-      });        Toast.show(data["error"], 3000)
-
+      });
 
       const data = await response.json()
       console.log("data : ", data);
+
       if (data["error"]) {
         Toast.show(data["error"], 3000)
         return
@@ -40,9 +43,14 @@ const SignIn = () => {
         //create account by going to this screen
         Toast.show("Lets Create Your Account", 1500)
         navigation.navigate("GetDetails", { token })
-      } else {
-        Toast.show("Logged In", 1500)
-      }
+        return
+      } 
+
+      // If the user is registered, navigate to the home screen
+      Toast.show("Login Successful", 2000);
+      setUser(data.data);
+      storeUserSession(data.data);
+      navigation.navigate("Home");
 
     } catch (error) {
       console.log(error)

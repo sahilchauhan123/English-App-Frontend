@@ -68,7 +68,7 @@ const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
 
     usernameTimeoutRef.current = setTimeout(async () => {
       try {
-        const res = await fetch(`${baseurl}/api/auth/checkusername?username=${text}`);
+        const res = await fetch(`${baseURL}/api/auth/checkusername?username=${text}`);
         const data = await res.json();
         console.log(data)
         // Assume API response is like { available: true/false }

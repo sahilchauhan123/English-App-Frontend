@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import {
   View,
   Text,
@@ -20,9 +20,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-simple-toast';
 import { useNavigation } from '@react-navigation/native';
 import { baseURL } from '../../../utils/constants';
+import { storeUserSession } from '../../../utils/tokens';
+import useAuthStore from '../../../store/useAuthStore';
 
 const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   const navigation = useNavigation();
+  const {setUser} = useAuthStore();
   const [challenge, setChallenge] = useState('');
   const challenges = [
     {
@@ -85,25 +88,25 @@ const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
       return 'Please select your main challenge';
     }
 
-    console.log("everything is fine ")
-    console.log("local data going to server : ", onboardingData)
+    // console.log("local data going to server : ", onboardingData)
 
     if (type === "email") {
-      // console.log("email data : ",onboardingData)
-      // setOnboardingData
+      // FOR EMAIL SIGNUP
       const response = await fetch(`${baseURL}/api/auth/email/generatesignupotp`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({email:onboardingData.email}),
+        body: JSON.stringify({ email: onboardingData.email }),
       })
       const data = await response.json()
       console.log(data)
-      navigation.navigate("Otp",{
+      navigation.navigate("Otp", {
         onboardingData
       })
+
     } else {
+      // FOR GOOGLE SIGNUP
       const response = await fetch(`${baseURL}/api/auth/google/signup`, {
         method: 'POST',
         headers: {
@@ -113,28 +116,21 @@ const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
       });
       const data = await response.json()
       console.log(data)
+      if (data["error"]) {
+        Toast.show(data["error"], 3000)
+        return
+      }
+      if (data.data.isRegistered) {
+        Toast.show("Account Created", 2000)
+        setUser(data.data)
+        storeUserSession(data.data);
+        navigation.navigate("Home")
+        return
+      }
     }
+
+
   }
-  // console.log("token : ",token)
-
-
-
-  // Id       int64  `json:"id"` // Set by DB
-  // FullName string `json:"full_name" binding:"required"`
-  // Username string `json:"username" binding:"required"`
-  // Email    string `json:"email" binding:"required,email"`
-  // Password string `json:"password,omitempty"` // Only used in local auth
-  // Age      int    `json:"age" binding:"required"`
-  // Gender   string `json:"gender" binding:"required"`
-  // // Interests      []string `json:"interests" binding:"required"`
-  // ProfilePic          string `json:"profile_pic" binding:"required,url"`
-  // AuthType            string `json:"auth_type" binding:"required"` // "google" or "email"
-  // MainChallenge       string `json:"mainChallenge" binding:"required"`
-  // NativeLanguage      string `json:"nativeLanguage" binding:"required"`
-  // CurrentEnglishLevel string `json:"currentEnglishLevel" binding:"required"`
-  // // CreatedAt  string   `json:"created_at,omitempty"`         // Set on backend
-  // CreatedAt pgtype.Timestamptz `json:"created_at,omitempty"` // <-- CHANGE THIS LINE
-  // Otp       string             `json:"opt,omitempty"`
 
   return (
     <SafeAreaView style={styles.container}>

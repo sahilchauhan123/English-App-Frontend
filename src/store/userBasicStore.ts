@@ -8,10 +8,13 @@ import { persist, createJSONStorage } from "zustand/middleware";
 const useBasicStore = create(
   persist(
     (set) => ({
+
       userOnboarded:false,
       isInitialized: false,
+
       setUserOnboarded: (value:boolean) => set({ userOnboarded: value }),
       setInitialized: () => set({ isInitialized: true }),
+      
     }),
     {
       name: "User-Data",
