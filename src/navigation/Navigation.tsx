@@ -1,4 +1,4 @@
-import {StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,6 +9,8 @@ import LoginOrSignup from '../screens/auth/LoginOrSignup';
 import Otp from '../screens/auth/accountCreate/Otp';
 import GetDetails from '../screens/auth/accountCreate/GetDetails';
 import Home from '../screens/home/Home';
+import CallScreen from '../screens/callScreen/CallScreen';
+import { navigationRef } from './navigationService';
 
 const Navigation = () => {
   const [initialRoute, setInitialRoute] = useState("SplashScreen"); // default SplashScreen
@@ -16,7 +18,7 @@ const Navigation = () => {
 
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName={initialRoute}
         screenOptions={{ headerShown: false, statusBarStyle: 'dark' }}>
@@ -31,6 +33,9 @@ const Navigation = () => {
 
         {/* for home screens */}
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="CallScreen" component={CallScreen} />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

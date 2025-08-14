@@ -1,13 +1,14 @@
 import { create } from "zustand";
 
 
-export const useCallStore = create((set) => ({
+export const useCallStore = create((set,get) => ({
   usersList:[],
-  target:null,
+  targetId:null,
   inRandomMatch:false,
   incomingCall: null,
   remoteStream: null,
   localStream:null,
+  iceCandidates: null,
 
   setUsersList:(data:any) => set({usersList:data}),
   setInRandomMatch : (data:boolean) => set({inRandomMatch:data}),
@@ -15,8 +16,14 @@ export const useCallStore = create((set) => ({
   hideIncomingCallModal: () => set({ incomingCall: null }),
   setRemoteStream: (stream) => set({ remoteStream: stream }),
   setLocalStream: (stream) => set({ localStream: stream }),
-  setTarget: (target) => set({ target: target }),
+  setTargetId: (target) => set({ targetId: target }),
+
+
+  setIceCandidates : (candidate) => set({icecandidates:candidate}),
+  clearIceCandidates: () => set({ iceCandidates: null }),
+
+
 }));
 
 // Helper for socket.js
-export const { showIncomingCallModal } = useCallStore.getState();
+// export const { showIncomingCallModal } = useCallStore.getState();
