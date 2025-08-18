@@ -97,7 +97,8 @@ import { ToastAndroid } from "react-native";
 import useAuthStore from "../store/useAuthStore";
 import { useCallStore } from "../store/useCallStore";
 import { wsURL } from "../utils/constants";
-import { acceptAnswer, insertICECandidate } from "./webrtc";
+import { acceptAnswer, acceptOffer, endCall, insertICECandidate, remoteEndCall, sendOffer } from "./webrtc";
+import { navigate, navigateWithParams, navigationRef } from "../navigation/navigationService";
 
 let socket;
 
@@ -139,27 +140,43 @@ export function initSocket() {
                     break;
 
                 case "offer":
-                    console.log("OFFER received", data);
-                    useCallStore.getState().showIncomingCallModal(data.fromUserData, data.payload);
+                    console.log("OFFER received");
+                    if (data.randomCall) {
+                        console.log("random offer received", data.fromUserData);
+                        useCallStore.getState().setRandomUserData(data.fromUserData)
+                        acceptOffer(data.payload, data.fromUserData)
+                        navigateWithParams("CallScreen", data.fromUserData)
+                        break;
+                    }
+                    console.log("normal offer received");
+                    useCallStore.getState().showIncomingCallModal(data);
                     break;
 
                 case "answer":
-                    console.log("[initSocket] Handling 'answer' event");
-                    acceptAnswer(data.payload);
+                    console.log("ANSWER received");
+                    acceptAnswer(data.payload, data.from);
+                    navigateWithParams("CallScreen", data.fromUserData)
                     break;
 
                 case "icecandidate":
-                    console.log("[initSocket] Handling 'icecandidate' event");
+                    console.log("ICE CANDIDATE received");
                     insertICECandidate(data.payload);
                     break;
 
                 case "endCall":
                     console.log("[initSocket] Handling 'endCall' event");
+                    ToastAndroid.show(`Call Ended By ${data.fromUserData.full_name}`, 2000);
+                    remoteEndCall();
+                    navigate("Home")
                     // some logic
+                    break; 
+
+                case "randomUserFound":
+                    console.log("random user fouund : ", data.target)
+                    sendOffer(data.target, true);
                     break;
 
                 case "randomCallOffer":
-                    console.log("[initSocket] Handling 'randomCallOffer' event");
                     // some logic
                     break;
 
@@ -174,7 +191,7 @@ export function initSocket() {
                     break;
 
                 default:
-                    console.warn("[initSocket] Unknown message type:", data.type);
+                // console.log("[initSocket] Unknown message type:", data.data);
             }
         } catch (err) {
             console.error("[initSocket] Failed to parse incoming message:", err);

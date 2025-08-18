@@ -49,32 +49,47 @@
 
 
 
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useCallStore } from '../../store/useCallStore';
 import { sendOffer } from '../../services/webrtc';
+import { colors } from '../../../assets/constants';
+import { sendMessage } from '../../services/socket';
+import useAuthStore from '../../store/useAuthStore';
 
 const Home = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const { usersList } = useCallStore();
-
+  const { usersList, setInRandomMatch, inRandomMatch } = useCallStore();
+  const { user } = useAuthStore();
+  
   useEffect(() => {
     if (usersList) {
       setOnlineUsers(usersList);
     }
   }, [usersList]);
 
+  // useEffect(()=>{
+
+  // },[])
+
 
   const handleCallUser = (userId) => {
     console.log(`Initiating call to user ID: ${userId}`);
-    sendOffer(userId)
+    sendOffer(userId, false)
     console.log("reaching there")
 
   };
 
   const handleRandomMatch = () => {
     console.log('Starting random match call');
-  };
+    const data = {
+      type: "randomCall",
+      from: user.user.id
+    }
+    sendMessage(data);
+    setInRandomMatch(true);
+    ToastAndroid.show("Random Call Waiting",2000)
+  }
 
   const renderUserItem = ({ item }) => (
     <View style={styles.userCard}>
@@ -87,7 +102,7 @@ const Home = () => {
         <Text style={styles.userDetails}>{item.nativeLanguage} | {item.currentEnglishLevel}</Text>
       </View>
       <TouchableOpacity style={styles.callButton} onPress={() => handleCallUser(item.id)}>
-        <Text style={{fontSize:50}}>☎️</Text>
+        <Text style={{ fontSize: 40 }}>☎️</Text>
       </TouchableOpacity>
     </View>
   );
@@ -95,11 +110,20 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>ConnectSphere</Text>
+        <Text style={styles.headerTitle}>Strango</Text>
         <TouchableOpacity style={styles.randomMatchButton} onPress={handleRandomMatch}>
           <Text style={styles.randomMatchText}>Random Match</Text>
         </TouchableOpacity>
       </View>
+
+      {inRandomMatch &&
+        <View>
+          <Text>
+            Finding a Random User
+          </Text>
+        </View>
+      }
+      <Text style={{textAlign:'center',fontSize:25,color:colors.orange}}> Online Users List </Text>
       <FlatList
         data={onlineUsers}
         renderItem={renderUserItem}
@@ -121,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   header: {
-    backgroundColor: '#007bff',
+    backgroundColor: colors.orange,
     padding: 15,
     paddingTop: 40,
     alignItems: 'center',
@@ -134,13 +158,13 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   randomMatchButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: colors.lightGrey,
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 20,
   },
   randomMatchText: {
-    color: '#fff',
+    color: colors.black,
     fontSize: 16,
     fontWeight: '600',
   },

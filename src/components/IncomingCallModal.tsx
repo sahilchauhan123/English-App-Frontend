@@ -5,7 +5,7 @@ import { useCallStore } from '../store/useCallStore';
 import { sendMessage } from '../services/socket';
 import useAuthStore from '../store/useAuthStore';
 import { acceptOffer } from '../services/webrtc';
-import { navigate } from '../navigation/navigationService';
+import { navigate, navigateWithParams } from '../navigation/navigationService';
 // import { useNavigation } from '@react-navigation/native';
 
 export default function IncomingCallModal() {
@@ -38,19 +38,18 @@ export default function IncomingCallModal() {
   const rejectCall = () => {
     const msg = {
       type: "rejectCall",
-      from: incomingCall.id,
-      target: user.user.id
+      from: user.user.id,
+      target: incomingCall.fromUserData.id,
     }
     sendMessage(msg)
     console.log(user);
     hideIncomingCallModal();
-
   }
 
   const acceptCall = () => {
     // console.log("incoming call payload : ",incomingCall)
-    acceptOffer(incomingCall.offer, incomingCall.from)
-    navigate("CallScreen")
+    acceptOffer(incomingCall.payload, incomingCall.fromUserData)
+    navigateWithParams("CallScreen",incomingCall.fromUserData)
     hideIncomingCallModal();
   }
 
@@ -63,11 +62,11 @@ export default function IncomingCallModal() {
       <View style={styles.container}>
         <View style={styles.notification}>
           <Image
-          source={{uri: incomingCall?.from.profile_pic}}
-          style={{ width: 50, height: 50, borderRadius: 25 }}
+            source={{ uri: incomingCall?.fromUserData.profile_pic }}
+            style={{ width: 50, height: 50, borderRadius: 25 }}
           />
           <Text style={styles.callerName}>
-            {incomingCall?.from.full_name || 'Unknown Caller'}
+            {incomingCall?.fromUserData.full_name || 'Unknown Caller'}
           </Text>
           <Text style={styles.callStatus}>Incoming Call</Text>
           <View style={styles.buttonContainer}>

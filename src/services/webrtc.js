@@ -176,17 +176,6 @@ export async function initWebRTC(targetId) {
   pc.onicecandidate = event => {
     // console.log('[initWebRTC] ICE candidate event triggered:', event.candidate);
     if (event.candidate) {
-      // store iceCandidate temp in store
-      // const previousIceCandidates = useCallStore.getState().iceCandidates;
-      // if (previousIceCandidates == []) {
-      //   console.log("added single candidate")
-      //   useCallStore.getState().setIceCandidates([event.candidate]);
-      // } else {
-      //   console.log("added multiple candidate")
-      //   useCallStore
-      //     .getState()
-      //     .setIceCandidates([...previousIceCandidates, event.candidate]);
-      // }
       if (targetId) {
         sendMessage({
           type: 'icecandidate',
@@ -194,24 +183,18 @@ export async function initWebRTC(targetId) {
           from: useAuthStore.getState().user.user.id,
           target: targetId,
         });
-        console.log('[initWebRTC] ICE candidate sent to target');
+        console.log('ICE candidate sent to target');
       } else {
         console.log('added single candidate');
         useCallStore.getState().setIceCandidates(event.candidate);
       }
-
-      // sendMessage({
-      //   type: 'icecandidate',
-      //   payload: event.candidate,
-      //   from: useAuthStore.getState().user.user.id,
-      //   target: targetId,
-      // });
-      // console.log('[initWebRTC] ICE candidate sent to target');
     }
   };
 
   pc.onconnectionstatechange = () => {
-    console.log('[initWebRTC] Connection state changed:', pc.connectionState);
+    if (pc.connectionState != null) {
+      console.log('[initWebRTC] Connection state changed:', pc.connectionState);
+    }
   };
 
   pc.ontrack = event => {
@@ -221,10 +204,13 @@ export async function initWebRTC(targetId) {
   };
 }
 
-export async function sendOffer(targetId) {
+export async function sendOffer(targetId, randomCall) {
   // console.log('[sendOffer] Creating and sending offer to:', targetId);
-
-  await initWebRTC(null);
+  if (randomCall) {
+    await initWebRTC(targetId);
+  } else {
+    await initWebRTC(null);
+  }
 
   // console.log('[sendOffer] Creating offer...');
   const offer = await pc.createOffer();
@@ -237,6 +223,7 @@ export async function sendOffer(targetId) {
     payload: offer,
     from: useAuthStore.getState().user.user.id,
     target: targetId,
+    randomCall: randomCall,
   };
   console.log('Offer sent to target', data);
   sendMessage(data);
@@ -276,11 +263,11 @@ export async function acceptOffer(offer, from) {
 }
 
 export async function acceptAnswer(answer, from) {
-  sendICECandidate(from);
   console.log('[acceptAnswer] Accepting answer:', answer);
   await pc.setRemoteDescription(new RTCSessionDescription(answer));
+  sendICECandidate(from);
   try {
-    navigate('CallScreen');
+    // navigate('CallScreen');
     console.log('navigated to CallScreen');
   } catch (error) {
     console.log(error);
@@ -298,6 +285,7 @@ export async function insertICECandidate(candidate) {
   }
 }
 
+// you ended the call
 export async function endCall(targetId) {
   console.log('[endCall] Ending call with target:', targetId);
   sendMessage({
@@ -316,6 +304,7 @@ export async function endCall(targetId) {
   console.log('[endCall] Local & remote streams cleared, modal hidden');
 }
 
+// call ended by other side
 export async function remoteEndCall() {
   console.log('[remoteEndCall] Remote ended the call');
   pc.close();
@@ -329,16 +318,23 @@ export async function remoteEndCall() {
 }
 
 function sendICECandidate(targetID) {
-  console.log('Local Ice Candidates: ', useCallStore.getState().iceCandidates);
+  try {
+    console.log(
+      'Local Ice Candidates: ',
+      useCallStore.getState().iceCandidates,
+    );
 
-  for (let i = 0; i < useCallStore.getState().iceCandidates.length; i++) {
-    const candidate = useCallStore.getState().iceCandidates[i];
-    const data = {
-      type: 'icecandidate',
-      payload: candidate,
-      from: useAuthStore.getState().user.user.id,
-      target: targetID,
-    };
-    sendMessage(data);
+    for (let i = 0; i < useCallStore.getState().iceCandidates.length; i++) {
+      const candidate = useCallStore.getState().iceCandidates[i];
+      const data = {
+        type: 'icecandidate',
+        payload: candidate,
+        from: useAuthStore.getState().user.user.id,
+        target: targetID,
+      };
+      sendMessage(data);
+    }
+  } catch (error) {
+    console.log('error in sending ice candidate', error);
   }
 }
