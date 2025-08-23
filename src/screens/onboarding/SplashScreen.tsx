@@ -31,7 +31,7 @@ const SplashScreen = () => {
         console.log('data', data);
         console.log('User is authenticated');
         initSocket();
-        navigation.navigate('Home');  
+        navigation.navigate('Tabs');  
       } else {
         if (userOnboarded) {
           console.log('User is not authenticated but completed onboarding');

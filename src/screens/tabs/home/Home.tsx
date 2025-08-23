@@ -51,11 +51,12 @@
 
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useCallStore } from '../../store/useCallStore';
-import { sendOffer } from '../../services/webrtc';
-import { colors } from '../../../assets/constants';
-import { sendMessage } from '../../services/socket';
-import useAuthStore from '../../store/useAuthStore';
+import { useCallStore } from '../../../store/useCallStore';
+import { sendOffer } from '../../../services/webrtc';
+import { colors } from '../../../../assets/constants';
+import { sendMessage } from '../../../services/socket';
+import useAuthStore from '../../../store/useAuthStore';
+
 
 const Home = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -80,16 +81,7 @@ const Home = () => {
 
   };
 
-  const handleRandomMatch = () => {
-    console.log('Starting random match call');
-    const data = {
-      type: "randomCall",
-      from: user.user.id
-    }
-    sendMessage(data);
-    setInRandomMatch(true);
-    ToastAndroid.show("Random Call Waiting",2000)
-  }
+
 
   const renderUserItem = ({ item }) => (
     <View style={styles.userCard}>
@@ -109,12 +101,6 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Strango</Text>
-        <TouchableOpacity style={styles.randomMatchButton} onPress={handleRandomMatch}>
-          <Text style={styles.randomMatchText}>Random Match</Text>
-        </TouchableOpacity>
-      </View>
 
       {inRandomMatch &&
         <View>

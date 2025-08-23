@@ -12,9 +12,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import EnglishLevel from './EnglishLevel';
 import MainChallenge from './MainChallange';
 
-const Line = () => <View style={styles.line} />;
+export const Line = () => <View style={styles.line} />;
 
-const GradientLine = () => {
+export const GradientLine = () => {
   return (
     <LinearGradient
       colors={[colors.gradient.first, colors.gradient.last]}

@@ -21,7 +21,7 @@ export default function CallScreen({ route }) {
     endCall(remoteUser.id)
     navigate("Home")
   }
-  
+
   return (
     <View style={styles.container}>
       {/* Remote video */}

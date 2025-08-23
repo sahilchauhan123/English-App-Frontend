@@ -11,6 +11,7 @@ import Toast from 'react-native-simple-toast';
 import { baseURL } from '../../utils/constants';
 import { storeUserSession } from '../../utils/tokens';
 import useAuthStore from '../../store/useAuthStore';
+import { navigateAndReset } from '../../navigation/navigationService';
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -50,8 +51,7 @@ const SignIn = () => {
       Toast.show("Login Successful", 2000);
       setUser(data.data);
       storeUserSession(data.data);
-      navigation.navigate("Home");
-
+      navigateAndReset("Home");
     } catch (error) {
       console.log(error)
     }

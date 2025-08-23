@@ -8,9 +8,12 @@ import SignIn from '../screens/auth/SignIn';
 import LoginOrSignup from '../screens/auth/LoginOrSignup';
 import Otp from '../screens/auth/accountCreate/Otp';
 import GetDetails from '../screens/auth/accountCreate/GetDetails';
-import Home from '../screens/home/Home';
 import CallScreen from '../screens/callScreen/CallScreen';
 import { navigationRef } from './navigationService';
+import Home from '../screens/tabs/home/Home';
+import Tabs from '../screens/tabs/Tabs';
+
+
 
 const Navigation = () => {
   const [initialRoute, setInitialRoute] = useState("SplashScreen"); // default SplashScreen
@@ -32,9 +35,9 @@ const Navigation = () => {
         <Stack.Screen name="GetDetails" component={GetDetails} />
 
         {/* for home screens */}
-        <Stack.Screen name="Home" component={Home} />
+        {/* <Stack.Screen name="Home" component={Home} /> */}
         <Stack.Screen name="CallScreen" component={CallScreen} />
-
+        <Stack.Screen name="Tabs" component={Tabs} />
 
       </Stack.Navigator>
     </NavigationContainer>

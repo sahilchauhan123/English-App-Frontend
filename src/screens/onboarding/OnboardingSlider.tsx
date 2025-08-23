@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Onboarding from 'react-native-onboarding-swiper';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {colors, fonts} from '../../../assets/constants';
+import { colors, fonts } from '../../../assets/constants';
 import GradientText from '../../components/GradientText';
 import {
   CommonActions,
@@ -22,10 +22,14 @@ import {
 } from '@react-navigation/native';
 import useBasicStore from '../../store/userBasicStore';
 
-const CustomDot = ({selected}) => {
+const CustomDot = ({ selected }) => {
   const widthAnim = useRef(new Animated.Value(wp(2))).current;
-  const {setUserOnboarded} = useBasicStore();
-  setUserOnboarded(true); 
+  const { setUserOnboarded } = useBasicStore();
+
+  useEffect(() => {
+    setUserOnboarded(true);
+  }, [])
+
   useEffect(() => {
     Animated.timing(widthAnim, {
       toValue: selected ? wp(8) : wp(2.5),
@@ -49,7 +53,7 @@ const CustomDot = ({selected}) => {
   );
 };
 
-const Skip = ({isLight, skipLabel, ...props}) => <></>;
+const Skip = ({ isLight, skipLabel, ...props }) => <></>;
 
 const OnboardingSlider = () => {
   const navigation = useNavigation();
@@ -60,16 +64,16 @@ const OnboardingSlider = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{name: 'SignIn'}],
+        routes: [{ name: 'SignIn' }],
       }),
     );
   };
 
   return (
-   
+
     <SafeAreaView
-      style={{flex: 1, paddingVertical: hp(5), backgroundColor: colors.white}}>
-      <View style={{alignItems: 'flex-end', marginHorizontal: wp(5)}}>
+      style={{ flex: 1, paddingVertical: hp(5), backgroundColor: colors.white }}>
+      <View style={{ alignItems: 'flex-end', marginHorizontal: wp(5) }}>
         <TouchableOpacity onPress={ResetAndNavigate}>
           <Text
             style={{
@@ -92,7 +96,7 @@ const OnboardingSlider = () => {
           setPageIndex(index);
         }}
         DoneButtonComponent={() => (
-          <View style={{marginHorizontal: wp(3)}}>
+          <View style={{ marginHorizontal: wp(3) }}>
             <TouchableOpacity
               style={{
                 backgroundColor: colors.orange,
@@ -124,7 +128,7 @@ const OnboardingSlider = () => {
                   //   marginTop: hp(10),
                 }}>
                 <Image
-                  style={{height: wp(60), width: wp(60)}}
+                  style={{ height: wp(60), width: wp(60) }}
                   source={require('../../../assets/images/slider1.png')}
                 />
                 <Text
@@ -136,7 +140,7 @@ const OnboardingSlider = () => {
                   }}>
                   Smart Matching for
                 </Text>
-                <View style={{flexDirection: 'row', marginTop: hp(-1)}}>
+                <View style={{ flexDirection: 'row', marginTop: hp(-1) }}>
                   <Text
                     style={{
                       fontFamily: fonts.semiBold,
@@ -178,7 +182,7 @@ const OnboardingSlider = () => {
                     alignItems: 'center',
                   }}>
                   <Image
-                    style={{height: wp(50), width: wp(80)}}
+                    style={{ height: wp(50), width: wp(80) }}
                     source={require('../../../assets/images/slider2.png')}
                   />
                 </View>
@@ -192,7 +196,7 @@ const OnboardingSlider = () => {
                   }}>
                   Learn English,
                 </Text>
-                <View style={{flexDirection: 'row', marginTop: hp(-1)}}>
+                <View style={{ flexDirection: 'row', marginTop: hp(-1) }}>
                   <Text
                     style={{
                       fontFamily: fonts.semiBold,
@@ -228,10 +232,10 @@ const OnboardingSlider = () => {
                   //   marginTop: hp(10),
                 }}>
                 <Image
-                  style={{height: wp(60), width: wp(60)}}
+                  style={{ height: wp(60), width: wp(60) }}
                   source={require('../../../assets/images/slider3.png')}
                 />
-                <View style={{flexDirection: 'row', marginTop: hp(8)}}>
+                <View style={{ flexDirection: 'row', marginTop: hp(8) }}>
                   <Text
                     style={{
                       fontFamily: fonts.semiBold,
@@ -240,7 +244,7 @@ const OnboardingSlider = () => {
                     }}>
                     See Your{' '}
                   </Text>
-                  <GradientText text="Progress" size={hp(3.5)}/>
+                  <GradientText text="Progress" size={hp(3.5)} />
                 </View>
 
                 <Text

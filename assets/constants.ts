@@ -13,6 +13,11 @@ const colors = {
     second: '#F93E51',
     last: '#FE742B',
   },
+  lightGradient: {
+    first: 'rgba(245, 7, 119, 0.3)',   // 50% opacity
+    second: 'rgba(249, 62, 81, 0.3)',
+    last: 'rgba(254, 116, 43, 0.3)',
+  },
   orange: '#FE742B',
   grey: '#A1A1A1',
   white: '#ffffff',
@@ -112,4 +117,4 @@ const nativeLanguages = [
   'Zulu',
 ];
 
-export {fonts, colors,nativeLanguages};
+export { fonts, colors, nativeLanguages };
