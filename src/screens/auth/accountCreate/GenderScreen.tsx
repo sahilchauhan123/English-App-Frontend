@@ -85,7 +85,7 @@ const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardView}>
-
+      
         <View style={styles.content}>
           <Text style={styles.title}>Select your gender</Text>
 

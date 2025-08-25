@@ -53,16 +53,17 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid
 import React, { useEffect, useState } from 'react';
 import { useCallStore } from '../../../store/useCallStore';
 import { sendOffer } from '../../../services/webrtc';
-import { colors } from '../../../../assets/constants';
-import { sendMessage } from '../../../services/socket';
+import { colors, fonts } from '../../../../assets/constants';
 import useAuthStore from '../../../store/useAuthStore';
+import LinearGradient from 'react-native-linear-gradient';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 
 const Home = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { usersList, setInRandomMatch, inRandomMatch } = useCallStore();
   const { user } = useAuthStore();
-  
+
   useEffect(() => {
     if (usersList) {
       setOnlineUsers(usersList);
@@ -84,18 +85,29 @@ const Home = () => {
 
 
   const renderUserItem = ({ item }) => (
-    <View style={styles.userCard}>
-      <Image
-        source={{ uri: item.profile_pic || 'https://via.placeholder.com/50' }}
-        style={styles.profilePic}
-      />
-      <View style={styles.userInfo}>
-        <Text style={styles.userName}>{item.full_name || item.username || 'Unknown User'}</Text>
-        <Text style={styles.userDetails}>{item.nativeLanguage} | {item.currentEnglishLevel}</Text>
+    <View style={{ backgroundColor: "#D8DBDD", borderRadius: 15, paddingBottom: hp(0.2) }}>
+      <View style={styles.userCard}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 2}}>
+          <Image
+            source={{ uri: item.profile_pic || 'https://via.placeholder.com/50' }}
+            style={styles.profilePic}
+          />
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>{item.full_name || item.username || 'Unknown User'}</Text>
+            <Text style={styles.userDetails}>{item.nativeLanguage}
+              {/* | {item.currentEnglishLevel} */}
+            </Text>
+          </View>
+        </View>
+        <View style={{ flex: 2,height:'100%',justifyContent:'space-between',alignItems:'center'}}>
+          <Image
+          style={{height:hp(3),width:hp(3),marginTop:hp(1)}}
+          source={require("../../../../assets/images/call.png")}
+          />
+          <Text style={styles.talk}>42 Talks</Text>
+        </View>
       </View>
-      <TouchableOpacity style={styles.callButton} onPress={() => handleCallUser(item.id)}>
-        <Text style={{ fontSize: 40 }}>☎️</Text>
-      </TouchableOpacity>
+
     </View>
   );
 
@@ -109,12 +121,15 @@ const Home = () => {
           </Text>
         </View>
       }
-      <Text style={{textAlign:'center',fontSize:25,color:colors.orange}}> Online Users List </Text>
+
+      <View style={{ marginVertical: hp(1.8) }}>
+        <Text style={styles.headerTitle}> Talk Instantly</Text>
+      </View>
+
       <FlatList
         data={onlineUsers}
         renderItem={renderUserItem}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.userList}
         ListEmptyComponent={
           <Text style={styles.emptyText}>No online users available</Text>
         }
@@ -128,7 +143,8 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.white,
+    marginHorizontal: wp(2.5)
   },
   header: {
     backgroundColor: colors.orange,
@@ -139,9 +155,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontFamily: fonts.semiBold,
+    fontSize: hp(2.3),
   },
   randomMatchButton: {
     backgroundColor: colors.lightGrey,
@@ -155,46 +170,60 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   userList: {
-    padding: 10,
+    marginHorizontal: wp(2.5)
   },
   userCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
+    flex: 1,
+    backgroundColor: colors.white,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    justifyContent: "space-between",
+    borderRadius: 13,
+    padding: hp(1.4),
+
+    // marginHorizontal: wp(2.5),
   },
+
+  //   userCard: {
+  //   flexDirection: 'row',
+  //   backgroundColor: '#fff',
+  //   padding: 15,
+  //   marginBottom: 10,
+  //   borderRadius: 10,
+  //   alignItems: 'center',
+  //   shadowColor: '#000',
+  //   shadowOffset: { width: 0, height: 2 },
+  //   shadowOpacity: 0.1,
+  //   shadowRadius: 4,
+  //   elevation: 3,
+  // },
   profilePic: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 15,
+    width: hp(10 / 1.4),
+    height: hp(10 / 1.4),
+    borderRadius: 13,
   },
   userInfo: {
-    flex: 1,
+    marginLeft: wp(2),
+    justifyContent: "center",
+    // backgroundColor:"red"
   },
   userName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontFamily: fonts.semiBold,
+    marginBottom: hp(-0.3),
+    fontSize: hp(1.8),
+    color: colors.black,
   },
   userDetails: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 5,
+    marginTop: hp(-0.3),
+    fontFamily: fonts.regular,
+    fontSize: hp(1.8),
+    color: colors.black,
   },
   callButton: {
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginRight: wp(0),
+    alignItems: "flex-end",
+    // backgroundColor:'red',
+    justifyContent: "centers"
   },
   emptyText: {
     fontSize: 16,
@@ -202,4 +231,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
+  gradient: {
+    padding: 16,
+    borderRadius: 8,
+  },
+  talk: {
+    fontFamily: fonts.regular,
+    fontSize: hp(1.5)
+  }
 });
