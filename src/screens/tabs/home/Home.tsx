@@ -49,7 +49,7 @@
 
 
 
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, ImageBackground } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useCallStore } from '../../../store/useCallStore';
 import { sendOffer } from '../../../services/webrtc';
@@ -85,9 +85,11 @@ const Home = () => {
 
 
   const renderUserItem = ({ item }) => (
-    <View style={{ backgroundColor: "#D8DBDD", borderRadius: 15, paddingBottom: hp(0.2) }}>
+    <View style={{
+      backgroundColor: "#D8DBDD", borderRadius: 15, paddingBottom: hp(0.2), marginHorizontal: wp(4),
+    }}>
       <View style={styles.userCard}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 2}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 2 }}>
           <Image
             source={{ uri: item.profile_pic || 'https://via.placeholder.com/50' }}
             style={styles.profilePic}
@@ -99,10 +101,10 @@ const Home = () => {
             </Text>
           </View>
         </View>
-        <View style={{ flex: 2,height:'100%',justifyContent:'space-between',alignItems:'center'}}>
+        <View style={{ flex: 2, height: '100%', justifyContent: 'space-between', alignItems: "flex-end" }}>
           <Image
-          style={{height:hp(3),width:hp(3),marginTop:hp(1)}}
-          source={require("../../../../assets/images/call.png")}
+            style={{ height: hp(3), width: hp(3), marginTop: hp(1), marginRight: wp(2) }}
+            source={require("../../../../assets/images/call.png")}
           />
           <Text style={styles.talk}>42 Talks</Text>
         </View>
@@ -122,18 +124,88 @@ const Home = () => {
         </View>
       }
 
-      <View style={{ marginVertical: hp(1.8) }}>
+      {/* <ImageBackground
+        source={require("../../../../assets/images/gradient.png")}
+        resizeMode="contain"
+        style={{ marginVertical: hp(1.8) ,flex:1,padding:hp(1)}}>
         <Text style={styles.headerTitle}> Talk Instantly</Text>
+        <FlatList
+          data={onlineUsers}
+          renderItem={renderUserItem}
+          keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No online users available</Text>
+          }
+        />
+      </ImageBackground> */}
+
+
+      {/* <Image
+        source={require("../../../../assets/images/gradient.png")}
+        resizeMode="stretch"
+        style={{
+          flex: 1,
+          width: "100%",
+          position: "absolute",
+          opacity: 0.7
+        }}
+      /> */}
+
+      {/* Overlay Content */}
+      <View style={{ padding: hp(0) }}>
+        <Text style={styles.headerTitle}>Talk Instantly</Text>
+        <FlatList
+
+          data={onlineUsers}
+          renderItem={renderUserItem}
+          keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No online users available</Text>
+          }
+        />
+        <View style={{ height: hp(1) }} />
+        <FlatList
+
+          data={onlineUsers}
+          renderItem={renderUserItem}
+          keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No online users available</Text>
+          }
+        />
+        <View style={{ height: hp(1) }} />
+        <FlatList
+
+          data={onlineUsers}
+          renderItem={renderUserItem}
+          keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No online users available</Text>
+          }
+        />
+        <View style={{ height: hp(1) }} />
+        <FlatList
+
+          data={onlineUsers}
+          renderItem={renderUserItem}
+          keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No online users available</Text>
+          }
+        />        <View style={{ height: hp(1) }} />
+        <FlatList
+
+          data={onlineUsers}
+          renderItem={renderUserItem}
+          keyExtractor={(item) => item.id.toString()}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No online users available</Text>
+          }
+        />
+
       </View>
 
-      <FlatList
-        data={onlineUsers}
-        renderItem={renderUserItem}
-        keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>No online users available</Text>
-        }
-      />
+
     </View>
   );
 };
@@ -144,7 +216,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    marginHorizontal: wp(2.5)
+    // marginHorizontal: wp(2.5)
   },
   header: {
     backgroundColor: colors.orange,
@@ -157,6 +229,9 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: fonts.semiBold,
     fontSize: hp(2.3),
+    marginVertical: hp(1),
+    paddingHorizontal: wp(4),
+
   },
   randomMatchButton: {
     backgroundColor: colors.lightGrey,
@@ -203,7 +278,7 @@ const styles = StyleSheet.create({
     borderRadius: 13,
   },
   userInfo: {
-    marginLeft: wp(2),
+    marginLeft: wp(3),
     justifyContent: "center",
     // backgroundColor:"red"
   },

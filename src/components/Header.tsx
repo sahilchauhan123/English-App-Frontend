@@ -24,7 +24,7 @@ const Header = ({ index }) => {
     }
     return (
         <View style={styles.header}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:wp(1.5) }}>
                 <Image
                     style={{ height: wp(10), width: wp(10) }}
                     source={require("../../assets/images/logo.png")}
