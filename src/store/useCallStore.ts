@@ -10,6 +10,7 @@ export const useCallStore = create((set, get) => ({
   remoteStream: null,
   localStream: null,
   iceCandidates: null,
+  ongoingCallId : null,
   
 
   setUsersList: (data: any) => set({ usersList: data }),
@@ -27,6 +28,7 @@ export const useCallStore = create((set, get) => ({
   }),
   clearIceCandidates: () => set({ iceCandidates: [] }),
   setRandomUserData: (data) => set({ randomUserData: data }),
+  setOngoingCallId : (data) => set({ongoingCallId:data})
 
 }));
 

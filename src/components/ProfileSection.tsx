@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { colors, fonts } from '../../assets/constants';
+import GradientText from './GradientText';
 
 const ProfileSection = ({ user }) => {
-
+    console.log("user in profile : ", user)
     return (
         <View>
             {/* blurry image */}
             <View>
                 <Image
-                    source={{ uri: user.user.profile_pic }}
-                    style={{ width: hp(50), height: hp(13), alignSelf: 'center' }}
+                    source={{ uri: user.profile_pic }}
+                    style={{ width: hp(100), height: hp(13), alignSelf: 'center' }}
                     resizeMode="cover"
                     blurRadius={1.2}
                 />
@@ -18,31 +20,59 @@ const ProfileSection = ({ user }) => {
             {/* real image */}
             <View style={{ alignItems: 'center', backgroundColor: 'white', borderTopLeftRadius: hp(3.5), borderTopRightRadius: hp(3.5), marginTop: hp(-4.5), flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: wp(4) }}>
                 <View
-                    style={{ width: hp(3.5) }}
+                    style={{ width: hp(3) }}
                 />
                 <Image
-                    source={{ uri: user.user.profile_pic }}
+                    source={{ uri: user.profile_pic }}
                     style={{ width: hp(14), height: hp(14), borderRadius: 100, marginTop: hp(-6.5) }}
                     resizeMode="cover"
                 />
                 <TouchableOpacity>
                     <Image
                         source={require("../../assets/images/heart.png")}
-                        style={{ width: hp(3.5), height: hp(3.5) }}
+                        style={{ width: hp(3), height: hp(3) }}
                         resizeMode='contain'
                     />
                 </TouchableOpacity>
             </View>
 
             {/* name , country, bio ,etc */}
-            <View style={{justifyContent:'center',alignItems:'center'}}>
-                <Text>
-                    {user.user.full_name}
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontFamily: fonts.semiBold, fontSize: hp(2.5), marginTop: hp(1) }}>
+                    {user.full_name}
                 </Text>
-                <Text>
-                    
+                <Text style={{ fontFamily: fonts.regular, fontSize: hp(1.8), color: colors.grey, marginTop: hp(-0.8) }}>
+                    India
+                </Text>
+                <Text style={{ paddingHorizontal: wp(10), textAlign: "center", color: colors.mediumGrey, fontFamily: fonts.meduim, fontSize: hp(1.7), marginTop: hp(2) }}>
+                    Creative mind with a strategic heart. Bold enough to start. Smart enough to scale.
                 </Text>
             </View>
+
+            {/* message & talk stats */}
+            <View style={{ paddingHorizontal: wp(2), marginTop: hp(2), alignItems: 'center', flexDirection: 'row' }}>
+                <View style={{width:'33.333%',alignItems:"center"}}>
+                    <GradientText text={"128"} size={hp(2.3)} />
+                    <Text style={{ fontFamily: fonts.meduim, fontSize: hp(1.8) }}>
+                        Talks
+                    </Text>
+                </View>
+                <View style={{width:'33.333%',alignItems:'center'}}>
+                    <GradientText text={"58"} size={hp(2.3)} />
+
+                    <Text style={{ fontFamily: fonts.meduim, fontSize: hp(1.8) }}>
+
+                        Minutes
+                    </Text>
+                </View>
+                <View style={{width:'33.333%',alignItems:'center'}}>
+                    <GradientText text={"128"} size={hp(2.3)} />
+                    <Text style={{ fontFamily: fonts.meduim, fontSize: hp(1.8) }}>
+                        Feedback
+                    </Text>
+                </View>
+            </View>
+
         </View>
     )
 }

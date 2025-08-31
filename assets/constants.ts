@@ -22,6 +22,7 @@ const colors = {
   grey: '#A1A1A1',
   white: '#ffffff',
   lightGrey: '#E5E5E5',
+  mediumGrey:"#666666",
   bordercolor: '#B0B0B0',
 };
 

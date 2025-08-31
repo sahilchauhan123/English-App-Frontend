@@ -38,7 +38,7 @@ export default function IncomingCallModal() {
   const rejectCall = () => {
     const msg = {
       type: "rejectCall",
-      from: user.user.id,
+      from: user.id,
       target: incomingCall.fromUserData.id,
     }
     sendMessage(msg)

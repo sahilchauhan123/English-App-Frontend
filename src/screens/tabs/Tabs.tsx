@@ -1,12 +1,10 @@
-import { StyleSheet, ToastAndroid, View } from 'react-native'
+import { StyleSheet} from 'react-native'
 import React, { useState } from 'react'
 import { TabView } from 'react-native-tab-view'
 import Home from './home/Home';
 import LeaderBoard from './leaderboard/LeaderBoard';
 
 import { colors } from '../../../assets/constants';
-import useAuthStore from '../../store/useAuthStore';
-import { useCallStore } from '../../store/useCallStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomBar from '../../components/BottomBar';
 import Chats from './chats/Chats';
@@ -14,7 +12,6 @@ import Profile from './profile/Profile';
 import Header from '../../components/Header';
 
 const Tabs = () => {
-  const { user } = useAuthStore();
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -44,14 +41,13 @@ const Tabs = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       {/* Header */}
       <Header index={index} />
-
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
         onIndexChange={setIndex}
-        swipeEnabled={true}
+        swipeEnabled={false}
         renderTabBar={() => null}
-        lazy
+        lazy={true}
       />
 
       {/* Bottombar */}

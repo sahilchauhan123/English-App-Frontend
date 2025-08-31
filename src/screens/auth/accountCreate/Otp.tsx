@@ -103,8 +103,12 @@ const Otp = ({ route }) => {
       }
       if (data.data.isRegistered) {
         ToastAndroid.show("Account Created", 2000);
-        storeUserSession(data.data);
-        setUser(data.data);
+        setUser(data.data.user);
+        const cred = {
+          accessToken: data.data.accessToken,
+          refreshToken: data.data.refreshToken,
+        }
+        storeUserSession(cred);
         navigation.navigate("Home");
       }
     }

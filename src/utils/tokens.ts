@@ -54,7 +54,6 @@ async function storeUserSession(value: any) {
 async function retrieveUserSession() {
     try {
         const session = await EncryptedStorage.getItem("user");
-
         if (session !== null) {
             // Congrats! You've just retrieved your first value!
             console.log(" in session",session);
@@ -79,7 +78,7 @@ async function removeUserSession() {
 
 
 
-async function clearStorage() {
+async function clearUserSession() {
     try {
         await EncryptedStorage.clear();
         // Congrats! You've just cleared the device storage!
@@ -89,4 +88,4 @@ async function clearStorage() {
     }
 }
 
-export { storeUserSession, retrieveUserSession, removeUserSession, clearStorage };
+export { storeUserSession, retrieveUserSession, removeUserSession, clearUserSession };

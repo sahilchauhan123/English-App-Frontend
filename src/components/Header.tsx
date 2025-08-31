@@ -16,7 +16,7 @@ const Header = ({ index }) => {
         console.log('Starting random match call');
         const data = {
             type: "randomCall",
-            from: user.user.id
+            from: user.id
         }
         sendMessage(data);
         setInRandomMatch(true);

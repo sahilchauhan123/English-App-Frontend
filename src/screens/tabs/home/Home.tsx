@@ -70,11 +70,6 @@ const Home = () => {
     }
   }, [usersList]);
 
-  // useEffect(()=>{
-
-  // },[])
-
-
   const handleCallUser = (userId) => {
     console.log(`Initiating call to user ID: ${userId}`);
     sendOffer(userId, false)
@@ -192,7 +187,8 @@ const Home = () => {
           ListEmptyComponent={
             <Text style={styles.emptyText}>No online users available</Text>
           }
-        />        <View style={{ height: hp(1) }} />
+        />        
+        <View style={{ height: hp(1) }} />
         <FlatList
 
           data={onlineUsers}
@@ -298,7 +294,7 @@ const styles = StyleSheet.create({
     marginRight: wp(0),
     alignItems: "flex-end",
     // backgroundColor:'red',
-    justifyContent: "centers"
+    justifyContent: "center"
   },
   emptyText: {
     fontSize: 16,

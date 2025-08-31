@@ -29,7 +29,7 @@
 
 //         const data = {
 //             type: 'initialize',
-//             user: useAuthStore.getState().user.user,
+//             user: useAuthStore.getState().user,
 //         }
 //         socket.send(JSON.stringify(data));
 //     };
@@ -99,10 +99,12 @@ import { useCallStore } from "../store/useCallStore";
 import { wsURL } from "../utils/constants";
 import { acceptAnswer, acceptOffer, endCall, insertICECandidate, remoteEndCall, sendOffer } from "./webrtc";
 import { navigate, navigateWithParams, navigationRef } from "../navigation/navigationService";
+import { retrieveUserSession } from "../utils/tokens";
 
 let socket;
+const user = useAuthStore.getState().user;
 
-export function initSocket() {
+export async function initSocket() {
     console.log("[initSocket] Initializing WebSocket...");
 
     if (socket) {
@@ -111,14 +113,21 @@ export function initSocket() {
     }
 
     console.log("[initSocket] Creating new WebSocket connection to:", wsURL);
-    socket = new WebSocket(wsURL);
+    const { refreshToken } = await retrieveUserSession();
+    try {
+        socket = new WebSocket(`${wsURL}?token=${refreshToken}`);
 
+    } catch (error) {
+        console.log("[initSocket] Error creating WebSocket:", error);
+    }
     socket.onopen = () => {
         console.log("[initSocket] WebSocket connection established");
 
         const data = {
             type: 'initialize',
-            user: useAuthStore.getState().user.user,
+            // user: useAuthStore.getState().user,
+            user: user,
+
         };
         console.log("[initSocket] Sending initialize data:", data);
         socket.send(JSON.stringify(data));
@@ -162,6 +171,10 @@ export function initSocket() {
                     console.log("ICE CANDIDATE received");
                     insertICECandidate(data.payload);
                     break;
+                case "callStarted":
+                    console.log("call started ", data.callId);
+                    // store ongoingcallid
+                    useCallStore.getState().setOngoingCallId(data.callId)
 
                 case "endCall":
                     console.log("[initSocket] Handling 'endCall' event");
@@ -169,7 +182,7 @@ export function initSocket() {
                     remoteEndCall();
                     navigate("Home")
                     // some logic
-                    break; 
+                    break;
 
                 case "randomUserFound":
                     console.log("random user fouund : ", data.target)

@@ -9,6 +9,7 @@ import { retrieveUserSession } from '../../utils/tokens';
 import useAuthStore from '../../store/useAuthStore';
 import useBasicStore from '../../store/userBasicStore';
 import { initSocket } from '../../services/socket';
+import { setTokens } from '../../utils/api';
 
 const SplashScreen = () => {
 
@@ -27,9 +28,9 @@ const SplashScreen = () => {
 
     try {
       if (data) {
-        setUser(data);
         console.log('data', data);
         console.log('User is authenticated');
+        setTokens(data.accessToken,data.refreshToken)
         initSocket();
         navigation.navigate('Tabs');  
       } else {

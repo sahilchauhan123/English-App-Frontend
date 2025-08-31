@@ -50,8 +50,8 @@
 //       sendMessage({
 //         type: 'icecandidate',
 //         payload: event.candidate,
-//         from: useAuthStore.getState().user.user.id,
-//         // fromUserData: useAuthStore.getState().user.user,
+//         from: useAuthStore.getState().user.id,
+//         // fromUserData: useAuthStore.getState().user,
 //         target: useAuthStore.getState().targetId
 //       });
 //     }
@@ -76,7 +76,7 @@
 //   sendMessage({
 //     type: 'offer',
 //     payload: offer,
-//     from: useAuthStore.getState().user.user.id,
+//     from: useAuthStore.getState().user.id,
 //     target: targetId,
 //   });
 // }
@@ -89,7 +89,7 @@
 //   sendMessage({
 //     type: 'answer',
 //     payload: answer,
-//     from: useAuthStore.getState().user.user.id,
+//     from: useAuthStore.getState().user.id,
 //     target: from,
 //   });
 // }
@@ -105,7 +105,7 @@
 // export async function endCall(targetId) {
 //   sendMessage({
 //     type: 'endCall',
-//     from: useAuthStore.getState().user.user.id,
+//     from: useAuthStore.getState().user.id,
 //     target: targetId,
 //   });
 //   pc.close();
@@ -180,7 +180,7 @@ export async function initWebRTC(targetId) {
         sendMessage({
           type: 'icecandidate',
           payload: event.candidate,
-          from: useAuthStore.getState().user.user.id,
+          from: useAuthStore.getState().user.id,
           target: targetId,
         });
         console.log('ICE candidate sent to target');
@@ -221,7 +221,7 @@ export async function sendOffer(targetId, randomCall) {
   const data = {
     type: 'offer',
     payload: offer,
-    from: useAuthStore.getState().user.user.id,
+    from: useAuthStore.getState().user.id,
     target: targetId,
     randomCall: randomCall,
   };
@@ -250,7 +250,7 @@ export async function acceptOffer(offer, from) {
     const data = {
       type: 'answer',
       payload: answer,
-      from: useAuthStore.getState().user.user.id,
+      from: useAuthStore.getState().user.id,
       target: from.id,
     };
     sendMessage(data);
@@ -290,8 +290,9 @@ export async function endCall(targetId) {
   console.log('[endCall] Ending call with target:', targetId);
   sendMessage({
     type: 'endCall',
-    from: useAuthStore.getState().user.user.id,
+    from: useAuthStore.getState().user.id,
     target: targetId,
+    callID : useCallStore.getState().ongoingCallId
   });
 
   pc.close();
@@ -301,6 +302,7 @@ export async function endCall(targetId) {
   useCallStore.getState().setRemoteStream(null);
   useCallStore.getState().setLocalStream(null);
   useCallStore.getState().hideIncomingCallModal();
+  useCallStore.getState().setOngoingCallId(null)
   console.log('[endCall] Local & remote streams cleared, modal hidden');
 }
 
@@ -314,6 +316,7 @@ export async function remoteEndCall() {
   useCallStore.getState().setRemoteStream(null);
   useCallStore.getState().hideIncomingCallModal();
   useCallStore.getState().setLocalStream(null);
+  useCallStore.getState().setOngoingCallId(null);
   console.log('[remoteEndCall] Local & remote streams cleared, modal hidden');
 }
 
@@ -329,7 +332,7 @@ function sendICECandidate(targetID) {
       const data = {
         type: 'icecandidate',
         payload: candidate,
-        from: useAuthStore.getState().user.user.id,
+        from: useAuthStore.getState().user.id,
         target: targetID,
       };
       sendMessage(data);

@@ -14,7 +14,7 @@ export default function CallScreen({ route }) {
   const { localStream, remoteStream } = useCallStore();
   const { user } = useAuthStore();
   console.log("remote user data : ", data)
-  console.log("our data", user.user)
+  console.log("our data", user)
 
   const HangUp = () => {
     console.log("ending call")
@@ -47,11 +47,11 @@ export default function CallScreen({ route }) {
       {localStream && (
         <View style={styles.container}>
           <Image
-            source={{ uri: user.user?.profile_pic }}
+            source={{ uri: user?.profile_pic }}
             style={{ width: 50, height: 50 }}
           />
           <Text style={styles.text}>
-            YOUR NAME: {user.user.full_name}
+            YOUR NAME: {user.full_name}
           </Text>
           <RTCView
             streamURL={localStream.toURL()}

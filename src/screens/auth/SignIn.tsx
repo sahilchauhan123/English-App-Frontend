@@ -15,7 +15,7 @@ import { navigateAndReset } from '../../navigation/navigationService';
 
 const SignIn = () => {
   const navigation = useNavigation();
-  const {setUser} = useAuthStore()
+  const {setUser} = useAuthStore();
 
   const GoogleLogin = async () => {
 
@@ -49,9 +49,13 @@ const SignIn = () => {
 
       // If the user is registered, navigate to the home screen
       Toast.show("Login Successful", 2000);
-      setUser(data.data);
-      storeUserSession(data.data);
-      navigateAndReset("Home");
+      setUser(data.data.user);
+      const cred = {
+        accessToken: data.data.accessToken,
+        refreshToken: data.data.refreshToken,
+      }
+      storeUserSession(cred);
+      navigateAndReset("Tabs");
     } catch (error) {
       console.log(error)
     }

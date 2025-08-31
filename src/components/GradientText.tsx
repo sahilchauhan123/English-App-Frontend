@@ -68,6 +68,8 @@ import {Text} from 'react-native';
 import MaskedView from '@react-native-masked-view/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import {colors, fonts} from '../../assets/constants';
+import { heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 const GradientText = ({text, size = 24}) => {
   const textStyle = {
