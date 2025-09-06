@@ -21,6 +21,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import useBasicStore from '../../store/userBasicStore';
+import { navigateAndReset } from '../../navigation/navigationService';
 
 const CustomDot = ({ selected }) => {
   const widthAnim = useRef(new Animated.Value(wp(2))).current;
@@ -61,12 +62,7 @@ const OnboardingSlider = () => {
   const [pageIndex, setPageIndex] = useState(0);
 
   const ResetAndNavigate = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'SignIn' }],
-      }),
-    );
+    navigateAndReset('SignIn');
   };
 
   return (

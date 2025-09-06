@@ -1,8 +1,9 @@
 import {Platform, StatusBar, StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navigation from './src/navigation/Navigation'
 import NetworkListener from './src/components/NetworkListener';
 import IncomingCallModal from './src/components/IncomingCallModal';
+import { listenOrientationChange as lor, removeOrientationListener as rol } from 'react-native-responsive-screen';
 
 StatusBar.setBarStyle("light-content");
 if (Platform.OS === "android") {
@@ -11,6 +12,11 @@ if (Platform.OS === "android") {
 }
 
 const App = () => {
+  //  useEffect(() => {
+  //   lor(); // start listening for orientation change
+  //   return () => rol(); // cleanup on unmount
+  // }, []);
+
   return (
     <View style={{ flex: 1 }} >
       <Navigation />

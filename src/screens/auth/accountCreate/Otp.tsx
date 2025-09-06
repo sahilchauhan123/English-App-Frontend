@@ -20,6 +20,9 @@ import { create } from 'zustand';
 import { baseURL } from '../../../utils/constants';
 import { storeUserSession } from '../../../utils/tokens';
 import useAuthStore from '../../../store/useAuthStore';
+import { navigateAndReset } from '../../../navigation/navigationService';
+import { setTokens } from '../../../utils/api';
+import { initSocket } from '../../../services/socket';
 
 const Otp = ({ route }) => {
   const { onboardingData, type, email } = route.params;
@@ -77,9 +80,15 @@ const Otp = ({ route }) => {
       }
       if (data.data.isRegistered) {
         ToastAndroid.show("Account Created", 2000);
-        storeUserSession(data.data);
-        setUser(data.data);
-        navigation.navigate("Home");
+        setUser(data.data.user);
+        const cred = {
+          accessToken: data.data.accessToken,
+          refreshToken: data.data.refreshToken,
+        }
+        setTokens(cred.accessToken, cred.refreshToken);
+        storeUserSession(cred);
+        initSocket();
+        navigateAndReset("Tabs");
       }
       return;
     } else {
@@ -107,9 +116,10 @@ const Otp = ({ route }) => {
         const cred = {
           accessToken: data.data.accessToken,
           refreshToken: data.data.refreshToken,
-        }
+        }    
+        setTokens(data.accessToken, data.refreshToken);
         storeUserSession(cred);
-        navigation.navigate("Home");
+        navigateAndReset("Tabs");
       }
     }
   }

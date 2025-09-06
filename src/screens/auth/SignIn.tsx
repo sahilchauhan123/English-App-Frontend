@@ -12,10 +12,12 @@ import { baseURL } from '../../utils/constants';
 import { storeUserSession } from '../../utils/tokens';
 import useAuthStore from '../../store/useAuthStore';
 import { navigateAndReset } from '../../navigation/navigationService';
+import { setTokens } from '../../utils/api';
+import { initSocket } from '../../services/socket';
 
 const SignIn = () => {
   const navigation = useNavigation();
-  const {setUser} = useAuthStore();
+  const { setUser } = useAuthStore();
 
   const GoogleLogin = async () => {
 
@@ -45,7 +47,7 @@ const SignIn = () => {
         Toast.show("Lets Create Your Account", 1500)
         navigation.navigate("GetDetails", { token })
         return
-      } 
+      }
 
       // If the user is registered, navigate to the home screen
       Toast.show("Login Successful", 2000);
@@ -54,7 +56,9 @@ const SignIn = () => {
         accessToken: data.data.accessToken,
         refreshToken: data.data.refreshToken,
       }
+      setTokens(cred.accessToken, cred.refreshToken);
       storeUserSession(cred);
+      initSocket();
       navigateAndReset("Tabs");
     } catch (error) {
       console.log(error)

@@ -22,10 +22,13 @@ import { useNavigation } from '@react-navigation/native';
 import { baseURL } from '../../../utils/constants';
 import { storeUserSession } from '../../../utils/tokens';
 import useAuthStore from '../../../store/useAuthStore';
+import { navigateAndReset } from '../../../navigation/navigationService';
+import { setTokens } from '../../../utils/api';
+import { initSocket } from '../../../services/socket';
 
 const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   const navigation = useNavigation();
-  const {setUser} = useAuthStore();
+  const { setUser } = useAuthStore();
   const [challenge, setChallenge] = useState('');
   const challenges = [
     {
@@ -122,9 +125,15 @@ const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
       }
       if (data.data.isRegistered) {
         Toast.show("Account Created", 2000)
-        setUser(data.data)
-        storeUserSession(data.data);
-        navigation.navigate("Home")
+        setUser(data.data.user);
+        const cred = {
+          accessToken: data.data.accessToken,
+          refreshToken: data.data.refreshToken,
+        }
+        setTokens(cred.accessToken, cred.refreshToken);
+        storeUserSession(cred);
+        initSocket();
+        navigateAndReset("Tabs");
         return
       }
     }

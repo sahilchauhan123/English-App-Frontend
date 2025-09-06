@@ -49,14 +49,16 @@
 
 
 
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, ImageBackground, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useCallStore } from '../../../store/useCallStore';
 import { sendOffer } from '../../../services/webrtc';
 import { colors, fonts } from '../../../../assets/constants';
 import useAuthStore from '../../../store/useAuthStore';
 import LinearGradient from 'react-native-linear-gradient';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+// import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { customFetch } from '../../../utils/api';
+import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive';
 
 
 const Home = () => {
@@ -76,6 +78,7 @@ const Home = () => {
     console.log("reaching there")
 
   };
+
 
 
 
@@ -118,7 +121,7 @@ const Home = () => {
           </Text>
         </View>
       }
-
+      
       {/* <ImageBackground
         source={require("../../../../assets/images/gradient.png")}
         resizeMode="contain"

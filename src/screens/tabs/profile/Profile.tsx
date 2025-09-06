@@ -4,6 +4,7 @@ import useAuthStore from '../../../store/useAuthStore'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import ProfileSection from '../../../components/ProfileSection';
 import Shimmer from '../../../components/ShimmerPlaceholder';
+import Pictures from '../../../components/Pictures';
 
 const Profile = () => {
   const { user } = useAuthStore();
@@ -15,6 +16,7 @@ const Profile = () => {
         {/* profile picture  */}
         <ProfileSection user={user} />
         {/* description & talk section */}
+        <Pictures/>
       </ScrollView>
 
     </View>

@@ -1,12 +1,15 @@
 import { Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import {
-    heightPercentageToDP as hp,
-    widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+// import {
+//     heightPercentageToDP as hp,
+//     widthPercentageToDP as wp,
+// } from 'react-native-responsive-screen';
+
+
 import { colors, fonts } from '../../assets/constants';
 import { sendMessage } from '../services/socket';
 import { useCallStore } from '../store/useCallStore';
+import { hpPortrait as hp, wpPortrait as wp } from '../utils/responsive';
 
 
 const Header = ({ index }) => {

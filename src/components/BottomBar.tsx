@@ -1,9 +1,9 @@
 import { Image, StyleSheet, Text, View, Animated, Pressable } from 'react-native'
 import React, { useEffect, useRef } from 'react'
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen'
 import { menus } from '../utils/constants'
 import { colors, fonts } from '../../assets/constants'
 import LinearGradient from 'react-native-linear-gradient'
+import { hpPortrait as hp, wpPortrait as wp } from '../utils/responsive'
 
 const BottomBar = ({ index, setIndex }) => {
     const widths = useRef(menus.map(() => new Animated.Value(wp(12)))).current

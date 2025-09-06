@@ -82,30 +82,92 @@ let accessToken = null;
 let refreshToken = null;
 
 // Call this to set tokens after login
-export function setTokens({ access, refresh }) {
+export function setTokens(access: string, refresh: string) {
+    console.log("Setting tokens:", { access, refresh });
     accessToken = access;
     refreshToken = refresh;
 }
 
 // Custom fetch wrapper
-export async function customFetch(url: string, method: string, body: any = null) {
-    // 1. Add Authorization header if token exists
+// export async function customFetch(url: string, method: string, body: any = null, contentType : string = "application/json") {
+//     // 1. Add Authorization header if token exists
+//     console.log("accessToken in fetch:", accessToken);
+//     const fullUrl = baseURL + url;
+//     const headers = {
+//         "Content-Type": contentType,
+//         Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
+
+//     };
+//     let config = {
+//         method,
+//         headers,
+//     };
+//     if (body) config.body = JSON.stringify(body)
+
+//     // 2. Make API call
+//     let response = await fetch(fullUrl, config);
+
+//     // 3. If 401 -> try refresh
+//     if (response.status === 401 && refreshToken) {
+//         console.log("Access Token expired. Trying refresh token now ...");
+
+//         const refreshResponse = await fetch(baseURL + "api/auth/refreshToken", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ refreshToken }),
+//         });
+
+//         if (refreshResponse.ok) {
+//             const data = await refreshResponse.json();
+//             accessToken = data.accessToken; // update token
+//             // Store locally token
+//             storeUserSession({ accessToken, refreshToken });
+//             // Retry original request with new token
+//             response = await fetch(fullUrl, config);
+//         } else {
+//             clearUserSession()
+//             useAuthStore.getState().logout();
+//             navigateAndReset("SignIn")
+//             ToastAndroid.show("Session expired. Please log in again.", ToastAndroid.SHORT);
+//             // throw new Error("Refresh token failed");
+//         }
+//     }
+
+//     //convert response to JSON 
+//     return response.json();
+// }
+
+
+
+
+
+export async function customFetch(
+    url: string,
+    method: string,
+    body: any = null,
+    contentType: string = "application/json"
+) {
     const fullUrl = baseURL + url;
-    const headers = {
-        "Content-Type": "application/json",
+    console.log("accessToken in fetch:", accessToken);
+    const headers: any = {
         Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
-
     };
-    let config = {
-        method,
-        headers,
-    };
-    if (body) config.body = JSON.stringify(body)
 
-    // 2. Make API call
+    let config: any = { method, headers };
+
+    if (body) {
+        if (body instanceof FormData) {
+            // ✅ FormData case → don’t set Content-Type
+            config.body = body;
+        } else {
+            // ✅ JSON case
+            headers["Content-Type"] = contentType;
+            config.body = JSON.stringify(body);
+        }
+    }
+
     let response = await fetch(fullUrl, config);
 
-    // 3. If 401 -> try refresh
     if (response.status === 401 && refreshToken) {
         console.log("Access Token expired. Trying refresh token now ...");
 
@@ -117,22 +179,20 @@ export async function customFetch(url: string, method: string, body: any = null)
 
         if (refreshResponse.ok) {
             const data = await refreshResponse.json();
-            accessToken = data.accessToken; // update token
-            // Store locally token
+            accessToken = data.accessToken;
             storeUserSession({ accessToken, refreshToken });
-            // Retry original request with new token
+            config.headers.Authorization = `Bearer ${accessToken}`;
             response = await fetch(fullUrl, config);
         } else {
-            clearUserSession()
+            clearUserSession();
             useAuthStore.getState().logout();
-            navigateAndReset("SignIn")
-            ToastAndroid.show("Session expired. Please log in again.", ToastAndroid.SHORT);
-            // throw new Error("Refresh token failed");
+            navigateAndReset("SignIn");
+            ToastAndroid.show(
+                "Session expired. Please log in again.",
+                ToastAndroid.SHORT
+            );
         }
     }
 
-    //convert response to JSON 
     return response.json();
 }
-
-

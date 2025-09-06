@@ -10,9 +10,7 @@ const Chats = () => {
       <ScrollView>
 
         <Text>Chats</Text>
-        <ProfileSection user={user} />
-        <ProfileSection user={user} />
-        <ProfileSection user={user} />
+
       </ScrollView>
 
     </View>

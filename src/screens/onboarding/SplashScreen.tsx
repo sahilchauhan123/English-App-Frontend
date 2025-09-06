@@ -1,60 +1,218 @@
+// // import { Image, StyleSheet, Text, View } from 'react-native';
+// // import React, { useEffect } from 'react';
+// // import {
+// //   widthPercentageToDP as wp,
+// //   heightPercentageToDP as hp,
+// //   listenOrientationChange as lor,
+// //   removeOrientationListener as rol
+// // } from 'react-native-responsive-screen';
+// // import { useNavigation } from '@react-navigation/native';
+// // import { retrieveUserSession } from '../../utils/tokens';
+// // import useAuthStore from '../../store/useAuthStore';
+// // import useBasicStore from '../../store/userBasicStore';
+// // import { initSocket } from '../../services/socket';
+// // import { setTokens } from '../../utils/api';
+
+// // const SplashScreen = () => {
+
+// //   const navigation = useNavigation();
+// //   const { setUser } = useAuthStore();
+// //   const { userOnboarded } = useBasicStore();
+
+
+// //   useEffect(() => {
+// //     handleNavigation();
+// //   }, []);
+
+// //   async function handleNavigation() {
+
+// //     // Logic to determine the initial route based on user authentication status
+// //     const data = await retrieveUserSession();
+
+// //     // try {
+// //     //   if (data) {
+// //     //     console.log('data', data);
+// //     //     console.log('User is authenticated');
+// //     //     setTokens(data.accessToken,data.refreshToken)
+// //     //     initSocket();
+// //     //     navigation.navigate('Tabs');  
+// //     //   } else {
+// //     //     if (userOnboarded) {
+// //     //       console.log('User is not authenticated but completed onboarding');
+// //     //       navigation.navigate('SignIn');
+// //     //     } else {
+// //     //       console.log('User has not completed onboarding');
+// //     //       navigation.navigate('OnboardingSlider');
+// //     //     }
+// //     //   }
+// //     // } catch (error) {
+// //     //   console.error('Error retrieving user session:', error);
+// //     //   navigation.navigate('OnboardingSlider');
+// //     // }
+// //   }
+
+
+
+// //   return (
+// //     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+// //       <Image
+// //         source={require('../../../assets/images/logo.png')}
+// //         style={{ height: hp(20 / 1.2), width: wp(40 / 1.2) }}
+// //       />
+// //       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+// //         <Text style={{ fontFamily: 'Poppins-Bold', fontSize: hp(4.4) }}>
+// //           Strango
+// //         </Text>
+// //         <Text
+// //           style={{
+// //             fontFamily: 'Poppins-Medium',
+// //             fontSize: hp(2.1),
+// //             marginTop: wp(-1.8),
+// //           }}>
+// //           Speak English With Real People
+// //         </Text>
+// //       </View>
+// //     </View>
+// //   );
+// // };
+
+// // export default SplashScreen;
+
+// // const styles = StyleSheet.create({});
+
+
+
+
+
+// import { Image, StyleSheet, Text, View } from 'react-native';
+// import React, { useEffect } from 'react';
+// import {
+//   widthPercentageToDP as wp,
+//   heightPercentageToDP as hp,
+//   listenOrientationChange as lor,
+//   removeOrientationListener as rol,
+// } from 'react-native-responsive-screen';
+// import { useNavigation } from '@react-navigation/native';
+// import { retrieveUserSession } from '../../utils/tokens';
+// import useAuthStore from '../../store/useAuthStore';
+// import useBasicStore from '../../store/userBasicStore';
+// import { initSocket } from '../../services/socket';
+// import { setTokens } from '../../utils/api';
+
+// const SplashScreen = () => {
+//   const navigation = useNavigation();
+//   const { setUser } = useAuthStore();
+//   const { userOnboarded } = useBasicStore();
+
+//   useEffect(() => {
+//     handleNavigation();
+//   }, []);
+
+//   async function handleNavigation() {
+//     const data = await retrieveUserSession();
+
+//     // your auth logic (commented for now)
+//     // try {
+//     //   if (data) {
+//     //     setTokens(data.accessToken, data.refreshToken);
+//     //     initSocket();
+//     //     navigation.navigate('Tabs');
+//     //   } else {
+//     //     if (userOnboarded) {
+//     //       navigation.navigate('SignIn');
+//     //     } else {
+//     //       navigation.navigate('OnboardingSlider');
+//     //     }
+//     //   }
+//     // } catch (error) {
+//     //   console.error('Error retrieving user session:', error);
+//     //   navigation.navigate('OnboardingSlider');
+//     // }
+//   }
+
+//   return (
+//     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+//       <Image
+//         source={require('../../../assets/images/logo.png')}
+//         style={{ height: hp(20 / 1.2), width: wp(40 / 1.2) }}
+//       />
+//       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+//         <Text style={{ fontFamily: 'Poppins-Bold', fontSize: hp(4.4) }}>
+//           Strango
+//         </Text>
+//         <Text
+//           style={{
+//             fontFamily: 'Poppins-Medium',
+//             fontSize: hp(2.1),
+//             marginTop: wp(-1.8),
+//           }}>
+//           Speak English With Real People
+//         </Text>
+//       </View>
+//     </View>
+//   );
+// };
+
+// export default SplashScreen;
+
+// const styles = StyleSheet.create({});
+
+
+
+
+
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
-import { retrieveUserSession } from '../../utils/tokens';
+import { clearUserSession, retrieveUserSession } from '../../utils/tokens';
 import useAuthStore from '../../store/useAuthStore';
 import useBasicStore from '../../store/userBasicStore';
 import { initSocket } from '../../services/socket';
-import { setTokens } from '../../utils/api';
-
+import { customFetch, setTokens } from '../../utils/api';
+// import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { wpPortrait as wp, hpPortrait as hp } from '../../utils/responsive';
+import { navigateAndReset } from '../../navigation/navigationService';
 const SplashScreen = () => {
-
   const navigation = useNavigation();
   const { setUser } = useAuthStore();
   const { userOnboarded } = useBasicStore();
 
+  // 👇 now use wp() and hp() just like before
 
   useEffect(() => {
     handleNavigation();
   }, []);
 
-  async function handleNavigation() {
-    // Logic to determine the initial route based on user authentication status
-    const data = await retrieveUserSession();
 
+  async function handleNavigation() {
+    const data = await retrieveUserSession();
     try {
       if (data) {
-        console.log('data', data);
-        console.log('User is authenticated');
-        setTokens(data.accessToken,data.refreshToken)
+        setTokens(data.accessToken, data.refreshToken);
+        const res = await customFetch("/api/user/profile", "GET")
+        setUser(res.data.profile);
         initSocket();
-        navigation.navigate('Tabs');  
+        navigateAndReset('Tabs');
       } else {
         if (userOnboarded) {
-          console.log('User is not authenticated but completed onboarding');
-          navigation.navigate('SignIn');
+          clearUserSession()
+          navigateAndReset('SignIn');
         } else {
-          console.log('User has not completed onboarding');
-          navigation.navigate('OnboardingSlider');
+          clearUserSession()
+          navigateAndReset('OnboardingSlider');
         }
       }
     } catch (error) {
       console.error('Error retrieving user session:', error);
-      navigation.navigate('OnboardingSlider');
+      navigateAndReset('OnboardingSlider');
     }
   }
-
-
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
       <Image
         source={require('../../../assets/images/logo.png')}
-        style={{ height: hp(20 / 1.2), width: wp(40 / 1.2) }}
+        style={{ height: hp(20), width: hp(20) }}
       />
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontFamily: 'Poppins-Bold', fontSize: hp(4.4) }}>
@@ -64,7 +222,6 @@ const SplashScreen = () => {
           style={{
             fontFamily: 'Poppins-Medium',
             fontSize: hp(2.1),
-            marginTop: wp(-1.8),
           }}>
           Speak English With Real People
         </Text>
