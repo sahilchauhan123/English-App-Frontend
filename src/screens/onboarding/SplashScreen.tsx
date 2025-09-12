@@ -190,6 +190,7 @@ const SplashScreen = () => {
       if (data) {
         setTokens(data.accessToken, data.refreshToken);
         const res = await customFetch("/api/user/profile", "GET")
+        console.log("res in splash", res);
         setUser(res.data.profile);
         initSocket();
         navigateAndReset('Tabs');

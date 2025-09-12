@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@appcitor/react-native-voice-to-text": "^0.2.1",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/netinfo": "^11.4.1",
     "@react-native-google-signin/google-signin": "^14.0.1",
@@ -32,6 +33,7 @@
     "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-simple-toast": "^3.3.2",
     "react-native-tab-view": "^4.1.2",
+    "react-native-tts": "^4.1.1",
     "react-native-webrtc": "^124.0.6",
     "zustand": "^5.0.6"
   },
