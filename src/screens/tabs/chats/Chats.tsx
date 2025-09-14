@@ -1,271 +1,176 @@
-// import { ScrollView, StyleSheet, Text, View,Button } from 'react-native'
-// import React, { useEffect, useState } from 'react'
-// import ProfileSection from '../../../components/ProfileSection'
-// import useAuthStore from '../../../store/useAuthStore'  
-
-// import Tts from "react-native-tts"; // for text-to-speech
-// import { retrieveUserSession } from '../../../utils/tokens';
-
-
-// const Chats = () => {
-//   const [recognizedText, setRecognizedText] = useState("");
-//   const [aiResponse, setAiResponse] = useState("");
-//   const [isListening, setIsListening] = useState(false);
-
-//   useEffect(() => {
-//     console.log("Voice module:", Voice);
-
-//     // Voice event handlers
-//     Voice.onSpeechResults = (event) => {
-//       const text = event.value[0]; // take the first recognized result
-//       setRecognizedText(text);
-//       sendToAPI(text);
-//     };
-
-//     Voice.onSpeechError = (err) => {
-//       console.error("Speech Error:", err);
-//       setIsListening(false);
-//     };
-
-//     return () => {
-//       Voice.destroy().then(Voice.removeAllListeners);
-//     };
-//   }, []);
-
-//   const startListening = async () => {
-//     try {
-//       setIsListening(true);
-//       await Voice.start("en-US");
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   };
-
-//   const stopListening = async () => {
-//     try {
-//       await Voice.stop();
-//       setIsListening(false);
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   };
-
-//   const sendToAPI = async (userText: string) => {
-//     try {
-//       const { accessToken } = await retrieveUserSession();
-//       const response = await fetch(
-//         "https://english-convo-ai.strango.workers.dev/chat/motivator",
-//         {
-//           method: "POST",
-//           headers: { 
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${accessToken}`
-//            },
-
-//           body: JSON.stringify({
-//             messages: [{ role: "user", content: userText }],
-//           }),
-//         }
-//       );
-
-//       const data = await response.json();
-//       const reply = data.choices[0].message.content;
-
-//       setAiResponse(reply);
-//       Tts.speak(reply); // speak response
-//     } catch (error) {
-//       console.error("API Error:", error);
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>🎙 AI Voice Chat</Text>
-
-//       <Button
-//         title={isListening ? "Stop Listening" : "Start Talking"}
-//         onPress={isListening ? stopListening : startListening}
-//       />
-
-//       <Text style={styles.label}>You said:</Text>
-//       <Text style={styles.text}>{recognizedText}</Text>
-
-//       <Text style={styles.label}>AI replied:</Text>
-//       <Text style={styles.text}>{aiResponse}</Text>
-//     </View>
-//   );
-// }
-
-// export default Chats;
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     padding: 20,
-//   },
-//   title: {
-//     fontSize: 22,
-//     fontWeight: "bold",
-//     marginBottom: 20,
-//   },
-//   label: {
-//     fontSize: 18,
-//     marginTop: 20,
-//     fontWeight: "600",
-//   },
-//   text: {
-//     fontSize: 16,
-//     marginTop: 10,
-//     textAlign: "center",
-//   },
-// });
-
-
-
-
-
-
-import { StyleSheet, Text, View, Button, Platform, PermissionsAndroid } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, Button, Platform, PermissionsAndroid, Alert, FlatList } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import VoiceToText, { VoiceToTextEvents } from "@appcitor/react-native-voice-to-text";
-import Tts from "react-native-tts"; // for text-to-speech
+import Tts from "react-native-tts";
 import { retrieveUserSession } from "../../../utils/tokens";
 
+type Message = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+};
+
 const Chats = () => {
-  const [recognizedText, setRecognizedText] = useState("");
-  const [aiResponse, setAiResponse] = useState("");
-  const [isListening, setIsListening] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inCall, setInCall] = useState(false);
+  const inCallRef = useRef(false);
+  const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   requestMicrophonePermission();
-
-  //   // Listen for final results
-  //   const resultsListener = VoiceToText.addEventListener(
-  //     VoiceToTextEvents.RESULTS,
-  //     (event) => {
-  //       const text = event.value; // recognized speech
-  //       setRecognizedText(text);
-  //       sendToAPI(text);
-  //     }
-  //   );
-
-  //   // Handle errors
-  //   const errorListener = VoiceToText.addEventListener(
-  //     VoiceToTextEvents.ERROR,
-  //     (err) => {
-  //       console.error("Speech Error:", err);
-  //       setIsListening(false);
-  //     }
-  //   );
-
-  //   // Listening state handlers
-  //   const startListener = VoiceToText.addEventListener(
-  //     VoiceToTextEvents.START,
-  //     () => setIsListening(true)
-  //   );
-
-  //   const endListener = VoiceToText.addEventListener(
-  //     VoiceToTextEvents.END,
-  //     () => setIsListening(false)
-  //   );
-
-  //   return () => {
-  //     VoiceToText.destroy();
-  //     resultsListener.remove();
-  //     errorListener.remove();
-  //     startListener.remove();
-  //     endListener.remove();
-  //   };
-  // }, []);
-
-
-  async function requestMicrophonePermission() {
-    if (Platform.OS !== 'android') return true;
-
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        {
-          title: 'Microphone Permission',
-          message: 'This app needs access to your microphone for speech recognition',
-          buttonPositive: 'OK',
+  useEffect(() => {
+    // load voices
+    Tts.getInitStatus()
+      .then(() => Tts.voices())
+      .then((voices) => {
+        const available = (voices || []).filter((v: any) => !v.notInstalled && v.language.startsWith("en"));
+        if (available.length > 0) {
+          setSelectedVoice(available[0].id);
         }
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-      console.warn(err);
-      return false;
-    }
+      });
+
+    // STT listener
+    const resultsListener = VoiceToText.addEventListener(VoiceToTextEvents.RESULTS, async (event) => {
+      const text = event?.value;
+      if (!text) return;
+
+      // stop listening to avoid echo
+      try {
+        await VoiceToText.stopListening();
+      } catch {}
+
+      addMessage("user", text);
+      await sendToAPI(text);
+    });
+
+    const errorListener = VoiceToText.addEventListener(VoiceToTextEvents.ERROR, (err) => {
+      console.log("STT Error:", err);
+      if (inCallRef.current) {
+        setTimeout(() => safeStartListening(), 500);
+      }
+    });
+
+    // TTS listener
+    const onTtsFinish = () => {
+      if (inCallRef.current) {
+        setTimeout(() => safeStartListening(), 400);
+      }
+    };
+    Tts.addEventListener("tts-finish", onTtsFinish);
+
+    return () => {
+      resultsListener.remove();
+      errorListener.remove();
+      Tts.removeEventListener("tts-finish", onTtsFinish);
+      try {
+        VoiceToText.destroy();
+        VoiceToText.stopListening();
+        Tts.stop();
+      } catch {}
+    };
+  }, []);
+
+  useEffect(() => {
+    inCallRef.current = inCall;
+  }, [inCall]);
+
+  async function requestMic() {
+    if (Platform.OS !== "android") return true;
+    const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO);
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
   }
 
-  // const startListening = async () => {
-  //   try {
-  //     await VoiceToText.startListening();
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
+  const startCall = async () => {
+    const ok = await requestMic();
+    if (!ok) {
+      Alert.alert("Permission required", "Microphone permission is needed.");
+      return;
+    }
+    setInCall(true);
+    setTimeout(() => safeStartListening(), 200);
+  };
 
-  // const stopListening = async () => {
-  //   try {
-  //     await VoiceToText.stopListening();
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
-
-  const sendToAPI = async (userText: string) => {
-    console.log("Sending to API:", userText);
-
+  const endCall = async () => {
+    setInCall(false);
     try {
-      const { accessToken } = await retrieveUserSession();
-      console.log("accessToken in chat", accessToken);
+      await VoiceToText.stopListening();
+      await Tts.stop();
+    } catch {}
+  };
 
-      const response =  await fetch(
-        "https://english-convo-ai.strango.workers.dev/chat/flirty",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            messages: [{ role: "user", content: "hi" }],
-          }),
-        }
-      );
-
-      console.log("✅ API Response Status:", response);
-
-      // const data = await response.json();
-      // console.log("✅ API Response Data:", data);
-
-      // const reply = data?.choices?.[0]?.message?.content ?? "No reply";
-      // setAiResponse(reply);
-      // Tts.speak(reply);
-
-    } catch (err) {
-      console.error("❌ API Fetch Error:", err);
+  const safeStartListening = async () => {
+    try {
+      await VoiceToText.stopListening();
+    } catch {}
+    try {
+      await VoiceToText.startListening();
+    } catch (e) {
+      console.log("startListening error:", e);
     }
   };
 
+  const addMessage = (role: "user" | "assistant", content: string) => {
+    setMessages((prev) => [...prev, { id: Date.now().toString(), role, content }]);
+  };
+
+  const sendToAPI = async (userText: string) => {
+    try {
+      const { accessToken } = await retrieveUserSession();
+
+      // include full history
+      const apiMessages = messages.concat({ id: Date.now().toString(), role: "user", content: userText });
+
+      const response = await fetch("https://english-convo-ai.strango.workers.dev/chat/flirty", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          messages: apiMessages.map((m) => ({
+            role: m.role === "user" ? "user" : "assistant",
+            content: m.content,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+      const reply = data?.choices?.[0]?.message?.content ?? "No reply";
+
+      addMessage("assistant", reply);
+      speakWithVoice(reply);
+    } catch (err) {
+      console.error("API Error:", err);
+      if (inCallRef.current) setTimeout(() => safeStartListening(), 500);
+    }
+  };
+
+  const speakWithVoice = (text: string) => {
+    if (selectedVoice) Tts.setDefaultVoice(selectedVoice);
+    // Tts.setDefaultRate(1.0);
+    Tts.speak(text);
+  };
+
+  const renderItem = ({ item }: { item: Message }) => (
+    <View style={[styles.bubble, item.role === "user" ? styles.userBubble : styles.aiBubble]}>
+      <Text style={styles.bubbleText}>{item.content}</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🎙 AI Voice Chat</Text>
+      <Text style={styles.title}>AI Voice Chat</Text>
 
-      {/* <Button
-        title={isListening ? "Stop Listening" : "Start Talking"}
-        onPress={isListening ? stopListening : startListening}
-      /> */}
-{/* 
-      <Text style={styles.label}>You said:</Text>
-      <Text style={styles.text}>{recognizedText}</Text>
+      <FlatList
+        data={messages}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={{ paddingVertical: 10 }}
+      />
 
-      <Text style={styles.label}>AI replied:</Text> */}
-      <Button onPress={()=>sendToAPI("hiiii")} title="sasa"/>
-      {/* <Text style={styles.text}>{aiResponse}</Text> */}
+      {inCall ? (
+        <Button title="End Call" onPress={endCall} color="red" />
+      ) : (
+        <Button title="Start Call" onPress={startCall} color="green" />
+      )}
     </View>
   );
 };
@@ -276,23 +181,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    padding: 10,
   },
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 18,
-    marginTop: 20,
-    fontWeight: "600",
-  },
-  text: {
-    fontSize: 16,
-    marginTop: 10,
     textAlign: "center",
+    marginVertical: 10,
+  },
+  bubble: {
+    maxWidth: "75%",
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 12,
+  },
+  userBubble: {
+    backgroundColor: "#DCF8C6",
+    alignSelf: "flex-end",
+  },
+  aiBubble: {
+    backgroundColor: "#E5E5EA",
+    alignSelf: "flex-start",
+  },
+  bubbleText: {
+    fontSize: 16,
   },
 });
