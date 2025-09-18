@@ -78,15 +78,15 @@ import { clearUserSession, storeUserSession } from "./tokens";
 
 
 // fetchInterceptor.js
-let accessToken = null;
-let refreshToken = null;
+// let accessToken = null;
+// let refreshToken = null;
 
-// Call this to set tokens after login
-export function setTokens(access: string, refresh: string) {
-    console.log("Setting tokens:", { access, refresh });
-    accessToken = access;
-    refreshToken = refresh;
-}
+// // Call this to set tokens after login
+// export function setTokens(access: string, refresh: string) {
+//     console.log("Setting tokens:", { access, refresh });
+//     accessToken = access;
+//     refreshToken = refresh;
+// }
 
 // Custom fetch wrapper
 // export async function customFetch(url: string, method: string, body: any = null, contentType : string = "application/json") {
@@ -141,6 +141,18 @@ export function setTokens(access: string, refresh: string) {
 
 
 
+// fetchInterceptor.js
+let accessToken = null;
+let refreshToken = null;
+
+// Call this to set tokens after login
+export function setTokens(access: string, refresh: string) {
+    console.log("Setting tokens:", { access, refresh });
+    accessToken = access;
+    refreshToken = refresh;
+}
+
+
 export async function customFetch(
     url: string,
     method: string,
@@ -171,16 +183,19 @@ export async function customFetch(
     if (response.status === 401 && refreshToken) {
         console.log("Access Token expired. Trying refresh token now ...");
 
-        const refreshResponse = await fetch(baseURL + "api/auth/refreshToken", {
+        const refreshResponse = await fetch(baseURL + "/api/auth/refreshToken", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ refreshToken }),
+            body: JSON.stringify({ "refreshToken": refreshToken }),
         });
+        console.log("refresh token done ")
 
         if (refreshResponse.ok) {
-            const data = await refreshResponse.json();
-            accessToken = data.accessToken;
+            const res = await refreshResponse.json();
+            console.log("refresh response data", res.data);
+            accessToken = res.data.accessToken;
             storeUserSession({ accessToken, refreshToken });
+            accessToken = res.data.accessToken; // update token
             config.headers.Authorization = `Bearer ${accessToken}`;
             response = await fetch(fullUrl, config);
         } else {

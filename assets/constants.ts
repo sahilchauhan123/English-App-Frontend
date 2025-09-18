@@ -24,6 +24,10 @@ const colors = {
   lightGrey: '#E5E5E5',
   mediumGrey:"#666666",
   bordercolor: '#B0B0B0',
+  callModalBackground: 'rgba(66, 65, 65, 0.66)',
+  callCut:"#FB4F4F",
+  callAccept:"#09C26F",
+
 };
 
 
