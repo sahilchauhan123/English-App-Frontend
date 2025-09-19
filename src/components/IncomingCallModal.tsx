@@ -57,7 +57,7 @@ export default function IncomingCallModal() {
   return (
 
     <Modal
-      visible={!callIncoming}
+      visible={callIncoming}
       transparent
       animationType="slide"
     >

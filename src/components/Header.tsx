@@ -10,6 +10,7 @@ import { colors, fonts } from '../../assets/constants';
 import { sendMessage } from '../services/socket';
 import { useCallStore } from '../store/useCallStore';
 import { hpPortrait as hp, wpPortrait as wp } from '../utils/responsive';
+import { navigate } from '../navigation/navigationService';
 
 
 const Header = ({ index }) => {
@@ -35,10 +36,10 @@ const Header = ({ index }) => {
                 <Text style={styles.headerTitle}>Strango</Text>
             </View>
             <View>
-                <TouchableOpacity >
+                <TouchableOpacity onPress={()=>navigate("Setting")} >
                     <Image
                         style={{ height: wp(10), width: wp(10) }}
-                        source={require("../../assets/images/filter.png")}
+                        source={require("../../assets/images/setting.png")}
                     />
                 </TouchableOpacity>
             </View>

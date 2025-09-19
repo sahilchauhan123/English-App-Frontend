@@ -27,6 +27,8 @@ const colors = {
   callModalBackground: 'rgba(66, 65, 65, 0.66)',
   callCut:"#FB4F4F",
   callAccept:"#09C26F",
+  red:"#FF1616",
+  
 
 };
 

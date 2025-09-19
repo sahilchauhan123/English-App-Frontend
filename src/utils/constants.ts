@@ -39,7 +39,26 @@ export const menus = [
 
 ]
 
+export const settingsMenus = [
+    {
+        id: 0,
+        name: "Change Language",
+        image: require("../../assets/images/x.png"),
+        screen: "ChangeLanguage"
+    },
+    {
+        id: 1,
+        name: "Delete your account",
+        image: require("../../assets/images/caution.png"),
+        screen: "DeleteAccount"
+    },
+    {
+        id: 2,
+        name:"Notifications",
+        image: require("../../assets/images/bell.png"),
+    }
 
+]
 
 export const grokvoice = [
   "en-gb-x-gba-local",

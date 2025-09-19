@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import Navigation from './src/navigation/Navigation'
 import NetworkListener from './src/components/NetworkListener';
 import IncomingCallModal from './src/components/IncomingCallModal';
+import CallHeader from './src/components/CallHeader';
 
 
 StatusBar.setBarStyle("light-content");
@@ -19,6 +20,7 @@ const App = () => {
 
   return (
     <View style={{ flex: 1 }} >
+      <CallHeader/>
       <Navigation />
       <NetworkListener/>
       <IncomingCallModal/>
