@@ -162,46 +162,6 @@ const Home = () => {
           }
         />
         <View style={{ height: hp(1) }} />
-        <FlatList
-
-          data={onlineUsers}
-          renderItem={renderUserItem}
-          keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>No online users available</Text>
-          }
-        />
-        <View style={{ height: hp(1) }} />
-        <FlatList
-
-          data={onlineUsers}
-          renderItem={renderUserItem}
-          keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>No online users available</Text>
-          }
-        />
-        <View style={{ height: hp(1) }} />
-        <FlatList
-
-          data={onlineUsers}
-          renderItem={renderUserItem}
-          keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>No online users available</Text>
-          }
-        />        
-        <View style={{ height: hp(1) }} />
-        <FlatList
-
-          data={onlineUsers}
-          renderItem={renderUserItem}
-          keyExtractor={(item) => item.id.toString()}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>No online users available</Text>
-          }
-        />
-
       </View>
 
 

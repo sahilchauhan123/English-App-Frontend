@@ -38,7 +38,7 @@ const Header = ({ index }) => {
             <View>
                 <TouchableOpacity onPress={()=>navigate("Setting")} >
                     <Image
-                        style={{ height: wp(10), width: wp(10) }}
+                        style={{ height: hp(4.3), width: hp(4.3) }}
                         source={require("../../assets/images/setting.png")}
                     />
                 </TouchableOpacity>

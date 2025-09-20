@@ -15,9 +15,9 @@ const CallHeader = () => {
         <SafeAreaView style={{ backgroundColor: colors.white }}>
             <LinearGradient
                 colors={[
-                    hexToRgba(colors.gradient.first, 0.8), 
-                    hexToRgba(colors.gradient.second, 0.8),
-                    hexToRgba(colors.gradient.last,0.8)
+                    hexToRgba(colors.gradient.first, 0.65), 
+                    hexToRgba(colors.gradient.second, 0.65),
+                    hexToRgba(colors.gradient.last,0.65)
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0.7, y: 0 }}

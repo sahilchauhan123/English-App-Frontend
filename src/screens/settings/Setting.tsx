@@ -29,14 +29,14 @@ const Setting = () => {
                     {menu.name}
                   </Text>
                 </View>
-                <View>
+                {/* <View> */}
                   <Switch
                     trackColor={{ false: colors.orange, true: colors.orange }}
                     thumbColor={colors.white}
                     onValueChange={toggle}
                     value={Enable}
                   />
-                </View>
+                {/* </View> */}
               </View>
             )
           } else {
