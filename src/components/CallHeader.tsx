@@ -27,7 +27,7 @@ const CallHeader = () => {
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <Image
                                 style={{ height: hp(6), width: hp(6), borderRadius: hp(100) }}
-                                source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVcJBefqsqE-EgUOG0wYrNLOjflaZXsH9U_A&s" }}
+                                source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraMl1GmQepkXHZlItoFEIUiNPk_krO1dyR7Xo1kBsZYNFb_w1kwhLnt5BO9LXYX5evAI&usqp=CAU" }}
                             />
                             <View style={{ marginLeft: wp(3) }}>
                                 <Text style={styles.text}>

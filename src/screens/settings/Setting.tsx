@@ -30,12 +30,12 @@ const Setting = () => {
                   </Text>
                 </View>
                 {/* <View> */}
-                  <Switch
-                    trackColor={{ false: colors.orange, true: colors.orange }}
-                    thumbColor={colors.white}
-                    onValueChange={toggle}
-                    value={Enable}
-                  />
+                <Switch
+                  trackColor={{ false: colors.grey, true: colors.orange }}
+                  thumbColor={colors.white}
+                  onValueChange={toggle}
+                  value={Enable}
+                />
                 {/* </View> */}
               </View>
             )

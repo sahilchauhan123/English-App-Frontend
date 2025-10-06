@@ -98,6 +98,7 @@ const RankHolder = () => {
 
             <FlatList
                 data={sampledata}
+                scrollEnabled={false}
                 renderItem={renderUserItem}
                 keyExtractor={(item) => item.id.toString()}
                 ListEmptyComponent={

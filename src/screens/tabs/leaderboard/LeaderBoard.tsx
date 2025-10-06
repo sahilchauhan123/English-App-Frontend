@@ -1,7 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet} from 'react-native'
 import React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
-import { hexToRgba } from '../../../utils/extras'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
 import Winners from './Winners'
@@ -9,7 +7,7 @@ import RankHolder from './RankHolder'
 
 const LeaderBoard = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image
         source={require("../../../../assets/images/gradient.png")}
         resizeMode="stretch"
@@ -17,7 +15,7 @@ const LeaderBoard = () => {
       />
       <Winners/>
       <RankHolder/>
-    </View>
+    </ScrollView>
   )
 }
 

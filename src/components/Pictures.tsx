@@ -65,7 +65,7 @@ const Pictures = () => {
                         key={key}
                         onPress={() => { setShow(true), setSelectedImage(item) }}
                         style={{
-                            width: images.length < 3 ? wp(46) : wp(30),
+                            width: images.length < 3 ? wp(46) : wp(46),
                             backgroundColor: colors.lightGrey,
                             marginVertical: hp(1),
                             borderWidth: 1,
@@ -75,7 +75,7 @@ const Pictures = () => {
                         }}>
                         <View
                             style={{
-                                height: images.length < 3 ? hp(30) : hp(20),
+                                height: images.length < 3 ? hp(30) : hp(30),
                             }}>
                             <Image
                                 style={{ height: "100%", width: "100%" }}

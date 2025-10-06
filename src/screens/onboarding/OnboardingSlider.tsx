@@ -9,10 +9,7 @@ import {
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import Onboarding from 'react-native-onboarding-swiper';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import { wpPortrait as wp, hpPortrait as hp } from '../../utils/responsive';
 import { colors, fonts } from '../../../assets/constants';
 import GradientText from '../../components/GradientText';
 import {

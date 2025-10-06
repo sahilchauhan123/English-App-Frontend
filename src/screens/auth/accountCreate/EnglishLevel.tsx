@@ -10,10 +10,7 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive';
 import { colors, fonts, nativeLanguages } from '../../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-simple-toast';

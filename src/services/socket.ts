@@ -120,6 +120,8 @@ export async function initSocket() {
     } catch (error) {
         console.log("[initSocket] Error creating WebSocket:", error);
     }
+
+
     socket.onopen = () => {
         console.log("[initSocket] WebSocket connection established");
 
@@ -202,6 +204,13 @@ export async function initSocket() {
                     console.log("[initSocket] Handling 'rejectedCall' event");
                     ToastAndroid.show(`Call Rejected By ${data.fromUserData.full_name}`, 2000);
                     break;
+
+                case "newUsersList":
+                    if (data.usersCount < 1) {
+                        console.log("refresh list :", data.error)
+                        break;
+                    }
+                    useCallStore.getState().setUsersList(data.usersList);
 
                 default:
                 // console.log("[initSocket] Unknown message type:", data.data);

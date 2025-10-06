@@ -101,6 +101,7 @@ export default function IncomingCallModal() {
               <Text style={styles.buttonText}>Answer</Text>
             </TouchableOpacity>
           </View>
+          
         </View>
       </View>
     </Modal>

@@ -7,10 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import { wpPortrait as wp, hpPortrait as hp } from '../../utils/responsive';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, fonts } from '../../../assets/constants';
 import LinearGradient from 'react-native-linear-gradient';

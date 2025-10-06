@@ -1,9 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { View, SafeAreaView, StyleSheet, Text } from 'react-native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive';
 import { colors, fonts } from '../../../../assets/constants';
 import { TabView } from 'react-native-tab-view';
 import LanguageSelector from './LanguageSelector';

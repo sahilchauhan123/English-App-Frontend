@@ -28,6 +28,7 @@ const colors = {
   callCut: "#FB4F4F",
   callAccept: "#09C26F",
   red: "#FF1616",
+  greyLighter:"#E8E8E8BF"
 
 
 };

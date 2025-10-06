@@ -1,10 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive';
 import { colors, fonts } from '../../../assets/constants';
 import { GoogleSignUp } from '../../utils/google';
 import Toast from 'react-native-simple-toast';

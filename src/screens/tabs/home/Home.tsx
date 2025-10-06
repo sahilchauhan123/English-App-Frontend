@@ -59,6 +59,8 @@ import LinearGradient from 'react-native-linear-gradient';
 // import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { customFetch } from '../../../utils/api';
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive';
+import { sendMessage } from '../../../services/socket';
+import { navigate } from '../../../navigation/navigationService';
 
 
 const Home = () => {
@@ -100,13 +102,17 @@ const Home = () => {
           </View>
         </View>
         <View style={{ flex: 2, height: '100%', justifyContent: 'space-between', alignItems: "flex-end" }}>
-          <Image
-            style={{ height: hp(3), width: hp(3), marginTop: hp(1), marginRight: wp(2) }}
-            source={require("../../../../assets/images/call.png")}
-          />
+          <TouchableOpacity onPress={() => handleCallUser(item.id)}>
+
+            <Image
+              style={{ height: hp(3), width: hp(3), marginTop: hp(1), marginRight: wp(2) }}
+              source={require("../../../../assets/images/call.png")}
+            />
+          </TouchableOpacity>
           <Text style={styles.talk}>42 Talks</Text>
         </View>
       </View>
+      <Button title='go to callscren' onPress={() => navigate("CallScreen")} />
 
     </View>
   );
@@ -121,7 +127,7 @@ const Home = () => {
           </Text>
         </View>
       }
-      
+
       {/* <ImageBackground
         source={require("../../../../assets/images/gradient.png")}
         resizeMode="contain"
@@ -150,6 +156,11 @@ const Home = () => {
       /> */}
 
       {/* Overlay Content */}
+      {/* <Button title='refresh list' onPress={() => sendMessage({
+        type: "refreshList",
+        from: user.id,  
+
+      })} /> */}
       <View style={{ padding: hp(0) }}>
         <Text style={styles.headerTitle}>Talk Instantly</Text>
         <FlatList
@@ -164,7 +175,7 @@ const Home = () => {
         <View style={{ height: hp(1) }} />
       </View>
 
-
+      <Button title='go to callscreen' onPress={() => navigate("CallScreen")} />
     </View>
   );
 };
