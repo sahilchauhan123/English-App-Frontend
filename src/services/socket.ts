@@ -95,7 +95,7 @@
 
 import { ToastAndroid } from "react-native";
 import useAuthStore from "../store/useAuthStore";
-import { useCallStore } from "../store/useCallStore";
+import { setOngoingCallId, startCallTimer, useCallStore } from "../store/useCallStore";
 import { wsURL } from "../utils/constants";
 import { acceptAnswer, acceptOffer, endCall, insertICECandidate, remoteEndCall, sendOffer } from "./webrtc";
 import { navigate, navigateWithParams, navigationRef } from "../navigation/navigationService";
@@ -176,7 +176,8 @@ export async function initSocket() {
                 case "callStarted":
                     console.log("call started ", data.callId);
                     // store ongoingcallid
-                    useCallStore.getState().setOngoingCallId(data.callId)
+                    setOngoingCallId(data.callId)
+                    startCallTimer();
 
                 case "endCall":
                     console.log("[initSocket] Handling 'endCall' event");

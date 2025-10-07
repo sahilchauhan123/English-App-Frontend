@@ -57,24 +57,23 @@ const LoginOrSignup = () => {
     });
     const data = await response.json()
     console.log(data);
-    if (data["error"]){
+    if (data["error"]) {
       console.log("in error")
       Toast.show(data["error"], 3000)
       return
     }
-    if (!data.data.optSent){
-      Toast.show(data.data.message,2000)
-      navigation.navigate("GetDetails",{
-        type:"email",email:email
+    if (!data.data.optSent) {
+      Toast.show(data.data.message, 2000)
+      navigation.navigate("GetDetails", {
+        type: "email", email: email
       })
     }
-    if (data.data.optSent) {
-      Toast.show("OTP sent to your email", 2000)
-      navigation.navigate("Otp", {
-        type: "login",
-        email: email,
-      });
-    } 
+    Toast.show("OTP sent to your email", 2000)
+    navigation.navigate("Otp", {
+      type: "login",
+      email: email,
+    });
+
   }
 
   return (

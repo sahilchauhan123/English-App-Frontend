@@ -1,7 +1,7 @@
 // if this is the url new url https://englishapp-skmti0r1.b4a.run/ change variable acc to it 
 
-const baseURL = 'http://10.214.225.24:8080';
-const wsURL = 'ws://10.214.225.24:8080/ws';
+const baseURL = 'http://10.55.77.24:8080';
+const wsURL = 'ws://10.55.77.24:8080/ws';
 export { baseURL, wsURL };
 
 // const baseURL = 'https://englishapp-skmti0r1.b4a.run';

@@ -92,30 +92,41 @@
 
 
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
 import { hexToRgba } from '../../utils/extras'
 import { colors, fonts } from '../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive'
-import { useCallStore } from '../../store/useCallStore'
+import { startCallTimer, useCallStore } from '../../store/useCallStore'
 import { RTCView } from 'react-native-webrtc'
 import { endCall } from '../../services/webrtc'
 import { navigate } from '../../navigation/navigationService'
 import CallBar from './CallBar'
-const intense = 0.2;
+import { useOrientationStore } from '../../store/useOrientationStore'
+// import { heightPercentageToDP as hp , widthPercentageToDP as wp} from 'react-native-responsive-screen'
 
 const CallScreen = ({ route }) => {
 
-
-
   const data = route.params;
+  const intense = 0.2;
   // console.log("data : ",data)
   const [remoteUser, setremoteUser] = useState(data)
-  const { localStream, remoteStream } = useCallStore();
+  const { localStream, remoteStream, callDuration } = useCallStore();
   const [speaker, setSpeaker] = useState(false)
   const [mute, setMute] = useState(false)
 
+  useEffect(() => {
+    
+    startCallTimer();
+  }, [])
+
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
 
 
   return (
@@ -139,9 +150,11 @@ const CallScreen = ({ route }) => {
           />
         )}
         <View style={{ flex: 2, justifyContent: "space-between", alignItems: "center", paddingBottom: hp(5) }}>
-          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: "center", width: wp(90), marginTop: hp(2) }}>
+          <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: "center", marginTop: hp(2), width: wp(90) }}>
 
-            <TouchableOpacity style={{ backgroundColor: colors.lightGrey, padding: hp(1.5), borderRadius: hp(100), flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity style={{
+              backgroundColor: colors.lightGrey, padding: hp(1.5), borderRadius: hp(100), flexDirection: "row", alignItems: "center", borderColor: colors.grey, borderWidth: 0.2,
+            }}>
               <Image
                 style={{ height: hp(3.5), width: hp(3.5) }}
                 source={require("../../../assets/images/minimize.png")}
@@ -150,7 +163,9 @@ const CallScreen = ({ route }) => {
 
             <View>
               <Text style={styles.username}>Username</Text>
-              <Text style={{ fontFamily: fonts.regular, fontSize: hp(1.7), textAlign: 'center' }}>00:00</Text>
+              <Text style={{ fontSize: hp(1.8), fontWeight: "500", textAlign: 'center', fontVariant: ['tabular-nums'], }}>
+                {formatTime(callDuration)}
+              </Text>
             </View>
 
             <View style={{ backgroundColor: colors.lightGrey, padding: hp(1.5), borderRadius: hp(100), flexDirection: "row", alignItems: "center", opacity: 0 }}>
@@ -161,6 +176,8 @@ const CallScreen = ({ route }) => {
             </View>
 
           </View>
+
+          {/* profile_pic */}
 
           <View style={{ marginBottom: hp(2) }}>
             <Image
@@ -173,8 +190,8 @@ const CallScreen = ({ route }) => {
         </View>
 
         {/* Options Bar */}
-        <CallBar remoteUser={remoteUser}/>
-        
+        <CallBar remoteUser={remoteUser} />
+
       </LinearGradient>
     </SafeAreaView>
   )

@@ -39,6 +39,7 @@ const CallBar = ({ remoteUser }) => {
         <View style={{ flex: 1, justifyContent: 'flex-end', paddingBottom: hp(8) }}>
             <View style={{
                 padding: hp(1.5),
+                borderColor:colors.grey,borderWidth:0.2,
                 marginHorizontal: wp(8), justifyContent: "space-between", alignItems: "center", backgroundColor: colors.greyLighter, borderRadius: hp(100), flexDirection: "row"
             }}>
                 <TouchableOpacity onPress={mute ? unMuteCall : muteCall}>

@@ -4,6 +4,7 @@ let { width: W, height: H } = Dimensions.get('window');
 
 // keep W/H fresh on any resize/orientation
 const onChange = ({ window }) => {
+  console.log('window changed', window);
   W = window.width;
   H = window.height;
 };
