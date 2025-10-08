@@ -13,8 +13,8 @@
 //   const [remoteUser, setremoteUser] = useState(data)
 //   const { localStream, remoteStream } = useCallStore();
 //   const { user } = useAuthStore();
-//   console.log("remote user data : ", data)
-//   console.log("our data", user)
+//   // console.log("remote user data : ", data)
+//   // console.log("our data", user)
 
 //   const HangUp = () => {
 //     console.log("ending call")
@@ -162,7 +162,7 @@ const CallScreen = ({ route }) => {
             </TouchableOpacity>
 
             <View>
-              <Text style={styles.username}>Username</Text>
+              <Text style={styles.username}>{remoteUser.full_name}</Text>
               <Text style={{ fontSize: hp(1.8), fontWeight: "500", textAlign: 'center', fontVariant: ['tabular-nums'], }}>
                 {formatTime(callDuration)}
               </Text>
@@ -182,7 +182,7 @@ const CallScreen = ({ route }) => {
           <View style={{ marginBottom: hp(2) }}>
             <Image
               style={{ height: hp(25), width: hp(25), borderRadius: hp(100) }}
-              source={{ uri: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" }}
+              source={{ uri: remoteUser.profile_pic}}
             />
 
           </View>

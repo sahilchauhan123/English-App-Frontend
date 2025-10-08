@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { colors } from '../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive'
 import { endCall } from '../../services/webrtc'
-import { navigate } from '../../navigation/navigationService'
+import { navigate, navigateAndReset } from '../../navigation/navigationService'
 
 
 const CallBar = ({ remoteUser }) => {
@@ -19,7 +19,7 @@ const CallBar = ({ remoteUser }) => {
     const HangUp = () => {
         console.log("ending call")
         endCall(remoteUser.id)
-        navigate("Home")
+        navigateAndReset("Tabs")
     }
     const muteCall = () => {
         setMute(true)

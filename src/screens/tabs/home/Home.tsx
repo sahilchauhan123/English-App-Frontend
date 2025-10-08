@@ -112,7 +112,7 @@ const Home = () => {
           <Text style={styles.talk}>42 Talks</Text>
         </View>
       </View>
-      <Button title='go to callscren' onPress={() => navigate("CallScreen")} />
+      {/* <Button title='go to callscren' onPress={() => navigate("CallScreen")} /> */}
 
     </View>
   );

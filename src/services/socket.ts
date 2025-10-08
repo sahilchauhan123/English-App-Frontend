@@ -98,7 +98,7 @@ import useAuthStore from "../store/useAuthStore";
 import { setOngoingCallId, startCallTimer, useCallStore } from "../store/useCallStore";
 import { wsURL } from "../utils/constants";
 import { acceptAnswer, acceptOffer, endCall, insertICECandidate, remoteEndCall, sendOffer } from "./webrtc";
-import { navigate, navigateWithParams, navigationRef } from "../navigation/navigationService";
+import { navigate, navigateAndReset, navigateWithParams, navigationRef } from "../navigation/navigationService";
 import { retrieveUserSession } from "../utils/tokens";
 
 let socket;
@@ -146,75 +146,120 @@ export async function initSocket() {
 
             switch (data.type) {
                 case "initialized":
-                    console.log("initialized success");
-                    useCallStore.getState().setUsersList(data.online_users);
+                    try {
+                        console.log("initialized success");
+                        useCallStore.getState().setUsersList(data.online_users);
+                    } catch (err) {
+                        console.error("[initialized] Error:", err);
+                    }
                     break;
 
                 case "offer":
-                    console.log("OFFER received");
-                    if (data.randomCall) {
-                        console.log("random offer received", data.fromUserData);
-                        useCallStore.getState().setRandomUserData(data.fromUserData)
-                        acceptOffer(data.payload, data.fromUserData)
-                        navigateWithParams("CallScreen", data.fromUserData)
-                        break;
+                    try {
+                        console.log("OFFER received");
+                        if (data.randomCall) {
+                            console.log("random offer received", data.fromUserData);
+                            useCallStore.getState().setRandomUserData(data.fromUserData);
+                            acceptOffer(data.payload, data.fromUserData);
+                            navigateWithParams("CallScreen", data.fromUserData);
+                            break;
+                        }
+                        console.log("normal offer received");
+                        useCallStore.getState().showIncomingCallModal(data);
+                    } catch (err) {
+                        console.error("[offer] Error:", err);
                     }
-                    console.log("normal offer received");
-                    useCallStore.getState().showIncomingCallModal(data);
                     break;
 
                 case "answer":
-                    console.log("ANSWER received");
-                    acceptAnswer(data.payload, data.from);
-                    navigateWithParams("CallScreen", data.fromUserData)
+                    try {
+                        console.log("ANSWER received");
+                        acceptAnswer(data.payload, data.from);
+                        navigateWithParams("CallScreen", data.fromUserData);
+                    } catch (err) {
+                        console.error("[answer] Error:", err);
+                    }
                     break;
 
                 case "icecandidate":
-                    console.log("ICE CANDIDATE received");
-                    insertICECandidate(data.payload);
+                    try {
+                        console.log("ICE CANDIDATE received");
+                        insertICECandidate(data.payload);
+                    } catch (err) {
+                        console.error("[icecandidate] Error:", err);
+                    }
                     break;
+
                 case "callStarted":
-                    console.log("call started ", data.callId);
-                    // store ongoingcallid
-                    setOngoingCallId(data.callId)
-                    startCallTimer();
+                    try {
+                        console.log("call started ", data.callId);
+                        setOngoingCallId(data.callId); // unique id for every call session
+                        startCallTimer();
+                    } catch (err) {
+                        console.error("[callStarted] Error:", err);
+                    }
+                    break;
 
                 case "endCall":
-                    console.log("[initSocket] Handling 'endCall' event");
-                    ToastAndroid.show(`Call Ended By ${data.fromUserData.full_name}`, 2000);
-                    remoteEndCall();
-                    navigate("Home")
-                    // some logic
+                    try {
+                        console.log("[initSocket] Handling 'endCall' event");
+                        ToastAndroid.show(`Call Ended By ${data.fromUserData.full_name}`, 2000);
+                        remoteEndCall();
+                        navigateAndReset("Tabs");
+                    } catch (err) {
+                        console.error("[endCall] Error:", err);
+                    }
                     break;
 
                 case "randomUserFound":
-                    console.log("random user fouund : ", data.target)
-                    sendOffer(data.target, true);
+                    try {
+                        console.log("random user found:", data.target);
+                        sendOffer(data.target, true);
+                    } catch (err) {
+                        console.error("[randomUserFound] Error:", err);
+                    }
                     break;
 
                 case "randomCallOffer":
-                    // some logic
+                    try {
+                        // some logic
+                    } catch (err) {
+                        console.error("[randomCallOffer] Error:", err);
+                    }
                     break;
 
                 case "canceledRandomMatch":
-                    console.log("[initSocket] Handling 'canceledRandomMatch' event");
-                    // some logic
+                    try {
+                        console.log("[initSocket] Handling 'canceledRandomMatch' event");
+                        // some logic
+                    } catch (err) {
+                        console.error("[canceledRandomMatch] Error:", err);
+                    }
                     break;
 
                 case "rejectedCall":
-                    console.log("[initSocket] Handling 'rejectedCall' event");
-                    ToastAndroid.show(`Call Rejected By ${data.fromUserData.full_name}`, 2000);
+                    try {
+                        console.log("[initSocket] Handling 'rejectedCall' event");
+                        ToastAndroid.show(`Call Rejected By ${data.fromUserData.full_name}`, 2000);
+                    } catch (err) {
+                        console.error("[rejectedCall] Error:", err);
+                    }
                     break;
 
                 case "newUsersList":
-                    if (data.usersCount < 1) {
-                        console.log("refresh list :", data.error)
-                        break;
+                    try {
+                        if (data.usersCount < 1) {
+                            console.log("refresh list:", data.error);
+                            break;
+                        }
+                        useCallStore.getState().setUsersList(data.usersList);
+                    } catch (err) {
+                        console.error("[newUsersList] Error:", err);
                     }
-                    useCallStore.getState().setUsersList(data.usersList);
+                    break;
 
                 default:
-                // console.log("[initSocket] Unknown message type:", data.data);
+                    console.warn("[initSocket] Unknown message type:", data.type);
             }
         } catch (err) {
             console.error("[initSocket] Failed to parse incoming message:", err);
@@ -222,6 +267,7 @@ export async function initSocket() {
     };
 
     return socket;
+
 }
 
 export function sendMessage(message) {
@@ -231,6 +277,7 @@ export function sendMessage(message) {
             return;
         }
         if (socket.readyState !== WebSocket.OPEN) {
+            console.log("socket state ",socket.readyState)
             console.error("[sendMessage] WebSocket is not open (state:", socket.readyState, ")");
             return;
         }

@@ -141,9 +141,24 @@ var peerConstraints = {
   iceServers: [
     {urls: 'stun:stun.l.google.com:19302'},
     {
-      urls: 'turn:relay1.expressturn.com:3478',
-      username: 'efP1LUPHPXL09ERRTN',
-      credential: 'S8dZLnys5SU7B8CU',
+      urls: 'turn:global.relay.metered.ca:80',
+      username: '3d87f7f5bcc238b508f250bb',
+      credential: 'VmG30ZbDD8yolAQW',
+    },
+    {
+      urls: 'turn:global.relay.metered.ca:80?transport=tcp',
+      username: '3d87f7f5bcc238b508f250bb',
+      credential: 'VmG30ZbDD8yolAQW',
+    },
+    {
+      urls: 'turn:global.relay.metered.ca:443',
+      username: '3d87f7f5bcc238b508f250bb',
+      credential: 'VmG30ZbDD8yolAQW',
+    },
+    {
+      urls: 'turns:global.relay.metered.ca:443?transport=tcp',
+      username: '3d87f7f5bcc238b508f250bb',
+      credential: 'VmG30ZbDD8yolAQW',
     },
   ],
 };
@@ -192,8 +207,15 @@ export async function initWebRTC(targetId) {
   };
 
   pc.onconnectionstatechange = () => {
-    if (pc.connectionState != null) {
-      console.log('[initWebRTC] Connection state changed:', pc.connectionState);
+    try {
+      if (pc.connectionState != null) {
+        console.log(
+          '[initWebRTC] Connection state changed:',
+          pc.connectionState,
+        );
+      }
+    } catch (error) {
+      console.log('error in webrtc state change', error);
     }
   };
 
@@ -292,7 +314,7 @@ export async function endCall(targetId) {
     type: 'endCall',
     from: useAuthStore.getState().user.id,
     target: targetId,
-    callID : useCallStore.getState().ongoingCallId
+    callID: useCallStore.getState().ongoingCallId,
   });
 
   pc.close();
@@ -302,7 +324,7 @@ export async function endCall(targetId) {
   useCallStore.getState().setRemoteStream(null);
   useCallStore.getState().setLocalStream(null);
   useCallStore.getState().hideIncomingCallModal();
-  useCallStore.getState().setOngoingCallId(null)
+  useCallStore.getState().setOngoingCallId(null);
   console.log('[endCall] Local & remote streams cleared, modal hidden');
 }
 

@@ -54,6 +54,13 @@ export default function IncomingCallModal() {
     hideIncomingCallModal();
   }
 
+  const formatName = (name)=>{
+    if(name.length > 15){
+      return name.slice(0,12) + "..."
+    }
+    return name
+  }
+
   return (
 
     <Modal
@@ -72,10 +79,10 @@ export default function IncomingCallModal() {
               />
             </TouchableOpacity>
 
-            <View>
+            <View >
 
               <Text style={styles.callerName}>
-                {incomingCall?.fromUserData.full_name || 'Unknown User'} {"is calling you"}
+                { formatName(incomingCall?.fromUserData.full_name  || "Unknown")} {"is calling you"}
               </Text>
               <Text style={[styles.callerName, { fontSize: hp(1.3), fontFamily: fonts.meduim }]}>
                 {"\u2022 "}{incomingCall?.fromUserData.nativeLanguage || 'Unknown Language '}
@@ -131,6 +138,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     fontSize: hp(2),
     marginLeft: wp(3),
+  
   },
   callStatus: {
     fontSize: 14,
