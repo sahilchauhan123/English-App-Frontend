@@ -175,7 +175,6 @@ const Home = () => {
         <View style={{ height: hp(1) }} />
       </View>
 
-      <Button title='go to callscreen' onPress={() => navigate("CallScreen")} />
     </View>
   );
 };
