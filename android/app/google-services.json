@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "691760050261",
+    "project_id": "strango-a0798",
+    "storage_bucket": "strango-a0798.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691760050261:android:b7d1f2e53f4dc45d3d64dc",
+        "android_client_info": {
+          "package_name": "com.english_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHHNtLpIYyfS1JboYet8keukQfNNYuVyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

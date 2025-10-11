@@ -67,7 +67,9 @@ const LoginOrSignup = () => {
       navigation.navigate("GetDetails", {
         type: "email", email: email
       })
+      return
     }
+
     Toast.show("OTP sent to your email", 2000)
     navigation.navigate("Otp", {
       type: "login",

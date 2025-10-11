@@ -57,13 +57,3 @@ export const {
   setOngoingCallId
 } = useCallStore.getState();
 
-
-
-export const useOrientationStore = create((set) => ({
-  orientation: Dimensions.get('window').height >= Dimensions.get('window').width ? 'portrait' : 'landscape',
-}));
-
-Dimensions.addEventListener('change', ({ window }) => {
-  const orientation = window.height >= window.width ? 'portrait' : 'landscape';
-  useOrientationStore.setState({ orientation });
-});

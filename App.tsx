@@ -1,9 +1,11 @@
-import {Platform, StatusBar, StyleSheet, View } from 'react-native'
+import { Platform, StatusBar, StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import Navigation from './src/navigation/Navigation'
 import NetworkListener from './src/components/NetworkListener';
 import IncomingCallModal from './src/components/IncomingCallModal';
 import CallHeader from './src/components/CallHeader';
+import { requestNotificationPermission } from './src/services/permission';
+import { onAppBootStart } from './src/services/notifications';
 
 
 StatusBar.setBarStyle("light-content");
@@ -12,7 +14,12 @@ if (Platform.OS === "android") {
   StatusBar.setTranslucent(true);
 }
 
+
 const App = () => {
+  useEffect(() => {
+    requestNotificationPermission();
+    onAppBootStart();
+  }, [])
   //  useEffect(() => {
   //   lor(); // start listening for orientation change
   //   return () => rol(); // cleanup on unmount
@@ -20,10 +27,10 @@ const App = () => {
 
   return (
     <View style={{ flex: 1 }} >
-      <CallHeader/>
+      <CallHeader />
       <Navigation />
-      <NetworkListener/>
-      <IncomingCallModal/>
+      <NetworkListener />
+      <IncomingCallModal />
     </View>
   )
 }

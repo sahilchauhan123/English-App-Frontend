@@ -34,6 +34,7 @@ const Navigation = () => {
         <Stack.Screen name="LoginOrSignup" component={LoginOrSignup} />
         <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="GetDetails" component={GetDetails} />
+        
 
 
         {/* for Tabs screens */}

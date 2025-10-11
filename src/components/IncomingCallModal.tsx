@@ -62,7 +62,7 @@ export default function IncomingCallModal() {
   }
 
   return (
-
+    
     <Modal
       visible={callIncoming}
       transparent
