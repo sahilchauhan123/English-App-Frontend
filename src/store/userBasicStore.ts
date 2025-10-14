@@ -9,12 +9,14 @@ const useBasicStore = create(
   persist(
     (set) => ({
 
-      userOnboarded:false,
+      userOnboarded: false,
       isInitialized: false,
+      notificationsEnabled: false,
 
-      setUserOnboarded: (value:boolean) => set({ userOnboarded: value }),
+      setUserOnboarded: (value: boolean) => set({ userOnboarded: value }),
       setInitialized: () => set({ isInitialized: true }),
-      
+      setNotificationEnabled: (value: boolean) => set({ notificationsEnabled: value }),
+
     }),
     {
       name: "User-Data",
@@ -29,5 +31,9 @@ const useBasicStore = create(
 );
 
 export default useBasicStore;
+export const {
+  setNotificationEnabled
+} = useBasicStore.getState();
+
 
 

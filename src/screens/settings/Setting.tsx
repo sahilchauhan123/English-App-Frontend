@@ -1,15 +1,31 @@
 import { Image, StyleSheet, Text, View, Switch, TouchableOpacity, ToastAndroid } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { colors, fonts } from '../../../assets/constants'
 import { settingsMenus } from '../../utils/constants'
 import { navigate } from '../../navigation/navigationService'
+import useAuthStore from '../../store/useAuthStore'
+import useBasicStore, { setNotificationEnabled } from '../../store/userBasicStore'
 
 const Setting = () => {
-  const [Enable, setEnable] = useState(false);
+  const { logout } = useAuthStore();
+  const { notificationsEnabled } = useBasicStore();
+  const [Enable, setEnable] = useState(notificationsEnabled);
 
-  const toggle = (state: boolean) => setEnable(state);
+  useEffect(() => {
+    setEnable(notificationsEnabled);
+  }, [notificationsEnabled]);
+
+
+  const toggle = (state: boolean) => {
+    setNotificationEnabled(state);
+    setEnable(state);
+  }
+
+  function handleLogout() {
+    logout();
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white, justifyContent: 'space-between' }}>
@@ -65,7 +81,7 @@ const Setting = () => {
       <View style={{ padding: hp(2) }}>
         <TouchableOpacity
           style={styles.continueButton}
-          onPress={() => ToastAndroid.show("Logging Out", 1000)}
+          onPress={handleLogout}
         >
           <Text style={styles.continueText}>Logout</Text>
         </TouchableOpacity>

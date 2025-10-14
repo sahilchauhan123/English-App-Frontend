@@ -1,12 +1,12 @@
 // if this is the url new url https://englishapp-skmti0r1.b4a.run/ change variable acc to it 
 
-const baseURL = 'http://10.109.231.24:8080';
-const wsURL = 'ws://10.109.231.24:8080/ws';
-export { baseURL, wsURL };
+// const baseURL = 'http://10.30.110.24:8080';
+// const wsURL = 'ws://10.30.110.24:8080/ws';
+// export { baseURL, wsURL };
 
-// const baseURL = 'https://englishapp-14oi2bhc.b4a.run';
-// const wsURL = 'wss://englishapp-14oi2bhc.b4a.run/ws';
-// export {baseURL, wsURL};
+const baseURL = 'https://english-app-backend-production.up.railway.app';
+const wsURL = 'wss://english-app-backend-production.up.railway.app/ws';
+export {baseURL, wsURL};
 
 
 export const menus = [

@@ -1,5 +1,6 @@
 import notifee, { AndroidImportance, AndroidStyle } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import useBasicStore from '../store/userBasicStore';
 
 async function displayLocalNotification(remoteMessage: any) {
     if (!remoteMessage?.data) {
@@ -16,7 +17,7 @@ async function displayLocalNotification(remoteMessage: any) {
     await notifee.displayNotification({
         title: remoteMessage.data.title,
         body: remoteMessage.data.body,
-        pressAction: { id: 'default' },
+        // pressAction: { id: 'default' },
         android: {
             channelId,
             importance: AndroidImportance.HIGH, // 🔥 Heads-Up Notification
@@ -31,13 +32,18 @@ async function displayLocalNotification(remoteMessage: any) {
 }
 
 export function onMessageReceived(message) {
-    displayLocalNotification(message);
-    console.log("Message received in foreground: ", message);
+    const notificationsEnabled = useBasicStore.getState().notificationsEnabled;
+    if (notificationsEnabled) {
+        displayLocalNotification(message);
+        // console.log("Message received in foreground: ", message);
+    }else{
+        // console.log("Notifications are disabled. Message not shown: ");
+    }
 }
 
 
 export async function onAppBootStart() {
     await messaging().registerDeviceForRemoteMessages();
     const token = await messaging().getToken();
-    console.log("FCM Token: ", token);
+    // console.log("FCM Token: ", token);
 }

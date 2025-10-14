@@ -1,5 +1,6 @@
-import { PermissionsAndroid, Platform,per } from "react-native";
-import notifee from '@notifee/react-native';
+import { Linking, PermissionsAndroid, Platform } from "react-native";
+import useAuthStore from "../store/useAuthStore";
+import { setNotificationsEnabled } from "../store/userBasicStore";
 
 
 export async function requestMicrophonePermission() {
@@ -25,5 +26,9 @@ export async function requestNotificationPermission() {
   }
 }
 
-
+export async function turnOffNotifications() {
+  // There is no direct API to revoke notification permission programmatically.
+  // You can guide the user to the app settings to manually turn off notifications.
+  setNotificationsEnabled(false);
+}
 
