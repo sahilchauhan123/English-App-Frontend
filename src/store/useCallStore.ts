@@ -1,8 +1,8 @@
-import { Dimensions } from "react-native";
 import { create } from "zustand";
 
 
-export const useCallStore = create((set, get) => ({
+
+const initialState = {
   usersList: [],
   targetId: null,
   inRandomMatch: false,
@@ -10,11 +10,28 @@ export const useCallStore = create((set, get) => ({
   incomingCall: null,
   remoteStream: null,
   localStream: null,
-  iceCandidates: null,
+  iceCandidates: [],
   ongoingCallId: null,
   callStartTime: null,
   callDuration: 0,
   intervalId: null,
+};
+
+export const useCallStore = create((set, get) => ({
+  // usersList: [],
+  // targetId: null,
+  // inRandomMatch: false,
+  // randomUserData: null,
+  // incomingCall: null,
+  // remoteStream: null,
+  // localStream: null,
+  // iceCandidates: null,
+  // ongoingCallId: null,
+  // callStartTime: null,
+  // callDuration: 0,
+  // intervalId: null,
+
+  ...initialState,
 
   setUsersList: (data: any) => set({ usersList: data }),
   setInRandomMatch: (data: boolean) => set({ inRandomMatch: data }),
@@ -47,11 +64,14 @@ export const useCallStore = create((set, get) => ({
     if (intervalId) clearInterval(intervalId);
     set({ callDuration: 0, intervalId: null, callStartTime: null });
   },
-
+  setCallStoreNull: () => {
+    get().stopCallTimer();
+    set(initialState);
+  }
 }));
 
 // Helper for socket.js
-export const { 
+export const {
   startCallTimer,
   stopCallTimer,
   setOngoingCallId

@@ -1,5 +1,5 @@
-import { Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View, Button, ToastAndroid } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { colors, fonts } from '../../assets/constants'
 import { hpPortrait as hp, hpPortrait, wpPortrait as wp } from '../utils/responsive'
 import ImagePicker from "react-native-image-crop-picker";
@@ -9,11 +9,39 @@ import useAuthStore from '../store/useAuthStore';
 const Pictures = () => {
     const [show, setShow] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const { user ,setUser} = useAuthStore();
+    const { user, setUser } = useAuthStore();
+    // console.log("pictures :",user?.pictures)
     const [images, setImages] = useState(user?.pictures || []); // initial from user profile
 
+    useEffect(() => {
+        if (user && user.pictures) {
+            console.log("user changed", user)
+            setImages(user?.pictures)
+        }
+    }, [user])
+
+    async function deleteImages(url: string) {
+        try {
+            ToastAndroid.show("Deleting picture ...", 1000);
+            setShow(false);
+            console.log("deleting : ", url)
+            const urlWithParams = `/api/user/picture/delete?url=${url}`;
+            const data = await customFetch(urlWithParams, "GET");
+            console.log("delete response :", data)
+            // ToastAndroid.show(data.data.message, ToastAndroid.SHORT)
+            console.log("deleted :", data)
+            const userData = await customFetch("/api/user/profile", "GET") // for refreshing App Data
+            console.log("refreshed user data :", userData)
+            setUser(userData.data.profile)
+            setImages(userData.data.profile?.pictures || []); // append new image to state
+            ToastAndroid.show("Picture deleted successfully!", 2000);
+        } catch (error) {
+            console.log("Error deleting image:", error);
+        }
+    }
 
     const pickAndUploadImage = async () => {
+
         try {
             const image = await ImagePicker.openPicker({
                 width: 600,
@@ -25,7 +53,6 @@ const Pictures = () => {
 
             if (image && image.path) {
                 console.log("Selected image:", image.path);
-
                 // prepare form data
                 const formData = new FormData();
                 formData.append("image", {
@@ -33,11 +60,13 @@ const Pictures = () => {
                     type: image.mime,         // e.g. "image/jpeg"
                     name: "upload.jpg",       // must have a file name
                 });
+                ToastAndroid.show("Uploading picture ...", 1000);
                 const response = await customFetch("/api/user/upload/image", "POST", formData);
                 console.log("Upload response:", response);
                 setImages([...images, response.data.url]); // append new image to state
-                const userData = await customFetch("/api/user/profile","GET") // for refreshing App Data
+                const userData = await customFetch("/api/user/profile", "GET") // for refreshing App Data
                 setUser(userData.data.profile)
+                ToastAndroid.show("Picture uploaded successfully!", 2000);
             }
         } catch (error) {
             console.log("Image selection cancelled", error);
@@ -47,7 +76,7 @@ const Pictures = () => {
 
     return (
         <View style={{ justifyContent: "center", alignItems: "center", paddingTop: hp(1.5), flex: 1 }} >
-            <Text style={{ fontFamily: fonts.semiBold, fontSize: hp(1.8) ,marginBottom:hp(1)}}>Photos</Text>
+            <Text style={{ fontFamily: fonts.semiBold, fontSize: hp(1.8), marginBottom: hp(1) }}>Photos</Text>
             <View style={{
                 flexDirection: 'row',
                 flexWrap: 'wrap',
@@ -128,18 +157,29 @@ const Pictures = () => {
                 transparent
                 animationType="fade"
                 onRequestClose={() => setShow(false)}
-
+                style={{ backgroundColor: "rgba(0, 0, 0, 0.8)", flex: 1 }}
             >
-                <Pressable
-                    onPress={() => setShow(false)}
-                    style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.8)", justifyContent: 'center', alignItems: 'center' }}
-                >
-                    <Image
-                        source={{ uri: selectedImage, }}
-                        style={{ height: "95%", width: "95%", }}
-                        resizeMode="contain"
-                    />
-                </Pressable>
+                    <Pressable
+                        onPress={() => setShow(false)}
+                        style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.8)", justifyContent: 'center', alignItems: 'center' }}
+                    >
+                        <TouchableOpacity
+                            style={{ width: wp(100), alignItems: 'flex-end', paddingHorizontal: wp(2), paddingTop: hp(3) }}
+                            onPress={() => deleteImages(selectedImage)}
+                        >
+                            <Image
+                                style={{ height: hp(4), width: hp(4) }}
+                                source={require("../../assets/images/delete.png")}
+                            />
+                        </TouchableOpacity>
+                        <Image
+                            source={{ uri: selectedImage }}
+                            style={{ height: "95%", width: "95%", }}
+                            resizeMode="contain"
+                        />
+                    </Pressable>
+                
+
             </Modal>
         </View>
     )

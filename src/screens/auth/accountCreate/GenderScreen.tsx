@@ -10,6 +10,7 @@ import {
   Pressable,
   StyleSheet,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive';
 import { colors, fonts } from '../../../../assets/constants';
@@ -42,11 +43,23 @@ const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
     setOnboardingData({ ...onboardingData, age: Number(text) })
   }
   const navigateToNext = () => {
-    if (Number(age) > 11 && selectedGender && username.trim() !== '') {
-      jumpTo("third");
-    } else {
+    console.log("age1 : ", Number(age))
+    console.log("username : ", username.length)
+    if (Number(age) < 11) {
+      console.log("age2 : ", Number(age))
       Toast.show("Age should be greater than 11", 1000)
+      return
     }
+    if (username.length < 3) {
+      Toast.show("Username is not valid", 1000)
+      return
+    }
+    if (!selectedGender) {
+      Toast.show("Select Your gender", 1000)
+      return
+    }
+
+    jumpTo("third");
   }
 
   const updateUsername = async (text: string) => {
@@ -82,7 +95,7 @@ const GenderScreen = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardView}>
-      
+
         <View style={styles.content}>
           <Text style={styles.title}>Select your gender</Text>
 
@@ -355,6 +368,12 @@ const styles = StyleSheet.create({
   },
   continueText: {
     fontFamily: fonts.bold,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: hp(4), // space so content doesn’t hide behind button
   },
 });
 

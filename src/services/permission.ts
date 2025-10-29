@@ -27,8 +27,7 @@ export async function requestNotificationPermission() {
 }
 
 export async function turnOffNotifications() {
-  // There is no direct API to revoke notification permission programmatically.
-  // You can guide the user to the app settings to manually turn off notifications.
   setNotificationsEnabled(false);
 }
 
+   

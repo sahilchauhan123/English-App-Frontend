@@ -60,7 +60,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { customFetch } from '../../../utils/api';
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive';
 import { sendMessage } from '../../../services/socket';
-import { navigate } from '../../../navigation/navigationService';
+import { navigate, navigateWithParams } from '../../../navigation/navigationService';
 
 
 const Home = () => {
@@ -70,6 +70,7 @@ const Home = () => {
 
   useEffect(() => {
     if (usersList) {
+      console.log("user list refreshed")
       setOnlineUsers(usersList);
     }
   }, [usersList]);
@@ -82,6 +83,13 @@ const Home = () => {
   };
 
 
+  const refreshUserList = () => {
+    sendMessage({
+      type: "refreshList",
+      from: user.id
+    })
+  }
+
 
 
   const renderUserItem = ({ item }) => (
@@ -89,7 +97,10 @@ const Home = () => {
       backgroundColor: "#D8DBDD", borderRadius: 15, paddingBottom: hp(0.2), marginHorizontal: wp(4),
     }}>
       <View style={styles.userCard}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flex: 2 }}>
+
+        <TouchableOpacity
+          onPress={() => navigateWithParams("OtherUserProfile", item)}
+          style={{ flexDirection: 'row', alignItems: 'center', flex: 2 }}>
           <Image
             source={{ uri: item.profile_pic || 'https://via.placeholder.com/50' }}
             style={styles.profilePic}
@@ -100,7 +111,8 @@ const Home = () => {
               {/* | {item.currentEnglishLevel} */}
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
+
         <View style={{ flex: 2, height: '100%', justifyContent: 'space-between', alignItems: "flex-end" }}>
           <TouchableOpacity onPress={() => handleCallUser(item.id)}>
 
@@ -111,6 +123,7 @@ const Home = () => {
           </TouchableOpacity>
           <Text style={styles.talk}>42 Talks</Text>
         </View>
+
       </View>
       {/* <Button title='go to callscren' onPress={() => navigate("CallScreen")} /> */}
 
@@ -162,7 +175,13 @@ const Home = () => {
 
       })} /> */}
       <View style={{ padding: hp(0) }}>
-        <Text style={styles.headerTitle}>Talk Instantly</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={styles.headerTitle}>Talk Instantly</Text>
+          <TouchableOpacity onPress={refreshUserList}>
+            <Text>refresh</Text>
+          </TouchableOpacity>
+        </View>
+
         <FlatList
 
           data={onlineUsers}

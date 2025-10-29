@@ -1,4 +1,4 @@
-import { Settings, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +13,8 @@ import { navigationRef } from './navigationService';
 import Home from '../screens/tabs/home/Home';
 import Tabs from '../screens/tabs/Tabs';
 import Setting from '../screens/settings/Setting';
+import AiCall from '../screens/callScreen/AiCall';
+import OtherUserProfile from '../screens/tabs/profile/OtherUserProfile';
 
 
 
@@ -34,16 +36,15 @@ const Navigation = () => {
         <Stack.Screen name="LoginOrSignup" component={LoginOrSignup} />
         <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="GetDetails" component={GetDetails} />
-        
-
 
         {/* for Tabs screens */}
         <Stack.Screen name="Tabs" component={Tabs} />
 
-
         {/* for Extra screen */}
         <Stack.Screen name="CallScreen" component={CallScreen} />
         <Stack.Screen name="Setting" component={Setting} />
+        <Stack.Screen name="AiCall" component={AiCall} />
+        <Stack.Screen name="OtherUserProfile" component={OtherUserProfile} />
 
       </Stack.Navigator>
     </NavigationContainer>

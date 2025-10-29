@@ -24,7 +24,6 @@ export const GradientLine = () => {
 
 const GetDetails = ({ route }) => {
   const { token, type ,email } = route.params;
-  console.log("email: ",email)
   const initialState = type === "email"
     ? {
       gender: '',

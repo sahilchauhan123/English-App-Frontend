@@ -14,6 +14,7 @@ import VoiceToText, {
 } from '@appcitor/react-native-voice-to-text';
 import Tts from 'react-native-tts';
 import { retrieveUserSession } from '../../../utils/tokens';
+import { navigate } from '../../../navigation/navigationService';
 
 type Message = {
   id: string;
@@ -197,7 +198,8 @@ const Chats = () => {
         keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={{ paddingVertical: 10 }}
-      />
+      /> 
+      <Button title='go to ai call' onPress={()=>navigate("AiCall")}/>
 
       {inCall ? (
         <Button title="End Call" onPress={endCall} color="red" />

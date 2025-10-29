@@ -1,10 +1,11 @@
 import { Image, ScrollView, StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import useAuthStore from '../../../store/useAuthStore'
 import ProfileSection from '../../../components/ProfileSection';
 import Pictures from '../../../components/Pictures';
 
-const Profile = () => {
+const Profile = ({ route }) => {
+
   const { user } = useAuthStore();
   return (
     <View style={{ flex: 1 }}>
@@ -13,7 +14,7 @@ const Profile = () => {
         {/* profile picture  */}
         <ProfileSection user={user} />
         {/* description & talk section */}
-        <Pictures/>
+        <Pictures otherUser={null}/>
       </ScrollView>
 
     </View>

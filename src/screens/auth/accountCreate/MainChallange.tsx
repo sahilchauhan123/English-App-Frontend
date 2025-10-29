@@ -60,32 +60,33 @@ const MainChallenge = ({ onboardingData, setOnboardingData, jumpTo, type }) => {
   const createAccount = async () => {
 
     if (!onboardingData.gender) {
-      console.log('Please select your gender')
-      return 'Please select your gender';
+      Toast.show('Please select your gender', 2000);
+      jumpTo('second'); // replace with your actual step id if different
+      return;
     }
 
     if (!onboardingData.nativeLanguage) {
-      console.log('Please select your language')
-
-      return 'Please select your native language';
+      Toast.show('Please select your native language', 2000);
+      jumpTo('first'); // replace with your actual step id if different
+      return;
     }
 
     if (!onboardingData.currentEnglishLevel) {
-      console.log('Please select your English level')
-
-      return 'Please select your English level';
+      Toast.show('Please select your English level', 2000);
+      jumpTo('third'); // replace with your actual step id if different
+      return;
     }
 
     if (!onboardingData.age) {
-      console.log('Please select your age')
-
-      return 'Please enter your age';
+      Toast.show('Please enter your age', 2000);
+      jumpTo('second'); // replace with your actual step id if different
+      return;
     }
 
     if (!onboardingData.mainChallenge) {
-      console.log('Please select your main challenge')
-
-      return 'Please select your main challenge';
+      Toast.show('Please select your main challenge', 2000);
+      // jumpTo('challenge'); // replace with your actual step id if different
+      return;
     }
 
     // console.log("local data going to server : ", onboardingData)

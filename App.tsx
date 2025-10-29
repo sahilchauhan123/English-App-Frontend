@@ -8,14 +8,17 @@ import { requestNotificationPermission } from './src/services/permission';
 import { onAppBootStart } from './src/services/notifications';
 
 
-StatusBar.setBarStyle("light-content");
-if (Platform.OS === "android") {
-  StatusBar.setBackgroundColor("rgba(0,0,0,0)");
-  StatusBar.setTranslucent(true);
-}
 
 
 const App = () => {
+  
+  
+  StatusBar.setBarStyle("light-content");
+  if (Platform.OS === "android") {
+    StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+    StatusBar.setTranslucent(true);
+  }
+
   useEffect(() => {
     requestNotificationPermission();
     onAppBootStart();
@@ -27,6 +30,7 @@ const App = () => {
 
   return (
     <View style={{ flex: 1 }} >
+      {/* <StatusBar barStyle="light-content" /> */}
       <CallHeader />
       <Navigation />
       <NetworkListener />

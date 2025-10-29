@@ -250,6 +250,7 @@ export async function initSocket() {
                     try {
                         if (data.usersCount < 1) {
                             console.log("refresh list:", data.error);
+                            useCallStore.getState().setUsersList([]);
                             break;
                         }
                         useCallStore.getState().setUsersList(data.usersList);
@@ -277,7 +278,7 @@ export function sendMessage(message) {
             return;
         }
         if (socket.readyState !== WebSocket.OPEN) {
-            console.log("socket state ",socket.readyState)
+            console.log("socket state ", socket.readyState)
             console.error("[sendMessage] WebSocket is not open (state:", socket.readyState, ")");
             return;
         }
@@ -287,3 +288,5 @@ export function sendMessage(message) {
         console.error("[sendMessage] Error while sending message:", error);
     }
 }
+
+
