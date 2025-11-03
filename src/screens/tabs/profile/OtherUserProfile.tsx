@@ -1,14 +1,26 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import OtherProfileSection from '../../../components/OtherProfileSection'
 import OtherPicture from '../../../components/OtherPicture'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
 import { navigateAndReset } from '../../../navigation/navigationService'
+import { customFetch } from '../../../utils/api'
 
 const OtherUserProfile = ({ route }) => {
-    const [user, setUser] = useState(route.params)
+    const [user, setUser] = useState(null)
+
+    async function fetchUserData(userId) {
+        
+        const data = await customFetch(`/api/user/userprofile/${userId}`, 'GET')
+        console.log("fetched other user data :", data)
+        setUser(data.data.profile)
+    }
+
+    useEffect(() => {
+        fetchUserData(route.params.id);
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>

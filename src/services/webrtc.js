@@ -7,7 +7,11 @@ import {
 
 import {sendMessage} from './socket';
 import useAuthStore from '../store/useAuthStore';
-import {useCallStore} from '../store/useCallStore';
+import {
+  setOngoingCallData,
+  useCallStore,
+  stopCallTimer,
+} from '../store/useCallStore';
 import {requestMicrophonePermission} from './permission';
 import {navigate} from '../navigation/navigationService';
 import inCallManager from 'react-native-incall-manager';
@@ -187,6 +191,8 @@ export async function insertICECandidate(candidate) {
 // you ended the call
 export async function endCall(targetId) {
   console.log('[endCall] Ending call with target:', targetId);
+  setOngoingCallData(null);
+  stopCallTimer();
   sendMessage({
     type: 'endCall',
     from: useAuthStore.getState().user.id,
@@ -212,6 +218,8 @@ export async function remoteEndCall() {
   console.log('[remoteEndCall] PeerConnection closed');
   pc = null;
   stopCallAudio();
+  setOngoingCallData(null);
+  stopCallTimer();
   useCallStore.getState().setRemoteStream(null);
   useCallStore.getState().hideIncomingCallModal();
   useCallStore.getState().setLocalStream(null);
@@ -262,7 +270,7 @@ export const stopCallAudio = () => {
   }
 };
 
-export const toggleMute = (mute ) => {
+export const toggleMute = mute => {
   try {
     inCallManager.setMicrophoneMute(mute);
   } catch (err) {
@@ -270,7 +278,7 @@ export const toggleMute = (mute ) => {
   }
 };
 
-export const toggleSpeaker = (enableSpeaker ) => {
+export const toggleSpeaker = enableSpeaker => {
   console.log('Toggling speaker to:', enableSpeaker);
   try {
     inCallManager.setForceSpeakerphoneOn(enableSpeaker);

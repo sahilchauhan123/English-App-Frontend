@@ -7,75 +7,8 @@
 import { ToastAndroid } from "react-native";
 import { navigateAndReset } from "../navigation/navigationService";
 import useAuthStore from "../store/useAuthStore";
-import { baseURL } from "./constants";
 import { clearUserSession, storeUserSession } from "./tokens";
-
-
-// const api = axios.create({
-//     baseURL: `${baseURL}/api`,
-//     timeout: 10000,
-// })
-
-
-// api.interceptors.request.use(
-//     async config => {
-//         const {accessToken} = await retrieveUserSession();
-//         if (accessToken) {
-//             config.headers.Authorization = `Bearer ${accessToken}`;
-//         }
-//         return config;
-//     },
-//     error => Promise.reject(error)
-// );
-
-// api.interceptors.response.use(
-//     response => response,
-//     async error => {
-//         const originalRequest = error.config;
-
-//         // Only retry once
-//         if (
-//             error.response?.status === 401 &&
-//             !originalRequest._retry &&
-//             !(originalRequest.url?.includes('refresh'))
-//         ) {
-//             originalRequest._retry = true;
-
-//             try {
-//                 const {accessToken,refreshToken} = await retrieveUserSession();
-//                 if (!refreshToken) throw new Error('No refresh token');
-
-//                 // Request new access token
-//                 const response = await axios.post(`${baseURL}/api/auth/refershToken`, {
-//                     accessToken,
-//                 });
-
-//                 const newAccessToken = response.data.data.accessToken;
-//                 // Save tokens
-//                 await storeUserSession({
-//                     accessToken: newAccessToken,
-//                     refreshToken,
-//                 });
-//                 // Retry the original request
-//                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-//                 return api(originalRequest);
-//             } catch (refreshError) {
-//                 // ❌ Refresh token failed, force logout
-//                 await clearUserSession();
-//                 useAuthStore.getState().logout();
-//                 // You can redirect user to login screen here
-//                 navigateAndReset("SignIn")
-//                 console.warn('Session expired. Please log in again.');
-//             }
-//         }
-//         return Promise.reject(error);
-//     }
-// )
-
-// export default api;
-
-
-
+import { baseURL } from "./constants";
 
 // fetchInterceptor.js
 // let accessToken = null;
@@ -160,6 +93,7 @@ export async function customFetch(
     contentType: string = "application/json"
 ) {
     const fullUrl = baseURL + url;
+    console.log("full url : ",fullUrl );
     console.log("accessToken in fetch:", accessToken);
     const headers: any = {
         Authorization: accessToken ? `Bearer ${accessToken}` : undefined,

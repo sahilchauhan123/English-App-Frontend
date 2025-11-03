@@ -1,4 +1,7 @@
 import { create } from "zustand";
+import { sendMessage } from "../services/socket";
+import { use } from "react";
+import useAuthStore from "./useAuthStore";
 
 
 
@@ -15,6 +18,8 @@ const initialState = {
   callStartTime: null,
   callDuration: 0,
   intervalId: null,
+  ongoingCallData: null,
+  isOnCallScreen: false,
 };
 
 export const useCallStore = create((set, get) => ({
@@ -34,9 +39,11 @@ export const useCallStore = create((set, get) => ({
   ...initialState,
 
   setUsersList: (data: any) => set({ usersList: data }),
+  setIsOnCallScreen: (value: boolean) => set({ isOnCallScreen: value }),
   setInRandomMatch: (data: boolean) => set({ inRandomMatch: data }),
   showIncomingCallModal: (payload) => set({ incomingCall: payload }),
   hideIncomingCallModal: () => set({ incomingCall: null }),
+  setOngoingCallData: (data) => set({ ongoingCallData: data }),
   setRemoteStream: (stream) => set({ remoteStream: stream }),
   setLocalStream: (stream) => set({ localStream: stream }),
   setTargetId: (target) => set({ targetId: target }),
@@ -51,14 +58,19 @@ export const useCallStore = create((set, get) => ({
 
   setOngoingCallId: (data) => set({ ongoingCallId: data }),
   startCallTimer: () => {
+    const { intervalId } = get();
+    if (intervalId) clearInterval(intervalId); // ← PREVENT DUPLICATES
+
     const startTime = Date.now();
-    const intervalId = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      set({ callDuration: elapsed });
+    const id = setInterval(() => {
+      const now = Date.now();
+      const seconds = Math.floor((now - startTime) / 1000);
+      set({ callDuration: seconds }); // always fresh
     }, 1000);
 
-    set({ callStartTime: startTime, intervalId, callDuration: 0 });
+    set({ callStartTime: startTime, intervalId: id });
   },
+
   stopCallTimer: () => {
     const { intervalId } = get();
     if (intervalId) clearInterval(intervalId);
@@ -67,13 +79,26 @@ export const useCallStore = create((set, get) => ({
   setCallStoreNull: () => {
     get().stopCallTimer();
     set(initialState);
+  },
+  startRefreshUserListLoop: (id) => {
+    const refresh = () => {
+        console.log("refreshing it ")
+        sendMessage({ type: "refreshList", from: id });
+
+      // Schedule next refresh
+      setTimeout(refresh, 15000);
+    };
+    refresh(); // Start immediately
   }
+
 }));
 
 // Helper for socket.js
 export const {
   startCallTimer,
   stopCallTimer,
-  setOngoingCallId
+  setOngoingCallId,
+  setOngoingCallData,
+  startRefreshUserListLoop
 } = useCallStore.getState();
 

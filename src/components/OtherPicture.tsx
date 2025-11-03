@@ -11,12 +11,12 @@ const OtherPicture = ({ user }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [images, setImages] = useState(user?.pictures || []); // initial from user profile
 
-    useEffect(()=>{
-        if (user){
+    useEffect(() => {
+        if (user) {
             console.log("user changed", user)
             setImages(user?.pictures)
         }
-    },[user])
+    }, [user])
 
     return (
         <View style={{ justifyContent: "center", alignItems: "center", paddingTop: hp(1.5), flex: 1 }} >
@@ -32,34 +32,48 @@ const OtherPicture = ({ user }) => {
 
             }}>
 
-                {images.map((item, key) =>
-
-                    <Pressable
-                        key={key}
-                        onPress={() => { setShow(true), setSelectedImage(item) }}
-                        style={{
-                            width: images.length < 3 ? wp(46) : wp(46),
-                            backgroundColor: colors.lightGrey,
-                            marginVertical: hp(1),
-                            borderWidth: 1,
-                            borderColor: colors.grey,
-                            borderRadius: hp(0.5),
-                            overflow: "hidden"
-                        }}>
-                        <View
+                {images && images.length > 0 ? (
+                    images.map((item, key) => (
+                        <Pressable
+                            key={key}
+                            onPress={() => {
+                                setShow(true);
+                                setSelectedImage(item);
+                            }}
                             style={{
-                                height: images.length < 3 ? hp(30) : hp(30),
+                                width: wp(46),
+                                backgroundColor: colors.lightGrey,
+                                marginVertical: hp(1),
+                                borderWidth: 1,
+                                borderColor: colors.grey,
+                                borderRadius: hp(0.5),
+                                overflow: 'hidden',
                             }}>
-                            <Image
-                                style={{ height: "100%", width: "100%" }}
-                                resizeMode='contain'
-                                source={{ uri: item }}
-                            />
-                        </View>
-
-                    </Pressable>
-
+                            <View
+                                style={{
+                                    height: hp(30),
+                                }}>
+                                <Image
+                                    style={{ height: '100%', width: '100%' }}
+                                    resizeMode="contain"
+                                    source={{ uri: item }}
+                                />
+                            </View>
+                        </Pressable>
+                    ))
+                ) : (
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            color: colors.grey,
+                            fontFamily: fonts.regular,
+                            fontSize: hp(2.2),
+                            marginVertical: hp(2),
+                        }}>
+                        No images available
+                    </Text>
                 )}
+
             </View>
 
             <Modal

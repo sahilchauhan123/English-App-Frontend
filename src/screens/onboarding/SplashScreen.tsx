@@ -172,6 +172,7 @@ import { customFetch, setTokens } from '../../utils/api';
 // import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { wpPortrait as wp, hpPortrait as hp } from '../../utils/responsive';
 import { navigateAndReset } from '../../navigation/navigationService';
+import { startRefreshUserListLoop } from '../../store/useCallStore';
 const SplashScreen = () => {
   const navigation = useNavigation();
   const { setUser } = useAuthStore();
@@ -193,6 +194,7 @@ const SplashScreen = () => {
         console.log("res in splash", res);
         setUser(res.data.profile);
         initSocket();
+        startRefreshUserListLoop(res.data.profile.id)
         navigateAndReset('Tabs');
       } else {
         if (userOnboarded) {

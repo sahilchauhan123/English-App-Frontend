@@ -1,9 +1,10 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
-import { colors } from '../../../assets/constants'
+import { colors, mutedIcon, speakerIcon, unmutedIcon, unspeakerIcon } from '../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive'
 import { endCall, toggleMute, toggleSpeaker } from '../../services/webrtc'
 import { navigate, navigateAndReset } from '../../navigation/navigationService'
+import { setOngoingCallData, stopCallTimer } from '../../store/useCallStore'
 
 
 const CallBar = ({ remoteUser }) => {
@@ -11,14 +12,11 @@ const CallBar = ({ remoteUser }) => {
     const [speaker, setSpeaker] = useState(false)
     const [mute, setMute] = useState(false)
 
-    const unmutedIcon = require("../../../assets/images/mute.png")
-    const mutedIcon = require("../../../assets/images/unmute.png")
-    const speakerIcon = require("../../../assets/images/speaker-disabled.png")
-    const unspeakerIcon = require("../../../assets/images/speaker-enabled.png")
+
 
     const HangUp = () => {
         console.log("ending call")
-        endCall(remoteUser.id)
+        endCall(remoteUser.id);
         navigateAndReset("Tabs")
     }
     const muteCall = () => {

@@ -49,9 +49,9 @@
 
 
 
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, ImageBackground, Button } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, ImageBackground, Button, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useCallStore } from '../../../store/useCallStore';
+import { startRefreshUserListLoop, useCallStore } from '../../../store/useCallStore';
 import { sendOffer } from '../../../services/webrtc';
 import { colors, fonts } from '../../../../assets/constants';
 import useAuthStore from '../../../store/useAuthStore';
@@ -67,6 +67,7 @@ const Home = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { usersList, setInRandomMatch, inRandomMatch } = useCallStore();
   const { user } = useAuthStore();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (usersList) {
@@ -74,7 +75,7 @@ const Home = () => {
       setOnlineUsers(usersList);
     }
   }, [usersList]);
-
+  
   const handleCallUser = (userId) => {
     console.log(`Initiating call to user ID: ${userId}`);
     sendOffer(userId, false)
@@ -84,10 +85,14 @@ const Home = () => {
 
 
   const refreshUserList = () => {
+    setLoading(true);
     sendMessage({
       type: "refreshList",
       from: user.id
     })
+    setTimeout(() => {
+      setLoading(false);
+    }, 1200);
   }
 
 
@@ -114,14 +119,15 @@ const Home = () => {
         </TouchableOpacity>
 
         <View style={{ flex: 2, height: '100%', justifyContent: 'space-between', alignItems: "flex-end" }}>
-          <TouchableOpacity onPress={() => handleCallUser(item.id)}>
+          <TouchableOpacity onPress={() => handleCallUser(item.id)} style={{width:wp(20),alignItems:"flex-end"}}>
 
             <Image
               style={{ height: hp(3), width: hp(3), marginTop: hp(1), marginRight: wp(2) }}
               source={require("../../../../assets/images/call.png")}
             />
-          </TouchableOpacity>
           <Text style={styles.talk}>42 Talks</Text>
+
+          </TouchableOpacity>
         </View>
 
       </View>
@@ -175,10 +181,13 @@ const Home = () => {
 
       })} /> */}
       <View style={{ padding: hp(0) }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', }}>
           <Text style={styles.headerTitle}>Talk Instantly</Text>
-          <TouchableOpacity onPress={refreshUserList}>
-            <Text>refresh</Text>
+          <TouchableOpacity onPress={refreshUserList} style={{ marginBottom: hp(0.3) }}>
+            {loading ?
+              <ActivityIndicator style={{ paddingRight: wp(5.5) }} color={colors.gradient.first} /> :
+              <Text style={{ paddingRight: wp(4.5), fontFamily: fonts.regular, fontSize: hp(1.8), color: colors.black }}>refresh</Text>
+            }
           </TouchableOpacity>
         </View>
 
@@ -300,6 +309,7 @@ const styles = StyleSheet.create({
   },
   talk: {
     fontFamily: fonts.regular,
-    fontSize: hp(1.5)
+    fontSize: hp(1.5),
+    marginTop:hp(0.3)
   }
 });

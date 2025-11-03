@@ -3,7 +3,8 @@ import React from 'react'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
 
-const RankHolder = () => {
+const RankHolder = ({ranking}) => {
+    console.log("ranking in rank holder :", ranking)
     const sampledata = [
         {
             id: 1,

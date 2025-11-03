@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive';
 import { colors, fonts } from '../../../assets/constants';
@@ -15,9 +15,10 @@ import { initSocket } from '../../services/socket';
 const SignIn = () => {
   const navigation = useNavigation();
   const { setUser } = useAuthStore();
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const GoogleLogin = async () => {
-
+    setGoogleLoading(true);
     try {
       const token = await GoogleSignUp();
       // console.log("token : ",token)
@@ -55,6 +56,7 @@ const SignIn = () => {
       }
       setTokens(cred.accessToken, cred.refreshToken);
       storeUserSession(cred);
+      setGoogleLoading(false);
       initSocket();
       navigateAndReset("Tabs");
     } catch (error) {
@@ -99,12 +101,17 @@ const SignIn = () => {
           flex: 1,
           paddingBottom: hp(1),
         }}>
-        <TouchableOpacity style={styles.signinButton} onPress={GoogleLogin}>
+        <TouchableOpacity style={styles.signinButton} onPress={GoogleLogin} disabled={googleLoading}>
           <Image
             source={require('../../../assets/images/google.png')}
             style={styles.icon}
           />
-          <Text style={styles.buttonText}>Continue with Google</Text>
+          {googleLoading ? <><ActivityIndicator size={hp(3.4)} color={colors.gradient.first} style={{marginLeft:wp(2)}} />
+            <Text style={[styles.buttonText,{color:colors.white}]}>C</Text>
+
+          </> :
+            <Text style={styles.buttonText}>Continue with Google</Text>
+          }
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("LoginOrSignup")} style={[styles.signinButton, { marginBottom: hp(5) }]}>
@@ -141,7 +148,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: hp(2.8),
-    position: 'relative',
+    // position: 'relative',
   },
   icon: {
     position: 'absolute',

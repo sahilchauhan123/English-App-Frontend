@@ -15,7 +15,7 @@ const OtherProfileSection = ({ user }) => {
             {/* blurry image */}
             <View>
                 <Image
-                    source={{ uri: user.profile_pic }}
+                    source={{ uri: user?.profile_pic || 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-High-Quality-Image.png' }}
                     style={{ width: hp(100), height: hp(13), alignSelf: 'center' }}
                     resizeMode="cover"
                     blurRadius={1.2}
@@ -27,7 +27,7 @@ const OtherProfileSection = ({ user }) => {
                     style={{ width: hp(3) }}
                 />
                 <Image
-                    source={{ uri: user.profile_pic }}
+                    source={{ uri: user?.profile_pic || 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-High-Quality-Image.png' }}
                     style={{ width: hp(14), height: hp(14), borderRadius: 100, marginTop: hp(-6.5) }}
                     resizeMode="cover"
                 />
@@ -43,10 +43,10 @@ const OtherProfileSection = ({ user }) => {
             {/* name , country, bio ,etc */}
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ fontFamily: fonts.semiBold, fontSize: hp(2.5), marginTop: hp(1) }}>
-                    {user.full_name}
+                    {user?.full_name || "Unknown User"}
                 </Text>
                 <Text style={{ fontFamily: fonts.regular, fontSize: hp(1.8), color: colors.grey, marginTop: hp(-0.8) }}>
-                    India
+                    {user?.nativeLanguage || 'Unknown Location'}
                 </Text>
                 <Text style={{ paddingHorizontal: wp(10), textAlign: "center", color: colors.mediumGrey, fontFamily: fonts.meduim, fontSize: hp(1.7), marginTop: hp(2) }}>
                     Creative mind with a strategic heart. Bold enough to start. Smart enough to scale.

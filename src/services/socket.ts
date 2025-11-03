@@ -95,7 +95,7 @@
 
 import { ToastAndroid } from "react-native";
 import useAuthStore from "../store/useAuthStore";
-import { setOngoingCallId, startCallTimer, useCallStore } from "../store/useCallStore";
+import { setOngoingCallData, setOngoingCallId, startCallTimer, stopCallTimer, useCallStore } from "../store/useCallStore";
 import { wsURL } from "../utils/constants";
 import { acceptAnswer, acceptOffer, endCall, insertICECandidate, remoteEndCall, sendOffer } from "./webrtc";
 import { navigate, navigateAndReset, navigateWithParams, navigationRef } from "../navigation/navigationService";
@@ -175,6 +175,7 @@ export async function initSocket() {
                     try {
                         console.log("ANSWER received");
                         acceptAnswer(data.payload, data.from);
+                        setOngoingCallData(data.fromUserData);
                         navigateWithParams("CallScreen", data.fromUserData);
                     } catch (err) {
                         console.error("[answer] Error:", err);
@@ -205,7 +206,9 @@ export async function initSocket() {
                         console.log("[initSocket] Handling 'endCall' event");
                         ToastAndroid.show(`Call Ended By ${data.fromUserData.full_name}`, 2000);
                         remoteEndCall();
-                        navigateAndReset("Tabs");
+                        if (useCallStore.getState().isOnCallScreen) {
+                            navigateAndReset("Tabs");
+                        }
                     } catch (err) {
                         console.error("[endCall] Error:", err);
                     }
@@ -279,7 +282,7 @@ export function sendMessage(message) {
         }
         if (socket.readyState !== WebSocket.OPEN) {
             console.log("socket state ", socket.readyState)
-            console.error("[sendMessage] WebSocket is not open (state:", socket.readyState, ")");
+            // console.error("[sendMessage] WebSocket is not open (state:", socket.readyState, ")");
             return;
         }
         console.log("send message:", message);

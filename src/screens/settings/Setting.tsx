@@ -16,6 +16,7 @@ const Setting = () => {
   const [modalText, setModalText] = useState("");
 
   useEffect(() => {
+    console.log("notificationsEnabled changed in settings:", notificationsEnabled);
     setEnable(notificationsEnabled);
   }, [notificationsEnabled]);
 

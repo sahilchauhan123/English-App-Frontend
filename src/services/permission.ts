@@ -1,6 +1,7 @@
 import { Linking, PermissionsAndroid, Platform } from "react-native";
 import useAuthStore from "../store/useAuthStore";
-import { setNotificationsEnabled } from "../store/userBasicStore";
+import useBasicStore, { setNotificationsEnabled } from "../store/userBasicStore";
+import { use } from "react";
 
 
 export async function requestMicrophonePermission() {
@@ -21,6 +22,7 @@ export async function requestNotificationPermission() {
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
     );
     if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      setNotificationsEnabled(false);
       console.log('❌ Notification permission denied');
     }
   }

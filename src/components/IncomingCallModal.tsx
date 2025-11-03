@@ -1,7 +1,7 @@
 
 import { Modal, StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, ToastAndroid } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useCallStore } from '../store/useCallStore';
+import { setOngoingCallData, useCallStore } from '../store/useCallStore';
 import { sendMessage } from '../services/socket';
 import useAuthStore from '../store/useAuthStore';
 import { acceptOffer } from '../services/webrtc';
@@ -49,6 +49,7 @@ export default function IncomingCallModal() {
 
   const acceptCall = () => {
     // console.log("incoming call payload : ",incomingCall)
+    setOngoingCallData(incomingCall.fromUserData);
     acceptOffer(incomingCall.payload, incomingCall.fromUserData)
     navigateWithParams("CallScreen", incomingCall.fromUserData)
     hideIncomingCallModal();
@@ -90,7 +91,7 @@ export default function IncomingCallModal() {
 
               </Text>
               <Text style={[styles.callerName, { fontSize: hp(1.3), fontFamily: fonts.meduim }]}>
-                {"\u2022 "}{incomingCall?.fromUserData.nativeLanguage || 'No talks'}
+                {"\u2022 "}{incomingCall?.fromUserData.currentEnglishLevel || 'No talks'}
               </Text>
             </View>
 

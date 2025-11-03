@@ -28,12 +28,15 @@ const colors = {
   callCut: "#FB4F4F",
   callAccept: "#09C26F",
   red: "#FF1616",
-  greyLighter:"#E8E8E8BF"
+  greyLighter: "#E8E8E8BF"
 
 
 };
 
-
+export const unmutedIcon = require("../assets/images/mute.png")
+export const mutedIcon = require("../assets/images/unmute.png")
+export const speakerIcon = require("../assets/images/speaker-disabled.png")
+export const unspeakerIcon = require("../assets/images/speaker-enabled.png")
 
 
 const nativeLanguages = [

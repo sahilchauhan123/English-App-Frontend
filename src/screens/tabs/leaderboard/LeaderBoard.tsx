@@ -1,11 +1,22 @@
 import { Image, ScrollView, StyleSheet} from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
 import Winners from './Winners'
 import RankHolder from './RankHolder'
+import { customFetch } from '../../../utils/api'
 
 const LeaderBoard = () => {
+  const [ranking,setRanking] = useState(null)
+  async function fetchLeaderBoard() {
+      const data = await customFetch("/api/user/leaderboard?duration=alltime","GET")
+      // console.log("leaderboard data :", data)
+      setRanking(data.data.leaderboard)
+  }
+
+  useEffect(()=>{
+    fetchLeaderBoard();
+  },[])
   return (
     <ScrollView style={styles.container}>
       <Image
@@ -13,8 +24,10 @@ const LeaderBoard = () => {
         resizeMode="stretch"
         style={styles.bgImage}
       />
-      <Winners/>
-      <RankHolder/>
+
+      <Winners ranking={ranking}/>
+      <RankHolder ranking={ranking}/>
+
     </ScrollView>
   )
 }

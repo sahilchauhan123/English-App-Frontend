@@ -1,96 +1,3 @@
-// import React, { useEffect, useRef, useState } from 'react';
-// import { useCallStore } from '../../store/useCallStore';
-// import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
-// import { RTCView } from 'react-native-webrtc';
-// import useAuthStore from '../../store/useAuthStore';
-// import { endCall } from '../../services/webrtc';
-// import { navigate } from '../../navigation/navigationService';
-
-// export default function CallScreen({ route }) {
-//   const data = route.params;
-//   // console.log("data : ",data)
-
-//   const [remoteUser, setremoteUser] = useState(data)
-//   const { localStream, remoteStream } = useCallStore();
-//   const { user } = useAuthStore();
-//   // console.log("remote user data : ", data)
-//   // console.log("our data", user)
-
-//   const HangUp = () => {
-//     console.log("ending call")
-//     endCall(remoteUser.id)
-//     navigate("Home")
-//   }
-
-//   return (
-//     <View style={styles.container}>
-//       {/* Remote video */}
-//       {remoteStream && (
-//         <View style={styles.container}>
-//           {remoteUser?.full_name && <Image
-//             source={{ uri: remoteUser.profile_pic }}
-//             style={{ width: 50, height: 50 }}
-//           />}
-
-//           <Text style={styles.text}>
-//             YOUR NAME: {remoteUser?.full_name ? remoteUser.full_name : 'Unknown'}
-//           </Text>
-//           <RTCView
-//             streamURL={remoteStream.toURL()}
-//             // style={styles.remoteVideo}
-//             objectFit="cover"
-//           />
-//         </View>
-//       )}
-
-//       {/* Local video (small overlay) */}
-//       {localStream && (
-//         <View style={styles.container}>
-//           <Image
-//             source={{ uri: user?.profile_pic }}
-//             style={{ width: 50, height: 50 }}
-//           />
-//           <Text style={styles.text}>
-//             YOUR NAME: {user.full_name}
-//           </Text>
-//           <RTCView
-//             streamURL={localStream.toURL()}
-//             // style={styles.localVideo}
-//             objectFit="cover"
-//           />
-//         </View>
-
-//       )}
-//       <Text style={{ fontSize: 40, color: 'red' }}>CallScreen</Text>
-//       <TouchableOpacity style={{ backgroundColor: "red" }}
-//         onPress={HangUp}
-//       >
-//         <Text style={styles.text}>End Call</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: { flex: 1, justifyContent: 'space-between', alignItems: 'center' },
-//   text: {
-//     color: "blue",
-//     fontSize: 30
-//   }
-
-//   // remoteVideo: {flex: 1},
-//   // localVideo: {
-//   //   position: 'absolute',
-//   //   right: 10,
-//   //   bottom: 10,
-//   //   width: 120,
-//   //   height: 160,
-//   //   zIndex: 10,
-//   // },
-// });
-
-
-
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -100,11 +7,8 @@ import { colors, fonts } from '../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive'
 import { startCallTimer, useCallStore } from '../../store/useCallStore'
 import { RTCView } from 'react-native-webrtc'
-import { endCall } from '../../services/webrtc'
-import { navigate } from '../../navigation/navigationService'
 import CallBar from './CallBar'
-import { useOrientationStore } from '../../store/useOrientationStore'
-// import { heightPercentageToDP as hp , widthPercentageToDP as wp} from 'react-native-responsive-screen'
+import { goBack, navigateAndReset } from '../../navigation/navigationService'
 
 const CallScreen = ({ route }) => {
 
@@ -112,22 +16,34 @@ const CallScreen = ({ route }) => {
   const intense = 0.2;
   // console.log("data : ",data)
   const [remoteUser, setremoteUser] = useState(data)
-  const { localStream, remoteStream, callDuration } = useCallStore();
+  const { localStream, remoteStream, setIsOnCallScreen } = useCallStore();
+  const callDuration = useCallStore(s => s.callDuration);
   const [speaker, setSpeaker] = useState(false)
   const [mute, setMute] = useState(false)
 
   useEffect(() => {
-    
-    startCallTimer();
+    if (callDuration === 0) {
+      startCallTimer();
+    }
+    setIsOnCallScreen(true);
+    return () => setIsOnCallScreen(false); // ← AUTO HIDE WHEN LEAVE
   }, [])
 
+
+
+  // THIS LINE FIXES EVERYTHING
+  useEffect(() => {
+    const ticker = setInterval(() => {
+      useCallStore.setState({}); // dummy update → forces re-render
+    }, 100);
+    return () => clearInterval(ticker);
+  }, []);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
@@ -152,9 +68,11 @@ const CallScreen = ({ route }) => {
         <View style={{ flex: 2, justifyContent: "space-between", alignItems: "center", paddingBottom: hp(5) }}>
           <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: "center", marginTop: hp(2), width: wp(90) }}>
 
-            <TouchableOpacity style={{
-              backgroundColor: colors.lightGrey, padding: hp(1.5), borderRadius: hp(100), flexDirection: "row", alignItems: "center", borderColor: colors.grey, borderWidth: 0.2,
-            }}>
+            <TouchableOpacity
+              onPress={()=>navigateAndReset("Tabs")}
+              style={{
+                backgroundColor: colors.lightGrey, padding: hp(1.5), borderRadius: hp(100), flexDirection: "row", alignItems: "center", borderColor: colors.grey, borderWidth: 0.2,
+              }}>
               <Image
                 style={{ height: hp(3.5), width: hp(3.5) }}
                 source={require("../../../assets/images/minimize.png")}
@@ -182,7 +100,7 @@ const CallScreen = ({ route }) => {
           <View style={{ marginBottom: hp(2) }}>
             <Image
               style={{ height: hp(25), width: hp(25), borderRadius: hp(100) }}
-              source={{ uri: remoteUser.profile_pic}}
+              source={{ uri: remoteUser.profile_pic }}
             />
 
           </View>

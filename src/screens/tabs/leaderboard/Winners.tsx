@@ -5,13 +5,22 @@ import { hexToRgba } from '../../../utils/extras'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
 
-const Winners = ({ data = [] }) => {
+const Winners = ({ ranking }) => {
+  console.log("ranking in winners :", ranking)
   // Arrange data for podium: 2nd, 1st, 3rd
+  const data = ranking || [];
   const displayData = [
     data[1] || { full_name: "Michael", country: "India", profile_pic: "", rank: 2 },
     data[0] || { full_name: "Kira", country: "Africa", profile_pic: "", rank: 1 },
     data[2] || { full_name: "Raman", country: "India", profile_pic: "", rank: 3 }
   ];
+
+  function formatName(name) {
+    // format name with only first name before space with max 10 characters
+    if (!name) return "Unknown User";
+    const firstName = name.split(' ')[0];
+    return firstName.length > 10 ? firstName.slice(0, 10) + '...' : firstName;
+  }
 
   return (
     <View style={styles.row}>
@@ -24,10 +33,10 @@ const Winners = ({ data = [] }) => {
           />
           <Image
             style={styles.profilePic}
-            source={{ uri: displayData[0].profile_pic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraMl1GmQepkXHZlItoFEIUiNPk_krO1dyR7Xo1kBsZYNFb_w1kwhLnt5BO9LXYX5evAI&usqp=CAU" }}
+            source={{ uri: displayData[0].user_data.profile_pic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraMl1GmQepkXHZlItoFEIUiNPk_krO1dyR7Xo1kBsZYNFb_w1kwhLnt5BO9LXYX5evAI&usqp=CAU" }}
           />
-          <Text style={styles.winnerName}>{displayData[0].full_name}</Text>
-          <Text style={styles.countryText}>{displayData[0].country}</Text>
+          <Text style={styles.winnerName}>{formatName(displayData[0].user_data.full_name)}</Text>
+          <Text style={styles.countryText}>{displayData[0].user_data.nativeLanguage}</Text>
         </View>
 
         <LinearGradient
@@ -53,10 +62,10 @@ const Winners = ({ data = [] }) => {
           />
           <Image
             style={styles.profilePic}
-            source={{ uri: displayData[1].profile_pic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTht0CJiQlX5WNR5Qe7avmqNMj1kesweoIYY_xY1WTxrJC7S1Y4gv2SRLTh2l6kU8c7ytU&usqp=CAU" }}
+            source={{ uri: displayData[1].user_data.profile_pic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTht0CJiQlX5WNR5Qe7avmqNMj1kesweoIYY_xY1WTxrJC7S1Y4gv2SRLTh2l6kU8c7ytU&usqp=CAU" }}
           />
-          <Text style={styles.winnerName}>{displayData[1].full_name}</Text>
-          <Text style={styles.countryText}>{displayData[1].country}</Text>
+          <Text style={styles.winnerName}>{formatName(displayData[1].user_data.full_name)}</Text>
+          <Text style={styles.countryText}>{displayData[1].user_data.nativeLanguage}</Text>
         </View>
 
         <LinearGradient
@@ -82,10 +91,10 @@ const Winners = ({ data = [] }) => {
           />
           <Image
             style={styles.profilePic}
-            source={{ uri: displayData[2].profile_pic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQumrcwZizGBisyEEmlbllYty5O_LuswiDbj0LnbD8XSJXbALXe0IYV1yDi86ZZYzXYgHA&usqp=CAU" }}
+            source={{ uri: displayData[2].user_data.profile_pic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQumrcwZizGBisyEEmlbllYty5O_LuswiDbj0LnbD8XSJXbALXe0IYV1yDi86ZZYzXYgHA&usqp=CAU" }}
           />
-          <Text style={styles.winnerName}>{displayData[2].full_name}</Text>
-          <Text style={styles.countryText}>{displayData[2].country}</Text>
+          <Text style={styles.winnerName}>{formatName(displayData[2].user_data.full_name)}</Text>
+          <Text style={styles.countryText}>{displayData[2].user_data.nativeLanguage}</Text>
         </View>
 
         <LinearGradient
@@ -121,7 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-end",
     marginHorizontal: wp(20),
-    marginTop:hp(2)
+    marginTop: hp(2)
   },
   positionWrapper: {
     justifyContent: "flex-end"
@@ -145,7 +154,7 @@ const styles = StyleSheet.create({
   },
   countryText: {
     fontFamily: fonts.regular,
-    marginTop:hp(-0.3),
+    marginTop: hp(-0.3),
     fontSize: hp(1.6),
   },
   gradientContainer: {
