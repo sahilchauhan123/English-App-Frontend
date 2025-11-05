@@ -148,7 +148,7 @@ const Chats = () => {
         role: m.role,
         content: m.content,
       }));
-
+      console.log("Sending messages to API:", messagetoAi)
       const response = await fetch(
         'https://english-convo-ai.strango.workers.dev/chat/flirty',
         {

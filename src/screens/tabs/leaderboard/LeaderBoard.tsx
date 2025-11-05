@@ -1,4 +1,4 @@
-import { Image, ScrollView, StyleSheet} from 'react-native'
+import { Image, ScrollView, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
@@ -7,16 +7,16 @@ import RankHolder from './RankHolder'
 import { customFetch } from '../../../utils/api'
 
 const LeaderBoard = () => {
-  const [ranking,setRanking] = useState(null)
+  const [ranking, setRanking] = useState(null)
   async function fetchLeaderBoard() {
-      const data = await customFetch("/api/user/leaderboard?duration=alltime","GET")
-      // console.log("leaderboard data :", data)
-      setRanking(data.data.leaderboard)
+    const data = await customFetch("/api/user/leaderboard?duration=alltime", "GET")
+    // console.log("leaderboard data :", data)
+    setRanking(data.data.leaderboard)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchLeaderBoard();
-  },[])
+  }, [])
   return (
     <ScrollView style={styles.container}>
       <Image
@@ -25,8 +25,8 @@ const LeaderBoard = () => {
         style={styles.bgImage}
       />
 
-      <Winners ranking={ranking}/>
-      <RankHolder ranking={ranking}/>
+      <Winners ranking={ranking} />
+      <RankHolder ranking={ranking} />
 
     </ScrollView>
   )
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   countryText: {
     fontFamily: fonts.regular,
-    marginTop:hp(-0.3),
+    marginTop: hp(-0.3),
     fontSize: hp(1.6),
   },
   gradientContainer: {

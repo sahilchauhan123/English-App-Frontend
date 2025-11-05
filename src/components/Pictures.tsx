@@ -159,26 +159,26 @@ const Pictures = () => {
                 onRequestClose={() => setShow(false)}
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.8)", flex: 1 }}
             >
-                    <Pressable
-                        onPress={() => setShow(false)}
-                        style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.8)", justifyContent: 'center', alignItems: 'center' }}
+                <Pressable
+                    onPress={() => setShow(false)}
+                    style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.8)", justifyContent: 'center', alignItems: 'center' }}
+                >
+                    <TouchableOpacity
+                        style={{ width: wp(100), alignItems: 'flex-end', paddingHorizontal: wp(2), paddingTop: hp(3) }}
+                        onPress={() => deleteImages(selectedImage)}
                     >
-                        <TouchableOpacity
-                            style={{ width: wp(100), alignItems: 'flex-end', paddingHorizontal: wp(2), paddingTop: hp(3) }}
-                            onPress={() => deleteImages(selectedImage)}
-                        >
-                            <Image
-                                style={{ height: hp(4), width: hp(4) }}
-                                source={require("../../assets/images/delete.png")}
-                            />
-                        </TouchableOpacity>
                         <Image
-                            source={{ uri: selectedImage }}
-                            style={{ height: "95%", width: "95%", }}
-                            resizeMode="contain"
+                            style={{ height: hp(4), width: hp(4) }}
+                            source={require("../../assets/images/delete.png")}
                         />
-                    </Pressable>
-                
+                    </TouchableOpacity>
+                    <Image
+                        source={{ uri: selectedImage }}
+                        style={{ height: "95%", width: "95%", }}
+                        resizeMode="contain"
+                    />
+                </Pressable>
+
 
             </Modal>
         </View>

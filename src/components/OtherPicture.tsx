@@ -5,8 +5,10 @@ import { hpPortrait as hp, hpPortrait, wpPortrait as wp } from '../utils/respons
 import ImagePicker from "react-native-image-crop-picker";
 import { customFetch } from '../utils/api';
 import useAuthStore from '../store/useAuthStore';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
-const OtherPicture = ({ user }) => {
+const OtherPicture = ({ user ,loading}) => {
     const [show, setShow] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [images, setImages] = useState(user?.pictures || []); // initial from user profile
@@ -17,6 +19,21 @@ const OtherPicture = ({ user }) => {
             setImages(user?.pictures)
         }
     }, [user])
+
+    if (loading) {
+        return (
+            <View style={{ width: '100%', paddingTop: hp(8),flexDirection:"row" ,alignItems:"center" ,flexWrap:"wrap",justifyContent:"center"}}>
+                {[0, 1, 2].map((_, index) => (
+                    <ShimmerPlaceholder
+                        key={index}
+                        shimmerColors={['#E0E0E0', '#F5F5F5', '#E0E0E0']}
+                        LinearGradient={LinearGradient}
+                        style={{ marginVertical: hp(1), marginHorizontal: wp(2), borderRadius: 5, height: hp(30), width: wp(42) }}
+                    />
+                ))}
+            </View>
+        )
+    }
 
     return (
         <View style={{ justifyContent: "center", alignItems: "center", paddingTop: hp(1.5), flex: 1 }} >

@@ -14,7 +14,7 @@ const Profile = ({ route }) => {
         {/* profile picture  */}
         <ProfileSection user={user} />
         {/* description & talk section */}
-        <Pictures otherUser={null}/>
+        <Pictures />
       </ScrollView>
 
     </View>

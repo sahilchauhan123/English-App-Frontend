@@ -282,6 +282,7 @@ export function sendMessage(message) {
         }
         if (socket.readyState !== WebSocket.OPEN) {
             console.log("socket state ", socket.readyState)
+            console.log("socket message : ",message)
             // console.error("[sendMessage] WebSocket is not open (state:", socket.readyState, ")");
             return;
         }

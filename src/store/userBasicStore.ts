@@ -11,7 +11,7 @@ const useBasicStore = create(
 
       userOnboarded: false,
       isInitialized: false,
-      notificationsEnabled: false,
+      notificationsEnabled: true,
 
       setUserOnboarded: (value: boolean) => set({ userOnboarded: value }),
       setInitialized: () => set({ isInitialized: true }),

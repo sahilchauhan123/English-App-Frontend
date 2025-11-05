@@ -5,8 +5,32 @@ import { colors, fonts } from '../../assets/constants';
 import GradientText from './GradientText';
 import { hpPortrait as hp, wpPortrait as wp } from '../utils/responsive';
 import { navigate, navigateAndReset } from '../navigation/navigationService';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
-const OtherProfileSection = ({ user }) => {
+const OtherProfileSection = ({ user, loading }) => {
+
+    if (loading) {
+        return (
+            <View style={{alignItems: 'center'}}>
+
+                <ShimmerPlaceholder
+                    shimmerColors={['#E0E0E0', '#F5F5F5', '#E0E0E0']}
+                    LinearGradient={LinearGradient}
+                    style={{ marginVertical: hp(1), marginHorizontal: wp(4), borderRadius: 5, height: hp(8), width: wp(92) }}
+                >
+                </ShimmerPlaceholder>
+                <ShimmerPlaceholder
+                    shimmerColors={['#E0E0E0', '#F5F5F5', '#E0E0E0']}
+                    LinearGradient={LinearGradient}
+                    style={{ marginTop: hp(-5), marginHorizontal: wp(4), borderRadius: 100, height: hp(15), width: hp(15) }}
+                >
+                </ShimmerPlaceholder>
+            </View>
+
+        )
+    }
+
     return (
         <View >
 

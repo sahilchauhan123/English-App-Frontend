@@ -5,17 +5,20 @@ import OtherPicture from '../../../components/OtherPicture'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
-import { navigateAndReset } from '../../../navigation/navigationService'
+import { goBack } from '../../../navigation/navigationService'
 import { customFetch } from '../../../utils/api'
 
 const OtherUserProfile = ({ route }) => {
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(false);
+
 
     async function fetchUserData(userId) {
-        
+        setLoading(true);
         const data = await customFetch(`/api/user/userprofile/${userId}`, 'GET')
         console.log("fetched other user data :", data)
         setUser(data.data.profile)
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -27,7 +30,7 @@ const OtherUserProfile = ({ route }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: wp(4), marginVertical: hp(2) }}>
                 <TouchableOpacity
                     style={{ width: hp(3), height: hp(3) }}
-                    onPress={() => navigateAndReset("Tabs")}
+                    onPress={goBack}
                 >
                     <Image
                         style={{
@@ -51,14 +54,13 @@ const OtherUserProfile = ({ route }) => {
                     style={{ width: hp(3), height: hp(3) }}
                 />
             </View>
-
             <ScrollView>
-
                 {/* profile picture  */}
-                <OtherProfileSection user={user} />
+                <OtherProfileSection user={user} loading={loading} />
                 {/* description & talk section */}
-                <OtherPicture user={user} />
+                <OtherPicture user={user} loading={loading} />
             </ScrollView>
+
         </SafeAreaView>
     )
 }

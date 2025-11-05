@@ -44,8 +44,8 @@ const Setting = () => {
             fontFamily: fonts.semiBold,
             fontSize: hp(2.8),
             marginBottom: hp(-2),
-            zIndex: 1,  
-            backgroundColor:colors.white                  // ensure it stays on top if needed
+            zIndex: 1,
+            backgroundColor: colors.white                  // ensure it stays on top if needed
           }}>
           Settings
         </Text>

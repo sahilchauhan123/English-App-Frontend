@@ -1,73 +1,68 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder'
+import LinearGradient from 'react-native-linear-gradient'
+import { navigateWithParams } from '../../../navigation/navigationService'
 
-const RankHolder = ({ranking}) => {
+const RankHolder = ({ ranking }) => {
     console.log("ranking in rank holder :", ranking)
-    const sampledata = [
-        {
-            id: 1,
-            profile_pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraMl1GmQepkXHZlItoFEIUiNPk_krO1dyR7Xo1kBsZYNFb_w1kwhLnt5BO9LXYX5evAI&usqp=CAU",
-            full_name: "Michael Johnson",
-            nativeLanguage: "English",
-            totalTime: "12h 30m",
-        },
-        {
-            id: 2,
-            profile_pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraMl1GmQepkXHZlItoFEIUiNPk_krO1dyR7Xo1kBsZYNFb_w1kwhLnt5BO9LXYX5evAI&usqp=CAU",
-            full_name: "Kira Mensah",
-            nativeLanguage: "Swahili",
-            totalTime: "15h 10m",
-        },
-        {
-            id: 3,
-            profile_pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQumrcwZizGBisyEEmlbllYty5O_LuswiDbj0LnbD8XSJXbALXe0IYV1yDi86ZZYzXYgHA&usqp=CAU",
-            full_name: "Raman Singh",
-            nativeLanguage: "Hindi",
-            totalTime: "10h 45m",
-        },
-        {
-            id: 4,
-            profile_pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraMl1GmQepkXHZlItoFEIUiNPk_krO1dyR7Xo1kBsZYNFb_w1kwhLnt5BO9LXYX5evAI&usqp=CAU",
-            full_name: "Sophia Lee",
-            nativeLanguage: "Korean",
-            totalTime: "9h 20m",
-        },
-        {
-            id: 5,
-            profile_pic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQraMl1GmQepkXHZlItoFEIUiNPk_krO1dyR7Xo1kBsZYNFb_w1kwhLnt5BO9LXYX5evAI&usqp=CAU",
-            full_name: "Carlos Martínez",
-            nativeLanguage: "Spanish",
-            totalTime: "13h 05m",
-        },
-    ]
+    const isFetched = ranking && ranking.length > 3
+    const [rankedUsers, setRankedUsers] = useState([])
+    // we need rank holder after 3 users because top 3 are in winners component
+    // do slicing here of array 
+    useEffect(() => {
+        if (ranking && ranking.length > 3) {
+            console.log("sliced array :", ranking.slice(3))
+            setRankedUsers(ranking.slice(3))
+        }
+    }, [ranking])
 
+    if (!isFetched) {
+        return (
+            <View style={{ width: '100%', paddingTop: hp(8) }}>
+                {[0, 1, 2].map((_, index) => (
+                    <ShimmerPlaceholder
+                        key={index}
+                        shimmerColors={['#E0E0E0', '#F5F5F5', '#E0E0E0']}
+                        LinearGradient={LinearGradient}
+                        style={{ marginVertical: hp(1), marginHorizontal: wp(4), borderRadius: 5, height: hp(8), width: wp(92) }}
+                    />
+                ))}
+            </View>
+        )
+    }
 
     const renderUserItem = ({ item }) => (
-        <View style={{
-            backgroundColor: "#D8DBDD", borderRadius: 15, paddingBottom: hp(0.2), marginHorizontal: wp(4),
-        }}>
-            <View style={styles.userCard}>
-                <Text style={{ fontFamily: fonts.bold, fontSize: hp(2.4), marginRight: wp(4) }}>{item.id}</Text>
+        console.log("item in rank holder :", item),
+        <View
+            key={item.rank}
+            style={{
+                backgroundColor: "#D8DBDD", borderRadius: 15, paddingBottom: hp(0.2), marginHorizontal: wp(4),
+            }}>
+            <TouchableOpacity
+                onPress={() => navigateWithParams("OtherUserProfile", item.user_data)}
+                style={styles.userCard}>
+                <Text style={{ fontFamily: fonts.bold, fontSize: hp(2.4), marginRight: wp(4) }}>{item.rank}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
 
                     <Image
-                        source={{ uri: item.profile_pic || 'https://via.placeholder.com/50' }}
+                        source={{ uri: item.user_data.profile_pic || 'https://via.placeholder.com/50' }}
                         style={styles.profilePic}
                     />
                     <View style={styles.userInfo}>
-                        <Text style={styles.userName}>{item.full_name || item.username || 'Unknown User'}</Text>
-                        <Text style={styles.userDetails}>{item.nativeLanguage}
+                        <Text style={styles.userName}>{item.user_data.full_name || item.username || 'Unknown User'}</Text>
+                        <Text style={styles.userDetails}>{item.user_data.nativeLanguage || 'Unknown Language'}
                             {/* | {item.currentEnglishLevel} */}
                         </Text>
                     </View>
                 </View>
                 <View style={{ flex: 1, height: '100%', justifyContent: "center", alignItems: "flex-end" }}>
 
-                    <Text style={styles.talk}>{item.totalTime}</Text>
+                    <Text style={styles.talk}>{item.total_duration + " min" || "csd"}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
 
         </View>
 
@@ -96,12 +91,11 @@ const RankHolder = ({ranking}) => {
                 </Text>
             </View>
 
-
             <FlatList
-                data={sampledata}
+                data={rankedUsers}
                 scrollEnabled={false}
                 renderItem={renderUserItem}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.rank.toString()}
                 ListEmptyComponent={
                     <Text style={styles.emptyText}>No online users available</Text>
                 }
@@ -214,9 +208,30 @@ const styles = StyleSheet.create({
     },
     talk: {
         fontFamily: fonts.regular,
-        fontSize: hp(1.5)
+        fontSize: hp(1.8),
     },
     bottomSpace: {
         flex: 1.05,
+    },
+    gradientContainer: {
+        paddingHorizontal: wp(0),
+        width: wp(18),
+        alignItems: 'center',
+        borderRadius: hp(1.2),
+    },
+    shadowWrapper: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        elevation: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    row: {
+        flex: 1,
+        // flexDirection: 'row',
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        // marginHorizontal: wp(20),
+        // marginTop: hp(2)
     },
 });
