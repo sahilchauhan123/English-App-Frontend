@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {  Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import { hexToRgba } from '../../../utils/extras'
@@ -8,19 +8,13 @@ import ShimmerPlaceholder, { createShimmerPlaceholder } from 'react-native-shimm
 import { navigateWithParams } from '../../../navigation/navigationService'
 
 const Winners = ({ ranking }) => {
-  console.log("ranking in winners :", ranking)
   const isFetched = ranking && ranking.length > 0
-
-
+  
   function formatName(name) {
     // format name with only first name before space with max 10 characters
     if (!name) return "Unknown User";
     const firstName = name.split(' ')[0];
     return firstName.length > 10 ? firstName.slice(0, 10) + '...' : firstName;
-  }
-
-  function navigateToProfile(userData) {
-    navigateWithParams("OtherUserProfile", userData)
   }
 
   if (!isFetched) {
@@ -29,7 +23,7 @@ const Winners = ({ ranking }) => {
         {[0, 1, 2].map((_, index) => (
           <ShimmerPlaceholder
             key={index}
-            style={[styles.gradientContainer, styles.shadowWrapper, { height: hp(30), marginVertical: hp(2) }]}
+            style={[styles.gradientContainer, { height: hp(30), marginVertical: hp(2) }]}
             shimmerColors={['#E0E0E0', '#F5F5F5', '#E0E0E0']}
             width={wp(18)}
             LinearGradient={LinearGradient}

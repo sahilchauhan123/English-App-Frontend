@@ -4,7 +4,7 @@ import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { colors, fonts } from '../../../assets/constants'
 import { settingsMenus } from '../../utils/constants'
-import { navigate } from '../../navigation/navigationService'
+import { goBack, navigate } from '../../navigation/navigationService'
 import useAuthStore, { deleteAccount } from '../../store/useAuthStore'
 import useBasicStore, { setNotificationEnabled } from '../../store/userBasicStore'
 
@@ -38,17 +38,34 @@ const Setting = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white, justifyContent: 'space-between' }}>
       <View>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontFamily: fonts.semiBold,
-            fontSize: hp(2.8),
-            marginBottom: hp(-2),
-            zIndex: 1,
-            backgroundColor: colors.white                  // ensure it stays on top if needed
-          }}>
-          Settings
-        </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: hp(-2), zIndex: 1, backgroundColor: colors.white, marginHorizontal: wp(3), marginTop: hp(2) }}>
+          <TouchableOpacity
+            style={{ width: hp(3), height: hp(3) }}
+            onPress={goBack}
+          >
+            <Image
+              style={{
+                width: hp(3), height: hp(3),
+              }}
+              source={require("../../../assets/images/back.png")}
+              resizeMode='contain'
+            />
+          </TouchableOpacity>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontFamily: fonts.semiBold,
+              fontSize: hp(2.8),
+              // zIndex: 1,
+              backgroundColor: colors.white                  // ensure it stays on top if needed
+            }}>
+            Settings
+          </Text>
+          <View
+            style={{ width: hp(3), height: hp(3) }}
+          />
+        </View>
+
         <View
           style={{
             backgroundColor: '#fff',
@@ -56,6 +73,7 @@ const Setting = () => {
             marginBottom: hp(2),
             height: hp(3),
           }} />
+
 
         {settingsMenus.map((menu, key) => {
           // ✅ Conditional rendering at the top

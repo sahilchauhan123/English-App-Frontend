@@ -24,10 +24,8 @@ const LeaderBoard = () => {
         resizeMode="stretch"
         style={styles.bgImage}
       />
-
       <Winners ranking={ranking} />
       <RankHolder ranking={ranking} />
-
     </ScrollView>
   )
 }
