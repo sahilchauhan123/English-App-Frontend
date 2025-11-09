@@ -4,7 +4,7 @@ import useAuthStore from '../../../store/useAuthStore'
 import ProfileSection from '../../../components/ProfileSection';
 import Pictures from '../../../components/Pictures';
 
-const Profile = ({ route }) => {
+const Profile = () => {
 
   const { user } = useAuthStore();
   return (

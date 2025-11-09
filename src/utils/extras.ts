@@ -9,3 +9,21 @@ export const hexToRgba = (hex, alpha = 1) => {
   const b = num & 255;
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
+
+
+export function formatTime(timestampString:string) {
+
+  const dateObject = new Date(timestampString.replace(' ', 'T'));
+
+  const formattedDate = dateObject.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+
+  return formattedDate+" Utc"
+}

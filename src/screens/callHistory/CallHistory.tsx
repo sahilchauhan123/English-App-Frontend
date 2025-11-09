@@ -7,6 +7,7 @@ import { customFetch } from '../../utils/api'
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder'
 import { navigateWithParams, goBack } from '../../navigation/navigationService'
 import LinearGradient from 'react-native-linear-gradient'
+import { formatTime } from '../../utils/extras'
 
 const CallHistory = () => {
     const [callHistory, setCallHistory] = useState([]);
@@ -29,6 +30,7 @@ const CallHistory = () => {
             setLoading(true)
             url = "/api/user/call/history";
             const res = await customFetch(url, "GET")
+            console.log(res.data.history)
             console.log("running")
             setCallHistory(res.data.history);
         }
@@ -62,7 +64,7 @@ const CallHistory = () => {
                     <View style={styles.userInfo}>
                         <Text style={styles.userName}>{item.peer_name || 'Unknown User'}</Text>
                         <Text style={styles.userDetails}>
-                            {item.ended_at}
+                            {formatTime(item.started_at)}
                         </Text>
                     </View>
                 </TouchableOpacity>

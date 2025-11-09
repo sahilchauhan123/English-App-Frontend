@@ -7,9 +7,9 @@ import LeaderBoard from './leaderboard/LeaderBoard';
 import { colors } from '../../../assets/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomBar from '../../components/BottomBar';
-import Chats from './chats/Chats';
 import Profile from './profile/Profile';
 import Header from '../../components/Header';
+import AiCharacters from './aiChats/AiCharacters';
 
 const Tabs = () => {
 
@@ -29,7 +29,7 @@ const Tabs = () => {
       case 'second':
         return <LeaderBoard />;
       case 'third':
-        return <Chats />;
+        return <AiCharacters />;
       case 'fourth':
         return <Profile />;
       default:
