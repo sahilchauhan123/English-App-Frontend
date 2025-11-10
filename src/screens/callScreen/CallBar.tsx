@@ -4,20 +4,22 @@ import { colors, mutedIcon, speakerIcon, unmutedIcon, unspeakerIcon } from '../.
 import { hpPortrait as hp, wpPortrait as wp } from '../../utils/responsive'
 import { endCall, toggleMute, toggleSpeaker } from '../../services/webrtc'
 import { navigate, navigateAndReset } from '../../navigation/navigationService'
-import { setOngoingCallData, stopCallTimer } from '../../store/useCallStore'
+import { setOngoingCallData, stopCallTimer, useCallStore } from '../../store/useCallStore'
 
 
 const CallBar = ({ remoteUser }) => {
 
     const [speaker, setSpeaker] = useState(false)
     const [mute, setMute] = useState(false)
-
+    const {ongoingCallId} = useCallStore();
 
 
     const HangUp = () => {
         console.log("ending call")
+        const callId = ongoingCallId;
         endCall(remoteUser.id);
-        navigateAndReset("Tabs")
+        navigateAndReset('FeedBack',callId);
+
     }
     const muteCall = () => {
         toggleMute(true);

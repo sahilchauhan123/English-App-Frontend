@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ActivityIndicator, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { sendOffer } from '../../../services/webrtc';
 import { colors, fonts } from '../../../../assets/constants';
 import useAuthStore from '../../../store/useAuthStore';
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive';
 import { sendMessage } from '../../../services/socket';
-import { navigateWithParams } from '../../../navigation/navigationService';
+import { navigateAndReset, navigateWithParams } from '../../../navigation/navigationService';
 import { useCallStore } from '../../../store/useCallStore';
 
 
@@ -21,7 +21,7 @@ const Home = () => {
       setOnlineUsers(usersList);
     }
   }, [usersList]);
-  
+
   const handleCallUser = (userId) => {
     console.log(`Initiating call to user ID: ${userId}`);
     sendOffer(userId, false)
@@ -65,13 +65,13 @@ const Home = () => {
         </TouchableOpacity>
 
         <View style={{ flex: 2, height: '100%', justifyContent: 'space-between', alignItems: "flex-end" }}>
-          <TouchableOpacity onPress={() => handleCallUser(item.id)} style={{width:wp(20),alignItems:"flex-end"}}>
+          <TouchableOpacity onPress={() => handleCallUser(item.id)} style={{ width: wp(20), alignItems: "flex-end" }}>
 
             <Image
               style={{ height: hp(3), width: hp(3), marginTop: hp(1), marginRight: wp(2) }}
               source={require("../../../../assets/images/call.png")}
             />
-          <Text style={styles.talk}>42 Talks</Text>
+            <Text style={styles.talk}>42 Talks</Text>
 
           </TouchableOpacity>
         </View>
@@ -148,7 +148,7 @@ const Home = () => {
         />
         <View style={{ height: hp(1) }} />
       </View>
-
+      <Button title="go to feedback" onPress={() => navigateAndReset("FeedBack")} />
     </View>
   );
 };
@@ -238,6 +238,6 @@ const styles = StyleSheet.create({
   talk: {
     fontFamily: fonts.regular,
     fontSize: hp(1.5),
-    marginTop:hp(0.3)
+    marginTop: hp(0.3)
   }
 });

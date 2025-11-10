@@ -1,7 +1,9 @@
 // if this is the url new url https://englishapp-skmti0r1.b4a.run/ change variable acc to it 
 
-const baseURL = 'http://192.168.1.20:8080';
-const wsURL = 'ws://192.168.1.20:8080/ws';
+import { hpPortrait as hp, wpPortrait as wp } from "./responsive";
+
+const baseURL = 'http://10.206.90.24:8080';
+const wsURL = 'ws://10.206.90.24:8080/ws';
 export { baseURL, wsURL };
 
 // const baseURL = 'https://english-app-backend-production.up.railway.app';
@@ -64,6 +66,66 @@ export const settingsMenus = [
         screen: "CallHistory"
     }
 
+]
+
+
+export const Behaviour = [
+    {
+        id: 0,
+        type: "RespectFull",
+        width: "33%",
+    },
+    {
+        id: 1,
+        type: "Abusive",
+        width: "33%",
+    },
+    {
+        id: 2,
+        type: "Introvert",
+        width: "33%",
+    },
+    {
+        id: 3,
+        type: "Friendly",
+        width: "25%",
+    },
+    {
+        id: 4,
+        type: "Confident",
+        width: "25%",
+    },
+    {
+        id: 5,
+        type: "Flirty",
+        width: "25%",
+
+    },
+    {
+        id: 6,
+        type: "Polite",
+        width: "25%",
+    },
+    {
+        id: 7,
+        type: "Talkative",
+        width: "25%",
+    },
+    {
+        id: 8,
+        type: "Supportive",
+        width: "25%",
+    },
+    {
+        id: 9,
+        type: "Formal",
+        width: "25%",
+    },
+    {
+        id: 10,
+        type: "Casual",
+        width: "25%",
+    },
 ]
 
 export const grokvoice = [

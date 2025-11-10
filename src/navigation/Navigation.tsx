@@ -16,6 +16,7 @@ import Setting from '../screens/settings/Setting';
 import AiCall from '../screens/callScreen/AiCall';
 import OtherUserProfile from '../screens/tabs/profile/OtherUserProfile';
 import CallHistory from '../screens/callHistory/CallHistory';
+import FeedBack from '../screens/feedback/FeedBack';
 
 
 
@@ -47,6 +48,8 @@ const Navigation = () => {
         <Stack.Screen name="AiCall" component={AiCall} />
         <Stack.Screen name="OtherUserProfile" component={OtherUserProfile} />
         <Stack.Screen name="CallHistory" component={CallHistory} />
+        <Stack.Screen name="FeedBack" component={FeedBack} />
+
         
       </Stack.Navigator>
     </NavigationContainer>

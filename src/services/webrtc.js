@@ -13,7 +13,7 @@ import {
   stopCallTimer,
 } from '../store/useCallStore';
 import {requestMicrophonePermission} from './permission';
-import {navigate} from '../navigation/navigationService';
+import {navigate, navigateAndReset} from '../navigation/navigationService';
 import inCallManager from 'react-native-incall-manager';
 
 let pc;
@@ -207,7 +207,7 @@ export async function endCall(targetId) {
   useCallStore.getState().setRemoteStream(null);
   useCallStore.getState().setLocalStream(null);
   useCallStore.getState().hideIncomingCallModal();
-  useCallStore.getState().setOngoingCallId(null);
+  // useCallStore.getState().setOngoingCallId(null);
   console.log('[endCall] Local & remote streams cleared, modal hidden');
 }
 
@@ -223,7 +223,7 @@ export async function remoteEndCall() {
   useCallStore.getState().setRemoteStream(null);
   useCallStore.getState().hideIncomingCallModal();
   useCallStore.getState().setLocalStream(null);
-  useCallStore.getState().setOngoingCallId(null);
+  // useCallStore.getState().setOngoingCallId(null);
   console.log('[remoteEndCall] Local & remote streams cleared, modal hidden');
 }
 

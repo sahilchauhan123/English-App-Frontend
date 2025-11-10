@@ -207,7 +207,11 @@ export async function initSocket() {
                         ToastAndroid.show(`Call Ended By ${data.fromUserData.full_name}`, 2000);
                         remoteEndCall();
                         if (useCallStore.getState().isOnCallScreen) {
-                            navigateAndReset("Tabs");
+                            const callId = useCallStore.getState().ongoingCallId;
+                            setOngoingCallId(null);
+                            if (callId) {
+                                navigateAndReset("FeedBack",callId)
+                            }
                         }
                     } catch (err) {
                         console.error("[endCall] Error:", err);
@@ -282,7 +286,7 @@ export function sendMessage(message) {
         }
         if (socket.readyState !== WebSocket.OPEN) {
             console.log("socket state ", socket.readyState)
-            console.log("socket message : ",message)
+            console.log("socket message : ", message)
             // console.error("[sendMessage] WebSocket is not open (state:", socket.readyState, ")");
             return;
         }

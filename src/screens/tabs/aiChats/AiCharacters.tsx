@@ -89,7 +89,7 @@ const AiCharacters = () => {
                             key={index}
                             onPress={()=>console.log("pressing")}
                             style={{
-                                width: hp(22),
+                                width: hp(21),
                                 height: hp(24),
                                 margin: hp(1),
                                 backgroundColor: item.backgroundColor,
