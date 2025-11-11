@@ -4,6 +4,7 @@ import { navigateAndReset } from '../navigation/navigationService';
 import { ToastAndroid } from 'react-native';
 import { useCallStore } from './useCallStore';
 import { customFetch } from '../utils/api';
+import { closeWebSocket } from '../services/socket';
 
 const useAuthStore = create((set, get) => ({
   user: null,
@@ -15,6 +16,7 @@ const useAuthStore = create((set, get) => ({
     set({ user: null, isAuthenticated: false });
     ToastAndroid.show("Logout Successfull", ToastAndroid.SHORT)
     navigateAndReset("SignIn");
+    closeWebSocket();
   },
   deleteAccount: () => {
     customFetch("/api/user/account/delete","GET");

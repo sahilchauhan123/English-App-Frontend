@@ -60,7 +60,7 @@ const Pictures = () => {
                     type: image.mime,         // e.g. "image/jpeg"
                     name: "upload.jpg",       // must have a file name
                 });
-                ToastAndroid.show("Uploading picture ...", 1000);
+                ToastAndroid.show("Uploading picture ...", 3000);
                 const response = await customFetch("/api/user/upload/image", "POST", formData);
                 console.log("Upload response:", response);
                 setImages([...images, response.data.url]); // append new image to state
@@ -123,7 +123,7 @@ const Pictures = () => {
 
                         onPress={pickAndUploadImage}
                         style={{
-                            width: images.length < 3 ? wp(46) : wp(30),
+                            width: images.length < 3 ? wp(46) : wp(46),
                         }}>
                         <View
                             style={{
@@ -134,7 +134,7 @@ const Pictures = () => {
                                 alignItems: 'center',
                                 borderWidth: 1,
                                 paddingVertical: hp(5),
-                                height: images.length < 3 ? hp(30) : hp(20),
+                                height: images.length < 3 ? hp(30) : hp(30),
                                 borderRadius: hp(0.5),
                                 marginBottom: hp(0.6)
                             }}>

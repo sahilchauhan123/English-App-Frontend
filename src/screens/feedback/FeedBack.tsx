@@ -1,5 +1,5 @@
-import { Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import React, { use, useEffect, useRef, useState } from 'react'
 import { setOngoingCallId, useCallStore } from '../../store/useCallStore'
 import { goBack, navigate, navigateAndReset } from '../../navigation/navigationService'
 import { colors, fonts } from '../../../assets/constants'
@@ -17,7 +17,7 @@ const FeedBack = ({ route }) => {
     const [comment, setComment] = useState("");
     const inputRef = useRef<TextInput>(null);
     const [selectedBehaviours, setSelectedBehaviours] = useState([]);
-
+    const [loading, setLoading] = useState(false);
 
     function handleAddBehaviour(item) {
         if (selectedBehaviours.includes(item.id)) {
@@ -30,6 +30,7 @@ const FeedBack = ({ route }) => {
 
     async function handleSubmit() {
         // make array of behaviour names (strings) from selected behaviour ids
+        setLoading(true);
         const behaviourArray = Behaviour
             .filter(b => selectedBehaviours.includes(b.id))
             .map(b => b.type);
@@ -45,12 +46,13 @@ const FeedBack = ({ route }) => {
             const res = await customFetch("/api/user/upload/feedback", "POST", data);
             console.log("res : ", res);
             setOngoingCallId(null);
+            setLoading(true);
             ToastAndroid.show("Feedback submitted successfully", ToastAndroid.SHORT);
-            navigateAndReset("Tabs")    
+            navigateAndReset("Tabs")
         } catch (err) {
             console.log("feedback error:", err);
         }
-        
+
     }
 
 
@@ -61,19 +63,7 @@ const FeedBack = ({ route }) => {
 
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.white, justifyContent: "space-between" }}>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: hp(-2), zIndex: 1, backgroundColor: colors.white, marginHorizontal: wp(3), marginTop: hp(2) }}>
-                <TouchableOpacity
-                    style={{ width: hp(3), height: hp(3) }}
-                    onPress={goBack}
-                >
-                    <Image
-                        style={{
-                            width: hp(3), height: hp(3),
-                        }}
-                        source={require("../../../assets/images/back.png")}
-                        resizeMode='contain'
-                    />
-                </TouchableOpacity>
+            <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center', marginBottom: hp(-2), zIndex: 1, backgroundColor: colors.white, marginHorizontal: wp(3), marginTop: hp(2) }}>
                 <Text
                     style={{
                         textAlign: 'center',
@@ -83,9 +73,6 @@ const FeedBack = ({ route }) => {
                     }}>
                     Feedback
                 </Text>
-                <View
-                    style={{ width: hp(3), height: hp(3) }}
-                />
             </View>
             <View
                 style={{
@@ -213,6 +200,8 @@ const FeedBack = ({ route }) => {
                     />
                 </Pressable>
             </View>
+
+
             <View style={{ marginHorizontal: hp(2), marginVertical: hp(2) }}>
                 <TouchableOpacity
                     onPress={handleSubmit}
@@ -226,7 +215,10 @@ const FeedBack = ({ route }) => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 0.9, y: 0 }}
                         style={styles.gradientButton}>
-                        <Text style={styles.gradientButtonText}>Submit</Text>
+                        {loading ?
+                            <ActivityIndicator size={23} color={colors.white} /> :
+                            <Text style={styles.gradientButtonText}>Submit</Text>
+                        }
                     </LinearGradient>
                 </TouchableOpacity>
             </View>

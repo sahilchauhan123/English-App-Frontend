@@ -40,13 +40,32 @@ const AiCharacters = () => {
 
     if (loading) {
         return (
-            <View>
+            <View style={{ marginHorizontal: hp(2), marginVertical: hp(1), flex: 1 }}>
+
                 <ShimmerPlaceholder
                     LinearGradient={LinearGradient}
-                    style={{ hieght: hp(10), width: wp(100) }}
-                >
-                </ShimmerPlaceholder>
-            </View>
+                    style={{ height: hp(20), width: "100%", borderRadius: hp(2) }}
+                />
+                <View style={{
+                    flexDirection: 'row', flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    width: "100%",
+                    marginVertical: hp(2),
+                }}>
+                    {[0, 1, 2, 3].map((item) =>
+                        <ShimmerPlaceholder
+                            key={item}
+                            LinearGradient={LinearGradient}
+                            style={{
+                                width: hp(19),
+                                height: hp(24),
+                                margin: hp(1),
+                                borderRadius: hp(2),
+                            }}
+                        />
+                    )}
+                </View>
+            </View >
         )
     }
 
@@ -87,7 +106,7 @@ const AiCharacters = () => {
                     {characters.slice(1).map((item, index) => (
                         <Pressable
                             key={index}
-                            onPress={()=>console.log("pressing")}
+                            onPress={() => console.log("pressing")}
                             style={{
                                 width: hp(21),
                                 height: hp(24),
@@ -117,6 +136,7 @@ const AiCharacters = () => {
                                         justifyContent: "center",
                                         alignItems: "flex-start",
                                         height: hp(8),
+                                        borderRadius: hp(1),
                                     }}
                                     colors={[
                                         hexToRgba(item.backgroundColor, 0),

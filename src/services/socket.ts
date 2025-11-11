@@ -1,98 +1,3 @@
-// import { ToastAndroid } from "react-native";
-// import useAuthStore from "../store/useAuthStore";
-// import { useCallStore } from "../store/useCallStore";
-// import { wsURL } from "../utils/constants";
-// import { acceptAnswer } from "./webrtc";
-
-
-
-// let socket;
-
-
-// // type Message struct {
-// // 	Type         string     `json:"type"`
-// // 	User         types.User `json:"user,omitempty"`
-// // 	Target       int64      `json:"target,omitempty"`
-// // 	Payload      any        `json:"payload,omitempty"`
-// // 	From         int64      `json:"from,omitempty"`
-// // 	FromUserData any        `json:"fromUserData,omitempty"`
-// // }
-
-// export function initSocket() {
-
-//     if (socket) return socket;
-
-//     socket = new WebSocket(wsURL)
-
-//     socket.onopen = () => {
-//         console.log('WebSocket connection established');
-
-//         const data = {
-//             type: 'initialize',
-//             user: useAuthStore.getState().user,
-//         }
-//         socket.send(JSON.stringify(data));
-//     };
-
-//     socket.onerror = (error) => {
-//         console.error('WebSocket error:', error);
-//     };
-
-//     socket.onmessage = (msg) => {
-//         const data = JSON.parse(msg.data);
-//         console.log('Received message:', data);
-//         switch (data.type) {
-//             case "initialized":
-//                 useCallStore.getState().setUsersList(data.online_users);
-//                 break;
-
-//             case "offer":
-//                 useCallStore.getState().showIncomingCallModal(data.fromUserData, data.payload);
-//                 break;
-//             case "answer":
-//                 acceptAnswer(data.payload);
-//                 break;
-//             case "icecandidate":
-//             //some logic
-
-//             case "endCall":
-//             //some logic
-
-//             case "randomCallOffer":
-//             //some logic
-
-//             case "canceledRandomMatch":
-//             //some logic
-
-//             case "rejectedCall":
-//                 ToastAndroid.show(`Call Rejected By ${data.fromUserData.full_name}`, 2000)
-//         }
-//     }
-
-//     return socket;
-// }
-
-
-// export function sendMessage(message: any) {
-//     console.log("sending message : ", message)
-//     try {
-//         if (!socket || socket.readyState !== WebSocket.OPEN) {
-//             console.error('WebSocket is not open. Cannot send message.');
-//             return;
-//         } else {
-//             console.log("sending message : ", message)
-//             socket.send(JSON.stringify(message));
-
-//         }
-//     } catch (error) {
-//         console.log("error in sending message : ", error)
-//     }
-// }
-
-
-
-
-
 import { ToastAndroid } from "react-native";
 import useAuthStore from "../store/useAuthStore";
 import { setOngoingCallData, setOngoingCallId, startCallTimer, stopCallTimer, useCallStore } from "../store/useCallStore";
@@ -103,8 +8,12 @@ import { retrieveUserSession } from "../utils/tokens";
 
 let socket;
 const user = useAuthStore.getState().user;
+let reconnectAttempts = 0;
+const MAX_RETRIES = 10;
+let manualClose = false;
 
 export async function initSocket() {
+    
     console.log("[initSocket] Initializing WebSocket...");
 
     if (socket) {
@@ -136,7 +45,20 @@ export async function initSocket() {
     };
 
     socket.onerror = (error) => {
-        console.error("[initSocket] WebSocket error:", error);
+        console.error("❌ WebSocket error:", error.message);
+    };
+
+    socket.onclose = (event) => {
+        console.warn("⚠️ Disconnected:", event.code, event.reason);
+
+        // 1000 = normal closure, don’t reconnect
+        if (event.code !== 1000 && !manualClose) {
+            socket.close();
+            socket = null;
+            attemptReconnect();
+        }else{
+            console.log("normal socket closure")
+        }
     };
 
     socket.onmessage = (msg) => {
@@ -210,7 +132,7 @@ export async function initSocket() {
                             const callId = useCallStore.getState().ongoingCallId;
                             setOngoingCallId(null);
                             if (callId) {
-                                navigateAndReset("FeedBack",callId)
+                                navigateAndReset("FeedBack", callId)
                             }
                         }
                     } catch (err) {
@@ -298,3 +220,29 @@ export function sendMessage(message) {
 }
 
 
+function attemptReconnect() {
+    if (reconnectAttempts >= MAX_RETRIES) {
+        console.error("🚫 Max reconnection attempts reached");
+        return;
+    }
+
+    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000); // exponential backoff
+    reconnectAttempts++;
+
+    console.log(`🔄 Reconnecting in ${delay / 1000}s...`);
+
+    setTimeout(() => {
+        initSocket();
+    }, delay);
+}
+
+
+export function closeWebSocket() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        console.log("👋 Closing socket manually...");
+        manualClose = true;
+        socket.close(1000, "Manual close");
+    } else {
+        manualClose = true;
+    }
+}

@@ -1,9 +1,8 @@
 // if this is the url new url https://englishapp-skmti0r1.b4a.run/ change variable acc to it 
 
-import { hpPortrait as hp, wpPortrait as wp } from "./responsive";
 
-const baseURL = 'http://10.206.90.24:8080';
-const wsURL = 'ws://10.206.90.24:8080/ws';
+const baseURL = 'http://192.168.20.24:8080';
+const wsURL = 'ws://192.168.20.24:8080/ws';
 export { baseURL, wsURL };
 
 // const baseURL = 'https://english-app-backend-production.up.railway.app';
@@ -27,7 +26,7 @@ export const menus = [
     },
     {
         id: 2,
-        name: "Chats",
+        name: "Ai call",
         image: require('../../assets/images/chats.png'),
         imagefilled: require('../../assets/images/chats-filled.png')
     },
