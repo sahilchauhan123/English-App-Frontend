@@ -72,7 +72,6 @@ const Home = () => {
               source={require("../../../../assets/images/call.png")}
             />
             <Text style={styles.talk}>42 Talks</Text>
-
           </TouchableOpacity>
         </View>
 

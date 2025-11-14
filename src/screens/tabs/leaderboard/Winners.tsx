@@ -1,7 +1,7 @@
 import {  Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import LinearGradient from 'react-native-linear-gradient'
-import { hexToRgba } from '../../../utils/extras'
+import { formatName, hexToRgba } from '../../../utils/extras'
 import { colors, fonts } from '../../../../assets/constants'
 import { hpPortrait as hp, wpPortrait as wp } from '../../../utils/responsive'
 import ShimmerPlaceholder, { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
@@ -10,12 +10,6 @@ import { navigateWithParams } from '../../../navigation/navigationService'
 const Winners = ({ ranking }) => {
   const isFetched = ranking && ranking.length > 0
   
-  function formatName(name) {
-    // format name with only first name before space with max 10 characters
-    if (!name) return "Unknown User";
-    const firstName = name.split(' ')[0];
-    return firstName.length > 10 ? firstName.slice(0, 10) + '...' : firstName;
-  }
 
   if (!isFetched) {
     return (

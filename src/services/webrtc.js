@@ -15,8 +15,10 @@ import {
 import {requestMicrophonePermission} from './permission';
 import {navigate, navigateAndReset} from '../navigation/navigationService';
 import inCallManager from 'react-native-incall-manager';
+import analytics from '@react-native-firebase/analytics';
 
 let pc;
+// let connectionType;
 var peerConstraints = {
   iceServers: [
     {urls: 'stun:stun.l.google.com:19302'},
@@ -191,15 +193,22 @@ export async function insertICECandidate(candidate) {
 // you ended the call
 export async function endCall(targetId) {
   console.log('[endCall] Ending call with target:', targetId);
+  const callID = useCallStore.getState().ongoingCallId;
   setOngoingCallData(null);
   stopCallTimer();
   sendMessage({
     type: 'endCall',
     from: useAuthStore.getState().user.id,
     target: targetId,
-    callID: useCallStore.getState().ongoingCallId,
+    callID,
   });
   stopCallAudio();
+  let connectionType = await checkConnectionType();
+  connectionType = getConnectionTypeString(connectionType);
+  await analytics().logEvent('webrtc_conn_type', {
+    callID,
+    connectionType,
+  });
   pc.close();
   console.log('[endCall] PeerConnection closed');
   pc = null;
@@ -286,3 +295,141 @@ export const toggleSpeaker = enableSpeaker => {
     console.log('Error toggling speaker:', err);
   }
 };
+
+export async function checkConnectionType() {
+  if (!pc) {
+    console.log('[checkConnectionType] pc is null');
+    return null;
+  }
+
+  try {
+    const stats = await pc.getStats();
+    let candidatePair = null;
+    let localCandidate = null;
+    let remoteCandidate = null;
+
+    // stats may be Map-like or an object; normalize iteration
+    const entries = [];
+    if (typeof stats.forEach === 'function') {
+      stats.forEach(r => entries.push(r));
+    } else if (Array.isArray(stats)) {
+      entries.push(...stats);
+    } else {
+      for (const k in stats) entries.push(stats[k]);
+    }
+
+    // find selected/succeeded candidate-pair
+    for (const r of entries) {
+      if (!r || !r.type) continue;
+      const t = r.type.toLowerCase();
+      if (
+        t === 'candidate-pair' &&
+        (r.state === 'succeeded' || r.selected === true || r.nominated === true)
+      ) {
+        candidatePair = r;
+        break;
+      }
+    }
+
+    // fallback: some implementations expose selectedCandidatePairId
+    if (!candidatePair) {
+      const sel = entries.find(
+        e =>
+          e &&
+          (e.type === 'transport' || e.type === 'candidate-pair') &&
+          (e.selected === true || e.state === 'succeeded'),
+      );
+      if (sel) candidatePair = sel;
+    }
+
+    if (candidatePair) {
+      const localId =
+        candidatePair.localCandidateId ||
+        candidatePair.localCandidate ||
+        candidatePair.local;
+      const remoteId =
+        candidatePair.remoteCandidateId ||
+        candidatePair.remoteCandidate ||
+        candidatePair.remote;
+
+      if (localId) {
+        localCandidate = entries.find(
+          e =>
+            e &&
+            (e.id === localId ||
+              e.localCandidateId === localId ||
+              (e.type === 'local-candidate' && e.id === localId)),
+        );
+      }
+      if (!localCandidate) {
+        // try to find any local-candidate record
+        localCandidate = entries.find(e => e && e.type === 'local-candidate');
+      }
+
+      if (remoteId) {
+        remoteCandidate = entries.find(
+          e =>
+            e &&
+            (e.id === remoteId ||
+              e.remoteCandidateId === remoteId ||
+              (e.type === 'remote-candidate' && e.id === remoteId)),
+        );
+      }
+      if (!remoteCandidate) {
+        remoteCandidate = entries.find(e => e && e.type === 'remote-candidate');
+      }
+    } else {
+      // no candidate pair found, try to infer from any local/remote candidate entries
+      localCandidate = entries.find(e => e && e.type === 'local-candidate');
+      remoteCandidate = entries.find(e => e && e.type === 'remote-candidate');
+    }
+
+    const result = {
+      usedTurn: false,
+      localType: localCandidate?.candidateType || localCandidate?.type || null,
+      remoteType:
+        remoteCandidate?.candidateType || remoteCandidate?.type || null,
+      localProtocol:
+        localCandidate?.protocol || localCandidate?.transport || null,
+      remoteProtocol:
+        remoteCandidate?.protocol || remoteCandidate?.transport || null,
+      candidatePair,
+      localCandidate,
+      remoteCandidate,
+    };
+
+    if (result.localType === 'relay' || result.remoteType === 'relay')
+      result.usedTurn = true;
+    else if (
+      result.localType === 'srflx' ||
+      result.remoteType === 'srflx' ||
+      result.localType === 'prflx' ||
+      result.remoteType === 'prflx'
+    )
+      result.usedTurn = false;
+
+    console.log('[checkConnectionType] result:', result);
+    return result;
+  } catch (err) {
+    console.error('[checkConnectionType] error:', err);
+    return null;
+  }
+}
+
+export function getConnectionTypeString(info) {
+  if (!info) return 'Unknown';
+  if (info.usedTurn)
+    return `TURN (${
+      (info.localProtocol || info.remoteProtocol || '').toUpperCase() ||
+      'UDP/TCP'
+    })`;
+  if (info.localType === 'srflx' || info.remoteType === 'srflx')
+    return `STUN (${
+      (info.localProtocol || info.remoteProtocol || '').toUpperCase() ||
+      'UDP/TCP'
+    })`;
+  if (info.localType === 'host' || info.remoteType === 'host')
+    return `Direct (Host)`;
+  return 'Unknown';
+}
+// ...existing code...

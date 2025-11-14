@@ -173,6 +173,7 @@ import { customFetch, setTokens } from '../../utils/api';
 import { wpPortrait as wp, hpPortrait as hp } from '../../utils/responsive';
 import { navigateAndReset } from '../../navigation/navigationService';
 import { startRefreshUserListLoop } from '../../store/useCallStore';
+
 const SplashScreen = () => {
   const navigation = useNavigation();
   const { setUser } = useAuthStore();
@@ -196,6 +197,7 @@ const SplashScreen = () => {
         initSocket();
         startRefreshUserListLoop(res.data.profile.id)
         navigateAndReset('Tabs');
+        console.log("navigated to tabs");
       } else {
         if (userOnboarded) {
           clearUserSession()

@@ -5,6 +5,7 @@ import { hpPortrait as hp, hpPortrait, wpPortrait as wp } from '../utils/respons
 import ImagePicker from "react-native-image-crop-picker";
 import { customFetch } from '../utils/api';
 import useAuthStore from '../store/useAuthStore';
+import { TabView } from 'react-native-tab-view';
 
 const Pictures = () => {
     const [show, setShow] = useState(false);
@@ -75,8 +76,9 @@ const Pictures = () => {
 
 
     return (
-        <View style={{ justifyContent: "center", alignItems: "center", paddingTop: hp(1.5), flex: 1 }} >
-            <Text style={{ fontFamily: fonts.semiBold, fontSize: hp(1.8), marginBottom: hp(1) }}>Photos</Text>
+        <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }} >
+            {/* <Text style={{ fontFamily: fonts.semiBold, fontSize: hp(1.8), marginBottom: hp(1) }}>Photos</Text> */}
+            
             <View style={{
                 flexDirection: 'row',
                 flexWrap: 'wrap',

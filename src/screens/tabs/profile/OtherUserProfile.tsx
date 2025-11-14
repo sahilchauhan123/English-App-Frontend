@@ -26,6 +26,14 @@ const OtherUserProfile = ({ route }) => {
     }, [])
 
     return (
+
+
+        // <LinearGradient
+        //                 colors={[colors.gradient.first, colors.gradient.second, colors.gradient.last]}
+        //                 start={{ x: 0, y: 0 }}
+        //                 end={{ x: 1, y: 0 }}
+        //                 style={styles.indicator}
+        //               />
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: wp(4), marginVertical: hp(2) }}>
                 <TouchableOpacity
@@ -67,4 +75,13 @@ const OtherUserProfile = ({ route }) => {
 
 export default OtherUserProfile
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    indicator: {
+        position: 'absolute',
+        bottom: -1,
+        height: 3,
+        width: '60%',
+        borderTopLeftRadius: 3,
+        borderTopRightRadius: 3,
+    },
+})

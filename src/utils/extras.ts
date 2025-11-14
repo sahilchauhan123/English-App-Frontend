@@ -11,7 +11,7 @@ export const hexToRgba = (hex, alpha = 1) => {
 };
 
 
-export function formatTime(timestampString:string) {
+export function formatTime(timestampString: string) {
 
   const dateObject = new Date(timestampString.replace(' ', 'T'));
 
@@ -25,5 +25,13 @@ export function formatTime(timestampString:string) {
     hour12: true
   });
 
-  return formattedDate+" Utc"
+  return formattedDate + " Utc"
+}
+
+
+export function formatName(name) {
+  // format name with only first name before space with max 10 characters
+  if (!name) return "Unknown User";
+  const firstName = name.split(' ')[0];
+  return firstName.length > 10 ? firstName.slice(0, 10) + '...' : firstName;
 }

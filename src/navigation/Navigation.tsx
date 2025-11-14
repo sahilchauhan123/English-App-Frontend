@@ -17,16 +17,37 @@ import AiCall from '../screens/callScreen/AiCall';
 import OtherUserProfile from '../screens/tabs/profile/OtherUserProfile';
 import CallHistory from '../screens/callHistory/CallHistory';
 import FeedBack from '../screens/feedback/FeedBack';
+import analytics from '@react-native-firebase/analytics';
 
 
 
 const Navigation = () => {
   const [initialRoute, setInitialRoute] = useState("SplashScreen"); // default SplashScreen
   const Stack = createNativeStackNavigator();
+  const routeNameRef = React.useRef();
+  // const navigationRef = React.useRef();
 
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current.getCurrentRoute().name;
+      }}
+      onStateChange={async () => {
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName = navigationRef.current.getCurrentRoute().name;
+
+        if (previousRouteName !== currentRouteName) {
+          console.log("screen changed")
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+        routeNameRef.current = currentRouteName;
+      }}
+
+    >
       <Stack.Navigator
         initialRouteName={initialRoute}
         screenOptions={{ headerShown: false, statusBarStyle: 'dark' }}>
@@ -50,7 +71,7 @@ const Navigation = () => {
         <Stack.Screen name="CallHistory" component={CallHistory} />
         <Stack.Screen name="FeedBack" component={FeedBack} />
 
-        
+
       </Stack.Navigator>
     </NavigationContainer>
   );

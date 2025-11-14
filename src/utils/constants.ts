@@ -26,7 +26,7 @@ export const menus = [
     },
     {
         id: 2,
-        name: "Ai call",
+        name: "Ai Call",
         image: require('../../assets/images/chats.png'),
         imagefilled: require('../../assets/images/chats-filled.png')
     },
